@@ -1,0 +1,23 @@
+Package: tidyhte
+Title: Tidy semantics for the estimation of heterogeneous treatment effects
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Drew",
+           family = "Dimmery",
+           role = c("aut", "cre"),
+           email = "drew.dimmery@univie.ac.at",
+           comment = c(ORCID = "0000-0001-9602-6325"))
+Description: Tools for the estimation of heterogeneous treatment effects
+    using tidy semantics. Methods are based on the doubly-robust learner
+    of Kennedy (n.d.).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    dplyr,
+    R6
