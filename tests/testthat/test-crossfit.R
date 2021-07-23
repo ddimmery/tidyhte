@@ -16,12 +16,12 @@ test_that("make.splits output",
             ncols=4, 
             col.names='named'
         )
-        expect_true("split_id" %in% names(make.splits(d, uid, .num_splits=2)))
+        expect_true(".split_id" %in% names(make.splits(d, uid, .num_splits=2)))
     }
 )
 
 s_df = make.splits(d, uid, .num_splits=2)
-s_id = s_df$split_id
+s_id = s_df$.split_id
 test_that("check that 2 splits are legit",
     {
     expect_length(unique(s_id), 2)
@@ -37,7 +37,7 @@ test_that("check that splits can be used to create dataframes",
     }
 )
 
-s_id = make.splits(d, uid, .num_splits=7)$split_id
+s_id = make.splits(d, uid, .num_splits=7)$.split_id
 test_that("check that 7 splits are legit", 
     {
     expect_length(unique(s_id), 7)

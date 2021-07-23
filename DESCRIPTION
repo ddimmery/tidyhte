@@ -20,4 +20,7 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     dplyr,
-    R6
+    R6,
+    rlang,
+    nprobust,
+    SuperLearner
