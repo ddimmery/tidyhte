@@ -9,6 +9,8 @@ construct.pseudo.outcomes <- function(.data, y_col, a_col) {
     pi <- .data[[".pi_hat"]]
     muA <- A * mu1 + (1 - A) * mu0
     .data$.pseudo.outcome <- (A - pi) / (pi * (1 - pi)) * (YA - muA) + mu1 - mu0
+    attr(.data, "treatment") <- rlang::as_string(a_col)
+    attr(.data, "outcome") <- rlang::as_string(y_col)
     .data
 }
 
@@ -23,13 +25,13 @@ calculate.quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
         model <- predictor$fit(data)
         if (.MCATE.cfg$std.errors) {
             result <- model$predict_se(data)
-            result$covariate_name <- rlang::quo_name(rlang::enquo(covariate))
+            result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, covariate_name, x, estimate, std.error
+                result, term, x, estimate, std.error
             )
         } else {
             result <- dplyr::tibble(
-                covariate_name = quo_name(enquo(covariate)),
+                term = quo_name(enquo(covariate)),
                 x = drop(data$features),
                 estimate = model$predict(data)
             )
@@ -48,7 +50,92 @@ calculate.quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
     dplyr::bind_rows(!!!result_list)
 }
 
-#' @export 
+SL_model_slot <- function(prediction) {
+    if (prediction == ".pi_hat") "pi"
+    else if (prediction == ".mu1_hat") "mu1"
+    else if (prediction == ".mu0_hat") "mu0"
+    else stop("Unknown model slot.")
+}
+
+#' @export
+#' @importFrom pROC auc
+diagnostic_factory <- function(.data, label, prediction, diag_name) {
+    if (tolower(diag_name) == "auc") {
+        n1 <- sum(.data[[label]])
+        result <- pROC::auc(.data[[label]], .data[[prediction]])
+        result <- dplyr::tibble(
+            estimand = "AUC",
+            term = label,
+            estimate = result,
+            # Hanley and McNeil (1982) bound on the variance of AUC
+            std.error = 1 / 2 / sqrt(pmin(n1, length(.data[[label]]) - n1))
+        )
+    } else if (tolower(diag_name) == "mse") {
+        sqerr <- (.data[[label]] - .data[[prediction]]) ^ 2
+        result <- mean(sqerr)
+        stderr <- sd(sqerr) / sqrt(length(sqerr))
+        result <- dplyr::tibble(
+            estimand = "MSE",
+            term = label,
+            estimate = result,
+            std.error = stderr
+        )
+    } else if (tolower(diag_name) == "sl_coefs") {
+        result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
+        result <- dplyr::bind_rows(!!!result_list) %>%
+            dplyr::group_by(model_name) %>%
+            dplyr::summarize(
+                estimate = mean(coef),
+                std.error = sd(coef) / sqrt(n()),
+                estimand = "SL coefficient"
+            ) %>%
+            dplyr::rename(term = model_name)
+    } else if (tolower(diag_name) == "sl_risk") {
+        result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
+        result <- dplyr::bind_rows(!!!result_list) %>%
+            dplyr::group_by(model_name) %>%
+            dplyr::summarize(
+                estimate = mean(cvRisk),
+                std.error = sd(cvRisk) / sqrt(n()),
+                estimand = "SL risk"
+            ) %>%
+            dplyr::rename(term = model_name)
+    }
+    result
+}
+
+#' @export
+calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
+    ps_cfg <- .diag.cfg$ps
+    y_cfg <- .diag.cfg$outcome
+    fx_cfg <- .diag.cfg$effect
+
+    treatment_name <- attr(.data, "treatment")
+    outcome_name <- attr(.data, "outcome")
+
+    result_list <- list()
+    for (diag in ps_cfg) {
+        result <- diagnostic_factory(.data, treatment_name, ".pi_hat", diag)
+        result_list <- c(result_list, list(result))
+    }
+
+    for (diag in y_cfg) {
+        result1 <- diagnostic_factory(.data %>% filter(.data[[treatment_name]] == 1), outcome_name, ".mu1_hat", diag)
+        result1$level <- "Treatment"
+        result0 <- diagnostic_factory(.data %>% filter(.data[[treatment_name]] == 0), outcome_name, ".mu0_hat", diag)
+        result0$level <- "Control"
+        result_list <- c(result_list, list(result0), list(result1))
+    }
+
+    for (diag in fx_cfg) {
+        result <- diagnostic_factory(.data, diag)
+        result_list <- c(result_list, list(result))
+    }
+
+    dplyr::bind_rows(!!!result_list)
+}
+
+#' @export
 calculate.vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
     dots <- rlang::enexprs(...)
 
@@ -60,7 +147,7 @@ calculate.vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
 
     folds_full <- rep(NA_integer_, length(full_model_predictions))
     idx <- 1
-    for(fold in full_model$model$validRows) {
+    for (fold in full_model$model$validRows) {
         folds_full[fold] <- idx
         idx <- idx + 1
     }
@@ -102,7 +189,7 @@ calculate.vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
         idx <- idx + 1
         result <- dplyr::tibble(
             estimand = "VIMP",
-            covariate_name = rlang::quo_name(rlang::enquo(covariate)),
+            term = rlang::quo_name(rlang::enquo(covariate)),
             estimate = result$est,
             std.error = result$se
         )
@@ -121,6 +208,11 @@ estimate.QoI <- function(
     .QoI.cfg <- .HTE.cfg$qoi
     result_list <- list()
 
+    if (!is.null(.QoI.cfg$diag)) {
+        result <- calculate_diagnostics(.data, .diag.cfg = .QoI.cfg$diag)
+        result_list <- c(result_list, list(result))
+    }
+
     if (!is.null(.QoI.cfg$mcate)) {
         result <- calculate.quantities(.data, .pseudo.outcome, !!!dots, .MCATE.cfg = .QoI.cfg$mcate)
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
@@ -135,7 +227,7 @@ estimate.QoI <- function(
         stop("Not implemented.")
     }
 
-    col_order <- c("estimand", "covariate_name", "value", "level", "estimate", "std.error")
+    col_order <- c("estimand", "term", "value", "level", "estimate", "std.error")
 
     dplyr::bind_rows(!!!result_list) %>%
         dplyr::select(intersect(col_order, names(.)))

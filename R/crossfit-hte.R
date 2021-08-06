@@ -10,6 +10,11 @@ produce.plugin.estimates <- function(.data, y_col, a_col, ...,
     pi_hat <- rep(NA_real_, nrow(.data))
     mu0_hat <- rep(NA_real_, nrow(.data))
     mu1_hat <- rep(NA_real_, nrow(.data))
+    SL_coefs <- list(
+        pi = list(),
+        mu0 = list(),
+        mu1 = list()
+    )
     for (split_id in 1:(num_splits - 1)) {
         folds <- split_data(.data, split_id)
 
@@ -17,11 +22,38 @@ produce.plugin.estimates <- function(.data, y_col, a_col, ...,
             folds$train, {{ a_col }}, !!!dots,
             .Model.cfg = .HTE.cfg$treatment
         )
+        if (.HTE.cfg$treatment$model_class == "SL") {
+            SL_coef <- tibble(
+                split_id = rep(split_id, length(a_model$pi$model$libraryNames)),
+                model_name = a_model$pi$model$libraryNames,
+                cvRisk = a_model$pi$model$cvRisk,
+                coef = a_model$pi$model$coef
+            )
+            SL_coefs[["pi"]] <- c(SL_coefs[["pi"]], list(SL_coef))
+        }
 
         y_model <- fit.plugin.Y(
             folds$train, {{ y_col }}, {{ a_col }}, !!!dots,
             .Model.cfg = .HTE.cfg$outcome
         )
+
+        if (.HTE.cfg$outcome$model_class == "SL") {
+            SL_coef <- tibble(
+                split_id = rep(split_id, length(y_model$mu0$model$libraryNames)),
+                model_name = y_model$mu0$model$libraryNames,
+                cvRisk = y_model$mu0$model$cvRisk,
+                coef = y_model$mu0$model$coef
+            )
+            SL_coefs[["mu0"]] <- c(SL_coefs[["mu0"]], list(SL_coef))
+
+            SL_coef <- tibble(
+                split_id = rep(split_id, length(y_model$mu1$model$libraryNames)),
+                model_name = y_model$mu1$model$libraryNames,
+                cvRisk = y_model$mu1$model$cvRisk,
+                coef = y_model$mu1$model$coef
+            )
+            SL_coefs[["mu1"]] <- c(SL_coefs[["mu1"]], list(SL_coef))
+        }
 
         if (.HTE.cfg$treatment$model_class == "known") {
             cov <- rlang::sym(.HTE.cfg$treatment$covariate_name)
@@ -35,17 +67,13 @@ produce.plugin.estimates <- function(.data, y_col, a_col, ...,
             pred_data <- Model.data$new(folds$holdout, NULL, !!!dots)
         }
 
-        # this might not work
-        mu1_hat[folds$in_holdout] <- y_model$mu1$predict(
-            pred_data
-        )
-        mu0_hat[folds$in_holdout] <- y_model$mu0$predict(
-            pred_data
-        )
+        mu1_hat[folds$in_holdout] <- y_model$mu1$predict(pred_data)
+        mu0_hat[folds$in_holdout] <- y_model$mu0$predict(pred_data)
     }
     .data$.pi_hat <- pi_hat
     .data$.mu1_hat <- mu1_hat
     .data$.mu0_hat <- mu0_hat
+    attr(.data, "SL_coefs") <- SL_coefs
     .data
 }
 

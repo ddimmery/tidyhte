@@ -136,19 +136,36 @@ VIMP.cfg <- R6::R6Class("VIMP.cfg",
     )
 )
 
+Diagnostics.cfg <- R6::R6Class("Diagnostics.cfg",
+    list(
+        ps = character(),
+        outcome = character(),
+        effect = character(),
+        initialize = function(ps = NULL, outcome = NULL, effect = NULL) {
+            if (!is.null(ps)) self$ps <- ps
+            if (!is.null(outcome)) self$outcome <- outcome
+            if (!is.null(effect)) self$effect <- effect
+        }
+    )
+)
+
 #' @export
 QoI.cfg <- R6::R6Class("QoI.cfg",
     list(
         mcate = NULL,
         pcate = NULL,
         vimp = NULL,
+        diag = NULL,
         initialize = function(
-            mcate = NULL, pcate = NULL, vimp = NULL
+            mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL
         ) {
-            if (is.null(mcate) && is.null(pcate) && is.null(vimp)) stop("Must define at least one QoI!")
+            if (is.null(mcate) && is.null(pcate) && is.null(vimp) && is.null(diag)) {
+                stop("Must define at least one QoI!")
+            }
             if (!is.null(mcate)) self$mcate <- mcate
             if (!is.null(pcate)) self$pcate <- pcate
             if (!is.null(vimp)) self$vimp <- vimp
+            if (!is.null(diag)) self$diag <- diag
         }
     )
 )
