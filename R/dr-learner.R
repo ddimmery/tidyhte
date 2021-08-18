@@ -15,7 +15,7 @@ construct.pseudo.outcomes <- function(.data, y_col, a_col) {
 }
 
 #' @export
-calculate.quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
+calculate.mcate.quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
     for (covariate in dots) {
@@ -50,6 +50,43 @@ calculate.quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
     dplyr::bind_rows(!!!result_list)
 }
 
+#' @export
+calculate.pcate.quantities <- function(.data, .outcome, fx_model, ..., .MCATE.cfg) {
+    dots <- rlang::enexprs(...)
+    result_list <- list()
+    for (covariate in dots) {
+        fx_data <- fx_mod$predict(.data, covariate)
+        .Model.cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
+        data <- Model.data$new(fx_data, .hte, covariate_value)
+        predictor <- predictor_factory(.Model.cfg)
+        model <- predictor$fit(data)
+        if (.MCATE.cfg$std.errors) {
+            result <- model$predict_se(data)
+            result$term <- rlang::quo_name(rlang::enquo(covariate))
+            result <- dplyr::select(
+                result, term, x, estimate, std.error
+            )
+        } else {
+            result <- dplyr::tibble(
+                term = rlang::quo_name(rlang::enquo(covariate)),
+                x = drop(data$features),
+                estimate = model$predict(data)
+            )
+        }
+        if (is.factor(result$x)) {
+            names(result)[names(result) == "x"] <- "level"
+            result$value <- as.integer(result$level)
+        } else if (is.double(result$x) || is.integer(result$x)) {
+            names(result)[names(result) == "x"] <- "value"
+        } else {
+            stop("Unknown type of result!")
+        }
+        result_list <- c(result_list, list(result))
+    }
+
+    dplyr::bind_rows(!!!result_list)
+}
+
 SL_model_slot <- function(prediction) {
     if (prediction == ".pi_hat") "pi"
     else if (prediction == ".mu1_hat") "mu1"
@@ -59,7 +96,7 @@ SL_model_slot <- function(prediction) {
 
 #' @export
 #' @importFrom pROC auc
-diagnostic_factory <- function(.data, label, prediction, diag_name) {
+estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     if (tolower(diag_name) == "auc") {
         n1 <- sum(.data[[label]])
         result <- pROC::auc(.data[[label]], .data[[prediction]])
@@ -109,26 +146,25 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
     ps_cfg <- .diag.cfg$ps
     y_cfg <- .diag.cfg$outcome
     fx_cfg <- .diag.cfg$effect
-
     treatment_name <- attr(.data, "treatment")
     outcome_name <- attr(.data, "outcome")
 
     result_list <- list()
     for (diag in ps_cfg) {
-        result <- diagnostic_factory(.data, treatment_name, ".pi_hat", diag)
+        result <- estimate_diagnostic(.data, treatment_name, ".pi_hat", diag)
         result_list <- c(result_list, list(result))
     }
 
     for (diag in y_cfg) {
-        result1 <- diagnostic_factory(.data %>% filter(.data[[treatment_name]] == 1), outcome_name, ".mu1_hat", diag)
+        result1 <- estimate_diagnostic(.data %>% filter(.data[[treatment_name]] == 1), outcome_name, ".mu1_hat", diag)
         result1$level <- "Treatment"
-        result0 <- diagnostic_factory(.data %>% filter(.data[[treatment_name]] == 0), outcome_name, ".mu0_hat", diag)
+        result0 <- estimate_diagnostic(.data %>% filter(.data[[treatment_name]] == 0), outcome_name, ".mu0_hat", diag)
         result0$level <- "Control"
         result_list <- c(result_list, list(result0), list(result1))
     }
 
     for (diag in fx_cfg) {
-        result <- diagnostic_factory(.data, diag)
+        result <- estimate_diagnostic(.data, diag)
         result_list <- c(result_list, list(result))
     }
 
@@ -214,7 +250,7 @@ estimate.QoI <- function(
     }
 
     if (!is.null(.QoI.cfg$mcate)) {
-        result <- calculate.quantities(.data, .pseudo.outcome, !!!dots, .MCATE.cfg = .QoI.cfg$mcate)
+        result <- calculate.mcate.quantities(.data, .pseudo.outcome, !!!dots, .MCATE.cfg = .QoI.cfg$mcate)
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
     }
 
@@ -224,7 +260,11 @@ estimate.QoI <- function(
     }
 
     if (!is.null(.QoI.cfg$pcate)) {
-        stop("Not implemented.")
+        message('pcate')
+        covs <- rlang::syms(.QoI.cfg$pcate$model_covariates)
+        fx_mod <- fit.fx.predictor(.data, !!!covs, .pcate.cfg = .QoI.cfg$pcate)
+        #result <- calculate.mcate.quantities(.data, .pseudo.outcome.hat, !!!dots, .MCATE.cfg = .QoI.cfg$mcate)
+        #result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
     }
 
     col_order <- c("estimand", "term", "value", "level", "estimate", "std.error")

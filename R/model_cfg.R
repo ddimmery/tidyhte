@@ -114,14 +114,16 @@ PCATE.cfg <- R6::R6Class("PCATE.cfg",
         cfgs = list(),
         effect_cfg = list(),
         model_covariates = character(),
+        num_mc_samples = integer(),
         estimand = "PCATE",
-        initialize = function(covariates, effect_cfg, cfgs) {
+        initialize = function(model_covariates, effect_cfg, cfgs, num_mc_samples = 100) {
             # cfgs is a named list from covariate name to a model config
             # this is exactly like the MCATE
             self$cfgs <- cfgs
             # a vector of covariate names that should be fed into the joint effect model
-            self$model_covariates <- covariates
+            self$model_covariates <- model_covariates
             self$effect_cfg <- effect_cfg
+            self$num_mc_samples <- num_mc_samples
         }
     )
 )
