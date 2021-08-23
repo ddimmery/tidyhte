@@ -1,0 +1,89 @@
+
+#' @export
+construct_pseudo_outcomes <- function(.data, y_col, a_col) {
+    # check that plugins are in the df
+    YA <- unlist(dplyr::select(.data, {{ y_col }}))
+    A <- unlist(dplyr::select(.data, {{ a_col }}))
+    mu0 <- .data[[".mu0_hat"]]
+    mu1 <- .data[[".mu1_hat"]]
+    pi <- .data[[".pi_hat"]]
+    muA <- A * mu1 + (1 - A) * mu0
+    .data$.pseudo_outcome <- (A - pi) / (pi * (1 - pi)) * (YA - muA) + mu1 - mu0
+    attr(.data, "treatment") <- rlang::as_string(a_col)
+    attr(.data, "outcome") <- rlang::as_string(y_col)
+    .data
+}
+
+#' @export
+calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
+    dots <- rlang::enexprs(...)
+    result_list <- list()
+    for (covariate in dots) {
+        .Model_cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
+        data <- Model_data$new(.data, {{ .outcome }}, {{ covariate }})
+        predictor <- predictor_factory(.Model_cfg)
+        model <- predictor$fit(data)
+        if (.MCATE.cfg$std_errors) {
+            result <- model$predict_se(data)
+            result$term <- rlang::quo_name(rlang::enquo(covariate))
+            result <- dplyr::select(
+                result, .data$term, .data$x, .data$estimate, .data$std_error
+            )
+        } else {
+            result <- dplyr::tibble(
+                term = rlang::quo_name(rlang::enquo(covariate)),
+                x = drop(data$features),
+                estimate = model$predict(data)
+            )
+        }
+        if (is.factor(result$x)) {
+            names(result)[names(result) == "x"] <- "level"
+            result$value <- as.integer(result$level)
+        } else if (is.double(result$x) || is.integer(result$x)) {
+            names(result)[names(result) == "x"] <- "value"
+        } else {
+            stop("Unknown type of result!")
+        }
+        result_list <- c(result_list, list(result))
+    }
+
+    dplyr::bind_rows(!!!result_list)
+}
+
+#' @importFrom rlang .data
+#' @export
+calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE.cfg) {
+    dots <- rlang::enexprs(...)
+    result_list <- list()
+    for (covariate in dots) {
+        fx_data <- fx_model$predict(.data, covariate)
+        .Model_cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
+        data <- Model_data$new(fx_data, .data$.hte, .data$covariate_value)
+        predictor <- predictor_factory(.Model_cfg)
+        model <- predictor$fit(data)
+        if (.MCATE.cfg$std_errors) {
+            result <- model$predict_se(data)
+            result$term <- rlang::quo_name(rlang::enquo(covariate))
+            result <- dplyr::select(
+                result, .data$term, .data$x, .data$estimate, .data$std_error
+            )
+        } else {
+            result <- dplyr::tibble(
+                term = rlang::quo_name(rlang::enquo(covariate)),
+                x = drop(data$features),
+                estimate = model$predict(data)
+            )
+        }
+        if (is.factor(result$x)) {
+            names(result)[names(result) == "x"] <- "level"
+            result$value <- as.integer(result$level)
+        } else if (is.double(result$x) || is.integer(result$x)) {
+            names(result)[names(result) == "x"] <- "value"
+        } else {
+            stop("Unknown type of result!")
+        }
+        result_list <- c(result_list, list(result))
+    }
+
+    dplyr::bind_rows(!!!result_list)
+}

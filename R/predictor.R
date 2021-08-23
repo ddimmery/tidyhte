@@ -1,19 +1,18 @@
-#' @export
 predictor_factory <- function(cfg, ...) {
     if (cfg$model_class == "known") {
-        Predictor.known$new(cfg$covariate_name)
+        KnownPredictor$new(cfg$covariate_name)
     } else if (cfg$model_class == "SL") {
-        Predictor.SL$new(cfg$SL.library, cfg$SL.env, ...)
+        SLPredictor$new(cfg$SL.library, cfg$SL.env, ...)
     } else if (cfg$model_class == "KernelSmooth") {
-        Predictor.KernelSmooth$new(neval = cfg$neval)
+        KernelSmoothPredictor$new(neval = cfg$neval)
     } else if (cfg$model_class == "Stratified") {
-        Predictor.Stratified$new(cfg$covariate)
+        StratifiedPredictor$new(cfg$covariate)
     } else{
         stop("Unknown model class.")
     }
 }
 
-#' @export
+
 Predictor <- R6::R6Class("Predictor",
     list(
         initialize = function(...) {
@@ -31,8 +30,8 @@ Predictor <- R6::R6Class("Predictor",
     )
 )
 
-#' @export
-Predictor.known <- R6::R6Class("Predictor.known",
+
+KnownPredictor <- R6::R6Class("KnownPredictor",
     inherit = Predictor,
     public = list(
         model = NULL,
@@ -49,9 +48,9 @@ Predictor.known <- R6::R6Class("Predictor.known",
     )
 )
 
+
 #' @import SuperLearner
-#' @export
-Predictor.SL <- R6::R6Class("Predictor.SL",
+SLPredictor <- R6::R6Class("SLPredictor",
     inherit = Predictor,
     public = list(
         model = list(),
@@ -77,7 +76,8 @@ Predictor.SL <- R6::R6Class("Predictor.SL",
 )
 
 #' @export
-Predictor.KernelSmooth <- R6::R6Class("Predictor.KernelSmooth",
+#' @importFrom nprobust lprobust
+KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
     inherit = Predictor,
     list(
         model = NULL,
@@ -95,10 +95,10 @@ Predictor.KernelSmooth <- R6::R6Class("Predictor.KernelSmooth",
             # if (length(unique(self$covariates)) != length(self$covariates))
             #     self$covariates <- self$covariates + rnorm(length(self$covariates), 0, sd(self$covariates) / 1e6)
             if (length(unique(self$covariates)) == length(self$covariates)) {
-                bw <- 'imse-dpi'
+                bw <- "imse-dpi"
                 cluster <- NULL
             } else {
-                bw <- 'imse-rot'
+                bw <- "imse-rot"
                 cluster <- as.integer(as.factor(self$covariates))
             }
             self$model <- nprobust::lprobust(self$label, self$covariates, neval = self$neval, bwselect = bw)
@@ -112,14 +112,17 @@ Predictor.KernelSmooth <- R6::R6Class("Predictor.KernelSmooth",
             dplyr::tibble(
                 x = ests[, 1],
                 estimate = ests[, 2],
-                std.error = ests[, 3]
+                std_error = ests[, 3]
             )
         }
     )
 )
 
 #' @export
-Predictor.Stratified <- R6::R6Class("Predictor.Stratified",
+#' @importFrom stats sd
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
+StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
     inherit = Predictor,
     list(
         model = NULL,
@@ -133,10 +136,10 @@ Predictor.Stratified <- R6::R6Class("Predictor.Stratified",
             # throw warning if there's very sparse strata
             # create mapping from unique covariate values to mean + std err
             self$map <- dplyr::tibble(x = unlist(data$model_frame), y = data$label) %>%
-                dplyr::group_by(x) %>%
+                dplyr::group_by(.data$x) %>%
                 dplyr::summarize(
-                    estimate = mean(y),
-                    std.error = sd(y) / sqrt(dplyr::n())
+                    estimate = mean(.data$y),
+                    std_error = stats::sd(.data$y) / sqrt(dplyr::n())
                 )
             invisible(self)
         },
@@ -146,8 +149,8 @@ Predictor.Stratified <- R6::R6Class("Predictor.Stratified",
             unq_vals <- unique(unlist(data$model_frame))
             dplyr::tibble(x = unq_vals, idx = seq_len(length(unq_vals))) %>%
                 dplyr::inner_join(self$map, by = "x") %>%
-                dplyr::arrange(idx) %>%
-                dplyr::select(estimate) %>%
+                dplyr::arrange(.data$idx) %>%
+                dplyr::select(.data$estimate) %>%
                 unlist()
         },
         predict_se = function(data) {
@@ -155,8 +158,8 @@ Predictor.Stratified <- R6::R6Class("Predictor.Stratified",
             unq_vals <- unique(unlist(data$model_frame))
             dplyr::tibble(x = unq_vals, idx = seq_len(length(unq_vals))) %>%
                 dplyr::inner_join(self$map, by = "x") %>%
-                dplyr::arrange(idx) %>%
-                dplyr::select(x, estimate, std.error)
+                dplyr::arrange(.data$idx) %>%
+                dplyr::select(.data$x, .data$estimate, .data$std_error)
         }
     )
 )

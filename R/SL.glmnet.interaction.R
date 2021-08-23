@@ -1,9 +1,17 @@
+.SL.require <- function(package, message = paste("loading required package (", package, ") failed", sep = "")) {
+  if (!requireNamespace(package, quietly = FALSE)) {
+    stop(message, call. = FALSE)
+  }
+  invisible(TRUE)
+}
+
 #' @export
+#' @importFrom stats predict model.matrix
 SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
                       alpha = 1, nfolds = 10, nlambda = 100, useMin = TRUE,
                       loss = "deviance",
                       ...) {
-  SuperLearner:::.SL.require('glmnet')
+  .SL.require("glmnet")
 
   # X must be a matrix, should we use model.matrix or as.matrix
   # TODO: support sparse matrices.
@@ -49,43 +57,44 @@ SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
 #' @seealso \code{\link{SL.glmnet}}
 #'
 #' @export
+#' @importFrom stats model.matrix
 predict.SL.glmnet.interaction <- function(object, newdata,
                               remove_extra_cols = T,
                               add_missing_cols = T,
                               ...) {
-  SuperLearner:::.SL.require('glmnet')
+  SuperLearner:::.SL.require("glmnet")
 
   # TODO: support sparse matrices.
   if (!is.matrix(newdata)) {
     newdata <- model.matrix(~ -1 + . ^ 2, newdata)
   }
 
-  original_cols = rownames(object$object$glmnet.fit$beta)
+  original_cols <- rownames(object$object$glmnet.fit$beta)
 
   # Remove any columns in newdata that were not present in original data.
   if (remove_extra_cols) {
-    extra_cols = setdiff(colnames(newdata), original_cols)
+    extra_cols <- setdiff(colnames(newdata), original_cols)
     if (length(extra_cols) > 0) {
       warning(paste("Removing extra columns in prediction data:",
                      paste(extra_cols, collapse = ", ")))
 
-      newdata = newdata[, !colnames(newdata) %in% extra_cols, drop = FALSE]
+      newdata <- newdata[, !colnames(newdata) %in% extra_cols, drop = FALSE]
     }
   }
 
   # Add any columns in original data that are not present in new data.
   if (add_missing_cols) {
-    missing_cols = setdiff(original_cols, colnames(newdata))
+    missing_cols <- setdiff(original_cols, colnames(newdata))
     if (length(missing_cols) > 0) {
       warning(paste("Adding missing columns in prediction data:",
                      paste(missing_cols, collapse = ", ")))
 
-      new_cols = matrix(0, nrow = nrow(newdata), ncol = length(missing_cols))
-      colnames(new_cols) = missing_cols
-      newdata = cbind(newdata, new_cols)
+      new_cols <- matrix(0, nrow = nrow(newdata), ncol = length(missing_cols))
+      colnames(new_cols) <- missing_cols
+      newdata <- cbind(newdata, new_cols)
 
       # Sort columns in the correct order so that matrix multiplication is correct.
-      newdata = newdata[, original_cols, drop = FALSE]
+      newdata <- newdata[, original_cols, drop = FALSE]
     }
   }
 

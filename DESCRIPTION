@@ -16,11 +16,20 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
+    knitr,
+    rmarkdown,
+    checkmate,
+    ggplot2,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
+    magrittr,
     dplyr,
     R6,
     rlang,
     nprobust,
-    SuperLearner
+    SuperLearner,
+    pROC,
+    vimp,
+    purrr
+VignetteBuilder: knitr
