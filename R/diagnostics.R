@@ -89,7 +89,7 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
 
     for (diag in fx_cfg) {
         result <- estimate_diagnostic(.data, ".pseudo_outcome", ".pseudo_outcome_hat", diag)
-        result$level <- "Effect"
+        result$level <- "Effect Surface"
         result_list <- c(result_list, list(result))
     }
 

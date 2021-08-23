@@ -38,7 +38,8 @@ This analysis will focus on using machine learning ensembles (through SuperLearn
 # Load packages and setup environment
 
 ```{r setup, print=FALSE, message=FALSE}
-library(tidyhte)
+#library(tidyhte)
+devtools::load_all()
 library(ggplot2)
 library(dplyr)
 # library(alethea)
@@ -433,6 +434,7 @@ readr::write_csv(results, file.path(OUTPUT_FOLDER, paste0("results_", rlang::as_
 ```{r sl_coef}
 plot_list <- list()
 filter(results, grepl("SL coefficient", estimand)) %>%
+mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
 ggplot(aes(
             x = reorder(term, estimate),
             y = estimate,
@@ -456,6 +458,7 @@ print(gp)
 ## Plot risk for each submodel
 ```{r sl_risk}
 filter(results, grepl("SL risk", estimand)) %>%
+mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
 ggplot() +
     geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
     geom_pointrange(
@@ -468,7 +471,7 @@ ggplot() +
     expand_limits(y = 0) +
     scale_x_discrete("Model name") +
     scale_y_continuous("CV Risk in SuperLearner Ensemble") +
-    facet_wrap(~level) +
+    facet_wrap(~level, scales = "free_x") +
     coord_flip() +
     ggtitle("Submodel Risk Estimates") +
     theme_minimal() +

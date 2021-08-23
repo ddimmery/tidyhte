@@ -101,18 +101,25 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                 bw <- "imse-rot"
                 cluster <- as.integer(as.factor(self$covariates))
             }
-            self$model <- nprobust::lprobust(self$label, self$covariates, neval = self$neval, bwselect = bw)
+            self$model <- nprobust::lprobust(
+                self$label,
+                self$covariates,
+                neval = self$neval,
+                bwselect = bw,
+                cluster = cluster
+            )
             invisible(self)
         },
         predict = function(data) {
             self$model$Estimate[, "tau.bc"]
         },
         predict_se = function(data) {
-            ests <- self$model$Estimate[, c("eval", "tau.bc", "se.rb")]
+            ests <- self$model$Estimate[, c("eval", "tau.bc", "se.rb", "N")]
             dplyr::tibble(
                 x = ests[, 1],
                 estimate = ests[, 2],
-                std_error = ests[, 3]
+                std_error = ests[, 3],
+                sample_size = ests[, 4]
             )
         }
     )
@@ -139,7 +146,8 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
                 dplyr::group_by(.data$x) %>%
                 dplyr::summarize(
                     estimate = mean(.data$y),
-                    std_error = stats::sd(.data$y) / sqrt(dplyr::n())
+                    std_error = stats::sd(.data$y) / sqrt(dplyr::n()),
+                    sample_size = dplyr::n()
                 )
             invisible(self)
         },
@@ -159,7 +167,7 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
             dplyr::tibble(x = unq_vals, idx = seq_len(length(unq_vals))) %>%
                 dplyr::inner_join(self$map, by = "x") %>%
                 dplyr::arrange(.data$idx) %>%
-                dplyr::select(.data$x, .data$estimate, .data$std_error)
+                dplyr::select(.data$x, .data$estimate, .data$std_error, .data$sample_size)
         }
     )
 )

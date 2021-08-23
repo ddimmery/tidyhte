@@ -4,11 +4,13 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
         num_splits = integer(),
         num_mc_samples = integer(),
         covariates = environment(),
-        initialize = function(models, num_splits, num_mc_samples, covariates) {
+        model_class = character(),
+        initialize = function(models, num_splits, num_mc_samples, covariates, model_class) {
             self$models <- models
             self$num_splits <- num_splits
             self$num_mc_samples <- num_mc_samples
             self$covariates <- covariates
+            self$model_class <- model_class
         },
         predict = function(data, covariate) {
             sample_size <- pmin(self$num_mc_samples[[rlang::as_string(covariate)]], nrow(data))
@@ -76,7 +78,8 @@ fit_fx_predictor <- function(.data, psi_col, ...,
         models = fx_models,
         num_splits = num_splits,
         num_mc_samples = .pcate.cfg$num_mc_samples,
-        covariates = dots
+        covariates = dots,
+        model_class = .pcate.cfg$effect_cfg$model_class
     )
 
     if (.pcate.cfg$effect_cfg$model_class == "SL") {

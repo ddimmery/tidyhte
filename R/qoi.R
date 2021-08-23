@@ -65,8 +65,10 @@ calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE.cf
             result <- model$predict_se(data)
             result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, .data$term, .data$x, .data$estimate, .data$std_error
+                result, .data$term, .data$x, .data$estimate, .data$std_error, .data$sample_size
             )
+            mse <- mean((.data$.pseudo_outcome_hat - .data$.pseudo_outcome) ^ 2)
+            result$std_error <- sqrt(result$std_error ^ 2 + mse / result$sample_size)
         } else {
             result <- dplyr::tibble(
                 term = rlang::quo_name(rlang::enquo(covariate)),
