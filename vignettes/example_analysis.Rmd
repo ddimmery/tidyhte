@@ -48,7 +48,7 @@ library(dplyr)
 OUTPUT_FOLDER <- "~"
 ```
 
-```{r alethea, print=FALSE, message=FALSE}
+```{r alethea, print=FALSE, message=FALSE, echo=FALSE}
 theme_alethea <- function(base_size = 16, base_family = "Helvetica",
                        base_line_size = base_size / 22,
                        base_rect_size = base_size / 22) {

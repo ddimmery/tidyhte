@@ -1,6 +1,6 @@
 Package: tidyhte
 Title: Tidy semantics for the estimation of heterogeneous treatment effects
-Version: 0.0.0.1
+Version: 0.0.0.2
 Authors@R: 
     person(given = "Drew",
            family = "Dimmery",
