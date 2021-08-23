@@ -12,7 +12,7 @@ SL.Learner.cfg <- R6::R6Class("SL.Learner.cfg",
 )
 
 #' @export
-Model.cfg <- R6::R6Class("Model.cfg",
+Model_cfg <- R6::R6Class("Model_cfg",
     list(
         model_class = NULL,
         initialize = function() {
@@ -21,8 +21,8 @@ Model.cfg <- R6::R6Class("Model.cfg",
 )
 
 #' @export
-Known.cfg <- R6::R6Class("Known.cfg",
-    inherit = Model.cfg,
+Known_cfg <- R6::R6Class("Known_cfg",
+    inherit = Model_cfg,
     list(
         covariate_name = character(),
         model_class = "known",
@@ -33,8 +33,8 @@ Known.cfg <- R6::R6Class("Known.cfg",
 )
 
 #' @export
-KernelSmooth.cfg <- R6::R6Class("KernelSmooth.cfg",
-    inherit = Model.cfg,
+KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
+    inherit = Model_cfg,
     list(
         model_class = "KernelSmooth",
         neval = integer(),
@@ -47,7 +47,7 @@ KernelSmooth.cfg <- R6::R6Class("KernelSmooth.cfg",
 
 #' @export
 Stratified.cfg <- R6::R6Class("Stratified.cfg",
-    inherit = Model.cfg,
+    inherit = Model_cfg,
     public = list(
         model_class = "Stratified",
         covariate = character(),
@@ -59,7 +59,7 @@ Stratified.cfg <- R6::R6Class("Stratified.cfg",
 
 #' @export
 SL.cfg <- R6::R6Class("SL.cfg",
-    inherit = Model.cfg,
+    inherit = Model_cfg,
     public = list(
         cvControl = list(V = 10),
         SL.library = character(),
@@ -114,7 +114,7 @@ PCATE.cfg <- R6::R6Class("PCATE.cfg",
         cfgs = list(),
         effect_cfg = list(),
         model_covariates = character(),
-        num_mc_samples = integer(),
+        num_mc_samples = list(),
         estimand = "PCATE",
         initialize = function(model_covariates, effect_cfg, cfgs, num_mc_samples = 100) {
             # cfgs is a named list from covariate name to a model config
@@ -123,7 +123,15 @@ PCATE.cfg <- R6::R6Class("PCATE.cfg",
             # a vector of covariate names that should be fed into the joint effect model
             self$model_covariates <- model_covariates
             self$effect_cfg <- effect_cfg
-            self$num_mc_samples <- num_mc_samples
+            if (is.atomic(num_mc_samples) && (num_mc_samples == trunc(num_mc_samples))) {
+                self$num_mc_samples <- as.list(
+                    structure(rep(num_mc_samples, length(cfgs)), names = names(cfgs))
+                )
+            } else if (is.list(num_mc_samples)) {
+                self$num_mc_samples <- num_mc_samples
+            } else {
+                stop("Unknown type of num_mc_samples")
+            }
         }
     )
 )

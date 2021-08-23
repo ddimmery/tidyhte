@@ -21,7 +21,7 @@ produce.plugin.estimates <- function(.data, y_col, a_col, ...,
 
         a_model <- fit.plugin.A(
             folds$train, {{ a_col }}, !!!dots,
-            .Model.cfg = .HTE.cfg$treatment
+            .Model_cfg = .HTE.cfg$treatment
         )
 
         if (.HTE.cfg$treatment$model_class == "SL") {
@@ -36,7 +36,7 @@ produce.plugin.estimates <- function(.data, y_col, a_col, ...,
 
         y_model <- fit.plugin.Y(
             folds$train, {{ y_col }}, {{ a_col }}, !!!dots,
-            .Model.cfg = .HTE.cfg$outcome
+            .Model_cfg = .HTE.cfg$outcome
         )
 
         if (.HTE.cfg$outcome$model_class == "SL") {
@@ -93,21 +93,26 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
             self$covariates <- covariates
         },
         predict = function(data, covariate) {
-            sample_size <- pmin(self$num_mc_samples, nrow(data))
+            sample_size <- pmin(self$num_mc_samples[[rlang::as_string(covariate)]], nrow(data))
             unq_values <- unique(data[[rlang::as_string(covariate)]])
-            result <- rep(NA_real_, length(unq_values) * sample_size)
+
             .data_modified <- data
+            data_list <- list()
             for (idx in seq_along(unq_values)) {
                 unq_value <- unq_values[idx]
                 .data_modified[[rlang::as_string(covariate)]] <- unq_value
-                for (split_id in 1:(num_splits - 1)) {
-                    folds <- split_data(sample_n(.data_modified, sample_size), split_id)
-                    pred_data <- Model.data$new(folds$holdout, NULL, !!!self$covariates)
-                    result_idx <- (idx - 1) * samplesize + folds$in_holdout
-                    result[result_idx] <- self$models[[split_id]]$fx$predict(pred_data)
-                }
+                data_list <- c(data_list, list(sample_n(.data_modified, sample_size)))
             }
+            .data_aggregated <- dplyr::bind_rows(!!!data_list)
 
+            result <- rep(NA_real_, nrow(.data_aggregated))
+            for (split_id in 1:(self$num_splits - 1)) {
+                folds <- split_data(.data_aggregated, split_id)
+                pred_data <- Model.data$new(folds$holdout, NULL, !!!self$covariates)
+                #result_idx <- (idx - 1) * sample_size + which(folds$in_holdout)
+                result[folds$in_holdout] <- self$models[[split_id]]$predict(pred_data)
+                #result[result_idx] <- self$models[[split_id]]$predict(pred_data)
+            }
             tibble(
                 covariate_value = rep(unq_values, rep(sample_size, length(unq_values))),
                 .hte = result
@@ -119,24 +124,26 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
 
 #'
 #' @export
-fit.fx.predictor <- function(.data, psi_col, a_col, ...,
+fit.fx.predictor <- function(.data, psi_col, ...,
     .pcate.cfg=NULL
 ) {
     dots <- rlang::enexprs(...)
 
     num_splits <- max(.data$.split_id)
-    fx_hat <- rep(NA_real_, nrow(.data))
     fx_models <- list()
     SL_coefs <- list(
         fx = list()
     )
+    fx_hat <- rep(NA_real_, nrow(.data))
     for (split_id in 1:(num_splits - 1)) {
         folds <- split_data(.data, split_id)
         fx_model <- fit.effect(
             folds$train, {{ psi_col }}, !!!dots,
-            .Model.cfg = .pcate.cfg$effect_cfg
+            .Model_cfg = .pcate.cfg$effect_cfg
         )
         fx_models[[split_id]] <- fx_model$fx
+        pred_data = Model.data$new(folds$holdout, NULL, !!!dots)
+        fx_hat[folds$in_holdout] <- fx_model$fx$predict(pred_data)
 
         if (.pcate.cfg$effect_cfg$model_class == "SL") {
             SL_coef <- tibble(
@@ -149,11 +156,22 @@ fit.fx.predictor <- function(.data, psi_col, a_col, ...,
         }
     }
 
-    FX.Predictor$new(
+    .data$.pseudo_outcome_hat <- fx_hat
+
+    predictor <- FX.Predictor$new(
         models = fx_models,
         num_splits = num_splits,
         num_mc_samples = .pcate.cfg$num_mc_samples,
         covariates = dots
+    )
+
+    if (.pcate.cfg$effect_cfg$model_class == "SL") {
+        attr(.data, "SL_coefs")[["fx"]] <- SL_coefs[["fx"]]
+    }
+
+    list(
+        model = predictor,
+        data = .data
     )
 }
 

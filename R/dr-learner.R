@@ -19,9 +19,9 @@ calculate.mcate.quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
     for (covariate in dots) {
-        .Model.cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
+        .Model_cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
         data <- Model.data$new(.data, {{ .outcome }}, {{ covariate }})
-        predictor <- predictor_factory(.Model.cfg)
+        predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
         if (.MCATE.cfg$std.errors) {
             result <- model$predict_se(data)
@@ -55,10 +55,10 @@ calculate.pcate.quantities <- function(.data, .outcome, fx_model, ..., .MCATE.cf
     dots <- rlang::enexprs(...)
     result_list <- list()
     for (covariate in dots) {
-        fx_data <- fx_mod$predict(.data, covariate)
-        .Model.cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
+        fx_data <- fx_model$predict(.data, covariate)
+        .Model_cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
         data <- Model.data$new(fx_data, .hte, covariate_value)
-        predictor <- predictor_factory(.Model.cfg)
+        predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
         if (.MCATE.cfg$std.errors) {
             result <- model$predict_se(data)
@@ -91,6 +91,7 @@ SL_model_slot <- function(prediction) {
     if (prediction == ".pi_hat") "pi"
     else if (prediction == ".mu1_hat") "mu1"
     else if (prediction == ".mu0_hat") "mu0"
+    else if (prediction == ".pseudo_outcome_hat") "fx"
     else stop("Unknown model slot.")
 }
 
@@ -156,15 +157,15 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
     }
 
     for (diag in y_cfg) {
-        result1 <- estimate_diagnostic(.data %>% filter(.data[[treatment_name]] == 1), outcome_name, ".mu1_hat", diag)
+        result1 <- estimate_diagnostic(filter(.data, .data[[treatment_name]] == 1), outcome_name, ".mu1_hat", diag)
         result1$level <- "Treatment"
-        result0 <- estimate_diagnostic(.data %>% filter(.data[[treatment_name]] == 0), outcome_name, ".mu0_hat", diag)
+        result0 <- estimate_diagnostic(filter(.data, .data[[treatment_name]] == 0), outcome_name, ".mu0_hat", diag)
         result0$level <- "Control"
         result_list <- c(result_list, list(result0), list(result1))
     }
 
     for (diag in fx_cfg) {
-        result <- estimate_diagnostic(.data, diag)
+        result <- estimate_diagnostic(.data, ".pseudo.outcome", ".pseudo_outcome_hat", diag)
         result_list <- c(result_list, list(result))
     }
 
@@ -236,7 +237,7 @@ calculate.vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
 
 #' @export
 estimate.QoI <- function(
-    .data, ..., .HTE.cfg=NULL
+    .data, .outcome, .treatment, ..., .HTE.cfg=NULL
 ) {
     dots <- rlang::enexprs(...)
     if (is.null(.HTE.cfg)) .HTE.cfg <- .HTE.cfg$new()
@@ -244,13 +245,13 @@ estimate.QoI <- function(
     .QoI.cfg <- .HTE.cfg$qoi
     result_list <- list()
 
-    if (!is.null(.QoI.cfg$diag)) {
-        result <- calculate_diagnostics(.data, .diag.cfg = .QoI.cfg$diag)
-        result_list <- c(result_list, list(result))
-    }
-
     if (!is.null(.QoI.cfg$mcate)) {
-        result <- calculate.mcate.quantities(.data, .pseudo.outcome, !!!dots, .MCATE.cfg = .QoI.cfg$mcate)
+        result <- calculate.mcate.quantities(
+            .data,
+            .pseudo.outcome,
+            !!!dots,
+            .MCATE.cfg = .QoI.cfg$mcate
+        )
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
     }
 
@@ -260,11 +261,16 @@ estimate.QoI <- function(
     }
 
     if (!is.null(.QoI.cfg$pcate)) {
-        message('pcate')
         covs <- rlang::syms(.QoI.cfg$pcate$model_covariates)
-        fx_mod <- fit.fx.predictor(.data, !!!covs, .pcate.cfg = .QoI.cfg$pcate)
-        #result <- calculate.mcate.quantities(.data, .pseudo.outcome.hat, !!!dots, .MCATE.cfg = .QoI.cfg$mcate)
-        #result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
+        fx_mod <- fit.fx.predictor(.data, .pseudo.outcome, !!!covs, .pcate.cfg = .QoI.cfg$pcate)
+        .data <- fx_mod$data
+        result <- calculate.pcate.quantities(.data, .pseudo.outcome, fx_mod$model, !!!dots, .MCATE.cfg = .QoI.cfg$mcate)
+        result_list <- c(result_list, list(dplyr::mutate(result, estimand = "PCATE")))
+    }
+
+    if (!is.null(.QoI.cfg$diag)) {
+        result <- calculate_diagnostics(.data, .diag.cfg = .QoI.cfg$diag)
+        result_list <- c(result_list, list(result))
     }
 
     col_order <- c("estimand", "term", "value", "level", "estimate", "std.error")

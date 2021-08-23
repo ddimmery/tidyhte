@@ -90,8 +90,18 @@ Predictor.KernelSmooth <- R6::R6Class("Predictor.KernelSmooth",
         fit = function(data) {
             # check that covariate is just 1D
             self$label <- data$label
-            self$covariates <- data$features
-            self$model <- nprobust::lprobust(self$label, self$covariates, neval = self$neval)
+            self$covariates <- drop(data$features)
+            # terrible hack in case there are empty bandwidths
+            # if (length(unique(self$covariates)) != length(self$covariates))
+            #     self$covariates <- self$covariates + rnorm(length(self$covariates), 0, sd(self$covariates) / 1e6)
+            if (length(unique(self$covariates)) == length(self$covariates)) {
+                bw <- 'imse-dpi'
+                cluster <- NULL
+            } else {
+                bw <- 'imse-rot'
+                cluster <- as.integer(as.factor(self$covariates))
+            }
+            self$model <- nprobust::lprobust(self$label, self$covariates, neval = self$neval, bwselect = bw)
             invisible(self)
         },
         predict = function(data) {

@@ -23,7 +23,7 @@ treatment_variable <- rlang::expr(a)
 
 all_covariates <- rlang::syms(c(continuous_covariates, discrete_covariates))
 
-trt.cfg <- Known.cfg$new(propensity_score_variable_name)
+trt.cfg <- Known_cfg$new(propensity_score_variable_name)
 
 regression.cfg <- SL.cfg$new(
     learner_cfgs = list(
@@ -73,7 +73,7 @@ regression.cfg <- SL.cfg$new(
 
 qoi.list <- list()
 for (cov in continuous_covariates) {
-    qoi.list[[cov]] <- KernelSmooth.cfg$new(neval = 100)
+    qoi.list[[cov]] <- KernelSmooth_cfg$new(neval = 100)
 }
 for (cov in discrete_covariates) {
     qoi.list[[cov]] <- Stratified.cfg$new(cov)
