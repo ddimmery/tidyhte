@@ -9,16 +9,19 @@ SL_model_slot <- function(prediction) {
 #' @export
 #' @importFrom pROC auc
 #' @importFrom stats sd
+#' @importFrom rlang .data
 estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     if (tolower(diag_name) == "auc") {
+        labels <- .data[[label]]
+        predictions <- .data[[prediction]]
         n1 <- sum(.data[[label]])
-        result <- pROC::auc(.data[[label]], .data[[prediction]])
+        result <- muffle_messages(as.double(pROC::auc(labels, predictions)), "Setting levels", "Setting direction")
         result <- dplyr::tibble(
             estimand = "AUC",
             term = label,
             estimate = result,
             # Hanley and McNeil (1982) bound on the variance of AUC
-            std_error = 1 / 2 / sqrt(pmin(n1, length(.data[[label]]) - n1))
+            std_error = 1 / 2 / sqrt(pmin(n1, length(labels) - n1))
         )
     } else if (tolower(diag_name) == "mse") {
         sqerr <- (.data[[label]] - .data[[prediction]]) ^ 2

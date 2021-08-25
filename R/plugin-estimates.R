@@ -4,7 +4,7 @@ fit_plugin <- function(.data, outcome_col, ..., .Model_cfg) {
 
     data <- Model_data$new(.data, {{ outcome_col }}, !!!dots)
 
-    predictor$fit(data)
+    muffle_warnings(predictor$fit(data), "rank-deficient fit", "grouped=FALSE")
 }
 
 

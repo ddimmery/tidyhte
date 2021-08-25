@@ -28,8 +28,8 @@ calculate_vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
                 )
         )
         reduced_model_predictions <- drop(reduced_model$SL.predict)
-
-        result <- vimp::vim(
+        muffle_warnings({
+            result <- vimp::vim(
             Y = data$label,
             f1 = full_model_predictions,
             f2 = reduced_model_predictions,
@@ -39,6 +39,7 @@ calculate_vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
             run_regression = FALSE,
             sample_splitting = FALSE
         )
+        }, "estimate < 0")
         # result <- vimp::vim(
         #     Y = data$label,
         #     X = data$model_frame,

@@ -30,10 +30,10 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
                 result, .data$term, .data$x, .data$estimate, .data$std_error
             )
         } else {
-            result <- dplyr::tibble(
-                term = rlang::quo_name(rlang::enquo(covariate)),
-                x = drop(data$features),
-                estimate = model$predict(data)
+            result <- model$predict(data)
+            result$term <- rlang::quo_name(rlang::enquo(covariate))
+            result <- dplyr::select(
+                result, .data$term, .data$x, .data$estimate
             )
         }
         if (is.factor(result$x)) {
@@ -70,10 +70,10 @@ calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE.cf
             mse <- mean((.data$.pseudo_outcome_hat - .data$.pseudo_outcome) ^ 2)
             result$std_error <- sqrt(result$std_error ^ 2 + mse / result$sample_size)
         } else {
-            result <- dplyr::tibble(
-                term = rlang::quo_name(rlang::enquo(covariate)),
-                x = drop(data$features),
-                estimate = model$predict(data)
+            result <- model$predict(data)
+            result$term <- rlang::quo_name(rlang::enquo(covariate))
+            result <- dplyr::select(
+                result, .data$term, .data$x, .data$estimate, .data$sample_size
             )
         }
         if (is.factor(result$x)) {

@@ -1,3 +1,6 @@
 ^LICENSE\.md$
 .lintr
+.covrignore
 ^\.github$
+^README\.Rmd$
+^codecov\.yml$

@@ -2,7 +2,7 @@ predictor_factory <- function(cfg, ...) {
     if (cfg$model_class == "known") {
         KnownPredictor$new(cfg$covariate_name)
     } else if (cfg$model_class == "SL") {
-        SLPredictor$new(cfg$SL.library, cfg$SL.env, ...)
+        SLPredictor$new(cfg$SL.library, cfg$SL.env, family = cfg$family, ...)
     } else if (cfg$model_class == "KernelSmooth") {
         KernelSmoothPredictor$new(neval = cfg$neval)
     } else if (cfg$model_class == "Stratified") {
@@ -70,7 +70,10 @@ SLPredictor <- R6::R6Class("SLPredictor",
             invisible(self)
         },
         predict = function(data) {
-            drop(predict(self$model, newdata = data$model_frame)$pred)
+            muffle_warnings(
+                drop(predict(self$model, newdata = data$model_frame)$pred),
+                "rank-deficient fit"
+            )
         }
     )
 )
@@ -91,9 +94,6 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
             # check that covariate is just 1D
             self$label <- data$label
             self$covariates <- drop(data$features)
-            # terrible hack in case there are empty bandwidths
-            # if (length(unique(self$covariates)) != length(self$covariates))
-            #     self$covariates <- self$covariates + rnorm(length(self$covariates), 0, sd(self$covariates) / 1e6)
             if (length(unique(self$covariates)) == length(self$covariates)) {
                 bw <- "imse-dpi"
                 cluster <- NULL
@@ -111,7 +111,12 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
             invisible(self)
         },
         predict = function(data) {
-            self$model$Estimate[, "tau.bc"]
+            ests <- self$model$Estimate[, c("eval", "tau.bc", "N")]
+            dplyr::tibble(
+                x = ests[, 1],
+                estimate = ests[, 2],
+                sample_size = ests[, 3]
+            )
         },
         predict_se = function(data) {
             ests <- self$model$Estimate[, c("eval", "tau.bc", "se.rb", "N")]
@@ -158,8 +163,7 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
             dplyr::tibble(x = unq_vals, idx = seq_len(length(unq_vals))) %>%
                 dplyr::inner_join(self$map, by = "x") %>%
                 dplyr::arrange(.data$idx) %>%
-                dplyr::select(.data$estimate) %>%
-                unlist()
+                dplyr::select(.data$x, .data$estimate, .data$sample_size)
         },
         predict_se = function(data) {
             # return mean and std err for requested buckets

@@ -1,0 +1,160 @@
+set.seed(20051920) # 20051920 == 'test'
+
+n <- 250
+data <- dplyr::tibble(
+    uid = 1:n
+) %>%
+    dplyr::mutate(
+        a = rbinom(n, 1, 0.5),
+        ps = rep(0.5, n),
+        x1 = rnorm(n),
+        x2 = factor(sample(1:4, n, prob = c(1 / 5, 1 / 5, 1 / 5, 2 / 5), replace = TRUE)),
+        x3 = factor(sample(1:3, n, prob = c(1 / 5, 1 / 5, 3 / 5), replace = TRUE)),
+        x4 = (x1 + rnorm(n)) / 2,
+        x5 = rnorm(n),
+        y = a + x1 - 0.5 * a * (x1 - mean(x1)) + as.double(x2) + rnorm(n)
+    )
+
+userid <- rlang::expr(uid)
+
+propensity_score_variable_name <- "ps"
+
+continuous_covariates <- c("x1")
+
+discrete_covariates <- c("x2", "x3")
+
+continuous_moderators <- rlang::exprs(x1, x4, x5)
+discrete_moderators <- rlang::exprs(x2, x3)
+moderators <- c(continuous_moderators, discrete_moderators)
+
+model_covariate_names <- c(continuous_covariates, discrete_covariates)
+model_covariates <- rlang::syms(model_covariate_names)
+
+outcome_variable <- rlang::expr(y)
+treatment_variable <- rlang::expr(a)
+
+trt.cfg <- Known_cfg$new(propensity_score_variable_name)
+
+regression.cfg <- SLEnsemble_cfg$new(
+    learner_cfgs = list(
+        SLLearner_cfg$new(
+            "SL.glm"
+        ),
+        SLLearner_cfg$new(
+            "SL.glmnet",
+            list(
+                alpha = c(0.05, 0.15)
+            )
+        )
+    )
+)
+
+qoi.list <- list()
+for (cov in continuous_moderators) {
+    qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100)
+}
+for (cov in discrete_moderators) {
+    qoi.list[[rlang::as_string(cov)]] <- Stratified_cfg$new(cov)
+}
+
+qoi.cfg <- QoI_cfg$new(
+    mcate = MCATE.cfg$new(cfgs = qoi.list),
+    # Don't use! The PCATE is still broken.
+    pcate = PCATE.cfg$new(
+        cfgs = qoi.list,
+        effect_cfg = regression.cfg,
+        model_covariates = model_covariate_names,
+        #num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)
+        num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
+    ),
+    vimp = VIMP.cfg$new(model_cfg = regression.cfg),
+    diag = Diagnostics.cfg$new(
+        outcome = c("SL_risk", "SL_coefs", "MSE"),
+        effect = c("SL_risk", "SL_coefs")
+    )
+)
+
+qoi.cfg2 <- QoI_cfg$new(
+    mcate = MCATE.cfg$new(cfgs = qoi.list, std_errors = FALSE),
+    pcate = PCATE.cfg$new(
+        cfgs = qoi.list,
+        effect_cfg = regression.cfg,
+        model_covariates = model_covariate_names,
+        #num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)
+        num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
+    ),
+    vimp = VIMP.cfg$new(model_cfg = regression.cfg),
+    diag = Diagnostics.cfg$new(
+        outcome = c("SL_risk", "SL_coefs", "MSE"),
+        effect = c("SL_risk", "SL_coefs")
+    )
+)
+
+cfg <- HTE_cfg$new(
+    treatment = trt.cfg,
+    outcome = regression.cfg,
+    qoi = qoi.cfg
+)
+
+cfg2 <- HTE_cfg$new(
+    treatment = trt.cfg,
+    outcome = regression.cfg,
+    qoi = qoi.cfg2
+)
+
+test_that("Split data", {
+    data2 <<- make_splits(data, {{ userid }}, .num_splits = 3)
+    checkmate::expect_data_frame(data2)
+})
+
+test_that("Estimate Plugin Models", {
+    data3 <<- produce_plugin_estimates(
+        data2,
+        {{ outcome_variable }},
+        {{ treatment_variable }},
+        !!!model_covariates,
+        .HTE_cfg = cfg
+    )
+    checkmate::expect_data_frame(data3)
+})
+
+test_that("Construct Pseudo-outcomes", {
+    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }})
+    checkmate::expect_data_frame(data4)
+})
+
+test_that("Estimate QoIs", {
+    # skip_on_cran()
+    results <<- estimate_QoI(data4, {{ outcome_variable }}, {{ treatment_variable }}, !!!moderators, .HTE_cfg = cfg)
+    checkmate::expect_data_frame(results)
+    results2 <<- estimate_QoI(data4, {{ outcome_variable }}, {{ treatment_variable }}, !!!moderators, .HTE_cfg = cfg2)
+    checkmate::expect_data_frame(results2)
+})
+
+n_rows <- (
+    2 + # MSE for y(0) & y(1)
+    3 * 3 + # one row per model in the ensemble for each PO / fx for SL risk
+    3 * 3 + # one row per model in the ensemble for each PO / fx for SL coefficient
+    5 + # one row per moderator for variable importance
+    2 * 3 * 100 + # 100 rows per continuous moderator for local regression for MCATE and for PCATE
+    2 * (4 + 3) # 2 rows per discrete moderator level for MCATE and for PCATE
+)
+
+
+test_that("Check results data", {
+    # skip_on_cran()
+    checkmate::expect_tibble(
+        results,
+        all.missing = FALSE,
+        nrows = n_rows,
+        ncols = 6,
+        types = c(
+            estimand = "character",
+            term = "character",
+            value = "double",
+            level = "character",
+            estimate = "double",
+            std_error = "double"
+        )
+    )
+})

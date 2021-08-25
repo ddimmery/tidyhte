@@ -40,7 +40,6 @@ make_splits <- function(.data, id_col, ..., .num_splits) {
 #'
 #' @export
 produce_plugin_estimates <- function(.data, y_col, a_col, ..., .HTE_cfg=NULL) {
-    if (is.null(.HTE_cfg)) .HTE_cfg <- HTE_cfg$new()
     dots <- rlang::enexprs(...)
 
     num_splits <- max(.data$.split_id)
@@ -123,7 +122,6 @@ estimate_QoI <- function(
     .data, .outcome, .treatment, ..., .HTE_cfg=NULL
 ) {
     dots <- rlang::enexprs(...)
-    if (is.null(.HTE_cfg)) .HTE_cfg <- .HTE_cfg$new()
 
     .QoI_cfg <- .HTE_cfg$qoi
     result_list <- list()

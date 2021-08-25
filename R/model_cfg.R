@@ -63,8 +63,10 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
         cvControl = list(V = 10),
         SL.library = character(),
         SL.env = NULL,
+        family = list(),
         model_class = "SL",
-        initialize = function(cvControl = NULL, learner_cfgs = NULL) {
+        initialize = function(cvControl = NULL, learner_cfgs = NULL, family = stats::gaussian()) {
+            self$family <- family
             if (!is.null(cvControl)) {
                 self$cvControl <- cvControl
             }

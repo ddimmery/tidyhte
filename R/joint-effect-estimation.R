@@ -21,7 +21,7 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
             for (idx in seq_along(unq_values)) {
                 unq_value <- unq_values[idx]
                 .data_modified[[rlang::as_string(covariate)]] <- unq_value
-                data_list <- c(data_list, list(sample_n(.data_modified, sample_size)))
+                data_list <- c(data_list, list(dplyr::sample_n(.data_modified, sample_size)))
             }
             .data_aggregated <- dplyr::bind_rows(!!!data_list)
 

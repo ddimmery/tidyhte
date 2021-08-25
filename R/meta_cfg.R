@@ -27,7 +27,7 @@ PCATE.cfg <- R6::R6Class("PCATE.cfg",
             # a vector of covariate names that should be fed into the joint effect model
             self$model_covariates <- model_covariates
             self$effect_cfg <- effect_cfg
-            if (is.atomic(num_mc_samples) && (num_mc_samples == trunc(num_mc_samples))) {
+            if (checkmate::test_integerish(num_mc_samples, len = 1)) {
                 self$num_mc_samples <- as.list(
                     structure(rep(num_mc_samples, length(cfgs)), names = names(cfgs))
                 )
