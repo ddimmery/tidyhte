@@ -5,9 +5,10 @@
 
 <!-- badges: start -->
 
-[![Codecov test
+[![lint](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml)
+[![Test
 coverage](https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg)](https://codecov.io/gh/ddimmery/tidyhte?branch=main)
-[![R-CMD-check](https://github.com/ddimmery/tidyhte/workflows/R-CMD-check/badge.svg)](https://github.com/ddimmery/tidyhte/actions)
+[![R-CMD-check](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of tidyhte is to …
@@ -36,6 +37,6 @@ example workflow can be found here:
 
 ``` r
 rnorm(10)
-#>  [1]  0.6516361  0.7168463 -1.1471041  0.4634879 -0.5431564 -1.1092884
-#>  [7]  1.4270890 -0.2360725 -1.3057147  0.8281158
+#>  [1]  1.0275800  1.0746933 -0.2762567 -0.4094385  1.1217606  0.3980937
+#>  [7]  0.4509138  0.4175637  2.4591381  0.8482585
 ```
