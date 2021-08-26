@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Configuration of SuperLearner Submodel — SLLearner_cfg • tidyhte</title>
+<title>Configuration for a SuperLearner Ensemble — SLEnsemble_cfg • tidyhte</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,9 @@
 
 
 
-<meta property="og:title" content="Configuration of SuperLearner Submodel — SLLearner_cfg" />
-<meta property="og:description" content="SLLearner_cfg is a configuration class for a single
-sublearner to be included in SuperLearner. By constructing with a named list
-of hyperparameters, this configuration allows distinct submodels
-for each unique combination of hyperparameters." />
+<meta property="og:title" content="Configuration for a SuperLearner Ensemble — SLEnsemble_cfg" />
+<meta property="og:description" content="SLEnsemble_cfg is a configuration class for estimation of a model
+using an ensemble of models using SuperLearner." />
 
 
 
@@ -118,28 +116,35 @@ for each unique combination of hyperparameters." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Configuration of SuperLearner Submodel</h1>
+    <h1>Configuration for a SuperLearner Ensemble</h1>
     
-    <div class="hidden name"><code>SLLearner_cfg.Rd</code></div>
+    <div class="hidden name"><code>SLEnsemble_cfg.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>SLLearner_cfg</code> is a configuration class for a single
-sublearner to be included in SuperLearner. By constructing with a named list
-of hyperparameters, this configuration allows distinct submodels
-for each unique combination of hyperparameters.</p>
+    <p><code>SLEnsemble_cfg</code> is a configuration class for estimation of a model
+using an ensemble of models using <code>SuperLearner</code>.</p>
     </div>
 
 
 
+    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
+
+    <p><code>tidyhte::Model_cfg</code> -&gt; <code>SLEnsemble_cfg</code></p>
     <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
     <p><div class="r6-fields"></p><dl>
-<dt><code>model_name</code></dt><dd><p>The name of the model as passed to <code>SuperLearner</code>
-through the <code>SL.library</code> parameter.</p></dd>
+<dt><code>cvControl</code></dt><dd><p>A list of parameters for controlling the cross-validation used in SuperLearner.</p></dd>
 
-<dt><code>hyperparameters</code></dt><dd><p>Named list from hyperparameter name to a vector of
-values that should be swept over.</p></dd>
+<dt><code>SL.library</code></dt><dd><p>A vector of the names of learners to include in the SuperLearner ensemble.</p></dd>
+
+<dt><code>SL.env</code></dt><dd><p>An environment containing all of the programmatically generated learners to be included
+in the SuperLearner ensemble.</p></dd>
+
+<dt><code>family</code></dt><dd><p><code><a href='https://rdrr.io/r/stats/family.html'>stats::family</a></code> object to determine how SuperLearner should be fitted.</p></dd>
+
+<dt><code>model_class</code></dt><dd><p>The class of the model, required for all classes
+which inherit from <code>Model_cfg</code>.</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -148,35 +153,43 @@ values that should be swept over.</p></dd>
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-new'><code>SLLearner_cfg$new()</code></a></p></li>
-<li><p><a href='#method-clone'><code>SLLearner_cfg$clone()</code></a></p></li>
+<li><p><a href='#method-new'><code>SLEnsemble_cfg$new()</code></a></p></li>
+<li><p><a href='#method-clone'><code>SLEnsemble_cfg$clone()</code></a></p></li>
 </ul>
-<p><hr>
+<p><details open ><summary>Inherited methods</summary>
+<ul>
+</ul>
+</details>
+
+<hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
-<p>Create a new <code>SLLearner_cfg</code> object with specified model name and hyperparameters.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>SLLearner_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>model_name</span>, hp <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
+<p>Create a new <code>SLEnsemble_cfg</code> object with specified settings.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>SLEnsemble_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+  cvControl <span class='op'>=</span> <span class='cn'>NULL</span>,
+  learner_cfgs <span class='op'>=</span> <span class='cn'>NULL</span>,
+  family <span class='op'>=</span> <span class='fu'>stats</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/stats/family.html'>gaussian</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>model_name</code></dt><dd><p>The name of the model as passed to <code>SuperLearner</code>
-through the <code>SL.library</code> parameter.</p></dd>
+<dt><code>cvControl</code></dt><dd><p>A list of parameters for controlling the cross-validation used in SuperLearner.
+For more details, see <code><a href='https://rdrr.io/pkg/SuperLearner/man/SuperLearner.CV.control.html'>SuperLearner::SuperLearner.CV.control</a></code>.</p></dd>
 
-<dt><code>hp</code></dt><dd><p>Named list from hyperparameter name to a vector of values that should be
-swept over. Hyperparameters not included in this list are left at their SuperLearner
-default values.</p></dd>
+<dt><code>learner_cfgs</code></dt><dd><p>A list of <code>SLLearner_cfg</code> objects.</p></dd>
+
+<dt><code>family</code></dt><dd><p><code><a href='https://rdrr.io/r/stats/family.html'>stats::family</a></code> object to determine how SuperLearner should be fitted.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>A new <code>SLLearner_cfg</code> object.</p>
+<p>A new <code>SLEnsemble_cfg</code> object.</p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre><span class='va'>SLLearner_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.glm"</span><span class='op'>)</span>
-<span class='va'>SLLearner_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.gam"</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>deg.gam <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<p><div class="r example copy"></p><pre><span class='va'>SLEnsemble_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>learner_cfgs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'><a href='SLLearner_cfg.html'>SLLearner_cfg</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.glm"</span><span class='op'>)</span>, <span class='va'><a href='SLLearner_cfg.html'>SLLearner_cfg</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.gam"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>SLLearner_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>SLEnsemble_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
@@ -189,22 +202,20 @@ default values.</p></dd>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'>## ------------------------------------------------</span>
-<span class='co'>## Method `SLLearner_cfg$new`</span>
+<span class='co'>## Method `SLEnsemble_cfg$new`</span>
 <span class='co'>## ------------------------------------------------</span>
 
-<span class='va'>SLLearner_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.glm"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;SLLearner_cfg&gt;
+<span class='va'>SLEnsemble_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>learner_cfgs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'><a href='SLLearner_cfg.html'>SLLearner_cfg</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.glm"</span><span class='op'>)</span>, <span class='va'><a href='SLLearner_cfg.html'>SLLearner_cfg</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.gam"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;SLEnsemble_cfg&gt;
+#&gt;   Inherits from: &lt;Model_cfg&gt;
 #&gt;   Public:
 #&gt;     clone: function (deep = FALSE) 
-#&gt;     hyperparameters: NULL
-#&gt;     initialize: function (model_name, hp = NULL) 
-#&gt;     model_name: SL.glm</div><div class='input'><span class='va'>SLLearner_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"SL.gam"</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>deg.gam <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;SLLearner_cfg&gt;
-#&gt;   Public:
-#&gt;     clone: function (deep = FALSE) 
-#&gt;     hyperparameters: list
-#&gt;     initialize: function (model_name, hp = NULL) 
-#&gt;     model_name: SL.gam</div></pre>
+#&gt;     cvControl: list
+#&gt;     family: family
+#&gt;     initialize: function (cvControl = NULL, learner_cfgs = NULL, family = stats::gaussian()) 
+#&gt;     model_class: SL
+#&gt;     SL.env: environment
+#&gt;     SL.library: SL.glm SL.gam</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

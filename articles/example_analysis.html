@@ -172,7 +172,7 @@ div.main-container {
 <a href="#define-propensity-score-model" class="anchor"></a>Define Propensity Score Model</h1>
 <p>Since in this example we know the exact propensity scores for all units, we use the <code>Known_cfg</code> config type.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">trt.cfg</span> <span class="op">&lt;-</span> <span class="va">Known_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">propensity_score_variable_name</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">trt.cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/Known_cfg.html">Known_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">propensity_score_variable_name</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="define-outcome-model" class="section level1">
 <h1 class="hasAnchor">
@@ -181,7 +181,7 @@ div.main-container {
 <p>Each individual component of the model provides a list of hyperparameters, over which a full cross-product is taken and all resulting models are estimate. For instance, <code>SL.glmnet</code> sweeps over two hyperparameters (two losses and four mixing parameters between ridge and Lasso). This implies that there will be 2 times 4 models estimated and incorporated into the ensemble. Note that <code>SL.glmnet</code> automatically tunes the regularization parameter using <code>cv.glmnet</code>, so this is not included as a hyperparameter.</p>
 <p>To run the full set of models, uncomment the lines below.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">regression.cfg</span> <span class="op">&lt;-</span> <span class="va">SLEnsemble_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">regression.cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SLEnsemble_cfg.html">SLEnsemble_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
     learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
         <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
             <span class="st">"SL.glm"</span>
@@ -236,10 +236,10 @@ div.main-container {
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">qoi.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">continuous_moderators</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">qoi.list</span><span class="op">[[</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">KernelSmooth_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
+    <span class="va">qoi.list</span><span class="op">[[</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">discrete_moderators</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">qoi.list</span><span class="op">[[</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">Stratified_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">cov</span><span class="op">)</span>
+    <span class="va">qoi.list</span><span class="op">[[</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/Stratified_cfg.html">Stratified_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">cov</span><span class="op">)</span>
 <span class="op">}</span>
 
 <span class="va">qoi.cfg</span> <span class="op">&lt;-</span> <span class="va">QoI_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
