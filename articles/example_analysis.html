@@ -243,16 +243,16 @@ div.main-container {
 <span class="op">}</span>
 
 <span class="va">qoi.cfg</span> <span class="op">&lt;-</span> <span class="va">QoI_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    mcate <span class="op">=</span> <span class="va">MCATE.cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>cfgs <span class="op">=</span> <span class="va">qoi.list</span><span class="op">)</span>,
+    mcate <span class="op">=</span> <span class="va"><a href="../reference/MCATE.cfg.html">MCATE.cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>cfgs <span class="op">=</span> <span class="va">qoi.list</span><span class="op">)</span>,
     <span class="co"># Don't use! The PCATE is still broken.</span>
-    pcate <span class="op">=</span> <span class="va">PCATE.cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+    pcate <span class="op">=</span> <span class="va"><a href="../reference/PCATE.cfg.html">PCATE.cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
         cfgs <span class="op">=</span> <span class="va">qoi.list</span>,
         effect_cfg <span class="op">=</span> <span class="va">regression.cfg</span>,
         model_covariates <span class="op">=</span> <span class="va">model_covariate_names</span>,
         <span class="co">#num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)</span>
         num_mc_samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fl">5</span>, x2 <span class="op">=</span> <span class="fl">10</span>, x3 <span class="op">=</span> <span class="fl">10</span>, x4 <span class="op">=</span> <span class="fl">5</span>, x5 <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
     <span class="op">)</span>,
-    vimp <span class="op">=</span> <span class="va">VIMP.cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>model_cfg <span class="op">=</span> <span class="va">regression.cfg</span><span class="op">)</span>,
+    vimp <span class="op">=</span> <span class="va"><a href="../reference/VIMP.cfg.html">VIMP.cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>model_cfg <span class="op">=</span> <span class="va">regression.cfg</span><span class="op">)</span>,
     diag <span class="op">=</span> <span class="va">Diagnostics.cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
         outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span>, <span class="st">"MSE"</span><span class="op">)</span>,
         effect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span><span class="op">)</span>
