@@ -4,10 +4,19 @@
 \alias{SLLearner_cfg}
 \title{Configuration of SuperLearner Submodel}
 \description{
-\code{SLLearner_cfg} is a configuration object for a single
+\code{SLLearner_cfg} is a configuration class for a single
 sublearner to be included in SuperLearner. By constructing with a named list
 of hyperparameters, this configuration allows distinct submodels
 for each unique combination of hyperparameters.
+}
+\examples{
+
+## ------------------------------------------------
+## Method `SLLearner_cfg$new`
+## ------------------------------------------------
+
+SLLearner_cfg$new("SL.glm")
+SLLearner_cfg$new("SL.gam", list(deg.gam = c(2, 3)))
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -48,6 +57,18 @@ default values.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+A new \code{SLLearner_cfg} object.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{SLLearner_cfg$new("SL.glm")
+SLLearner_cfg$new("SL.gam", list(deg.gam = c(2, 3)))
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

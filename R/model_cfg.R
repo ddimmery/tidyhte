@@ -84,8 +84,8 @@ Known_cfg <- R6::R6Class("Known_cfg",
 KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
     inherit = Model_cfg,
     public = list(
-        #' @field covariate_name The name of the column in the dataset
-        #' which corresponds to the known model score.
+        #' @field model_class The class of the model, required for all classes
+        #' which inherit from `Model_cfg`.
         model_class = "KernelSmooth",
         #' @field neval The number of points at which to evaluate the local
         #' regression. More points will provide a smoother line at the cost
@@ -107,27 +107,66 @@ KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
 )
 
 
+#' Configuration for a Stratification Estimator
+#'
+#' @description
+#' `Stratified_cfg` is a configuration class for stratifying a covariate
+#' and calculating statistics within each cell.
 #' @export
 Stratified_cfg <- R6::R6Class("Stratified_cfg",
     inherit = Model_cfg,
     public = list(
+        #' @field model_class The class of the model, required for all classes
+        #' which inherit from `Model_cfg`.
         model_class = "Stratified",
+        #' @field covariate The name of the column in the dataset
+        #' which corresponds to the covariate on which to stratify.
         covariate = character(),
+
+        #' @description
+        #' Create a new `Stratified_cfg` object with specified number of evaluation points.
+        #' @param covariate The name of the column in the dataset
+        #' which corresponds to the covariate on which to stratify.
+        #' @return A new `Stratified_cfg` object.
+        #' @examples
+        #' Stratified_cfg$new(covariate = "test_covariate")
         initialize = function(covariate) {
             self$covariate <- covariate
         }
     )
 )
 
+#' Configuration for a SuperLearner Ensemble
+#'
+#' @description
+#' `SLEnsemble_cfg` is a configuration class for estimation of a model
+#' using an ensemble of models using `SuperLearner`.
 #' @export
 SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
     inherit = Model_cfg,
     public = list(
+        #' @field cvControl A list of parameters for controlling the cross-validation used in SuperLearner.
         cvControl = list(V = 10),
+        #' @field SL.library A vector of the names of learners to include in the SuperLearner ensemble.
         SL.library = character(),
+        #' @field SL.env An environment containing all of the programmatically generated learners to be included
+        #' in the SuperLearner ensemble.
         SL.env = NULL,
+        #' @field family `stats::family` object to determine how SuperLearner should be fitted.
         family = list(),
+        #' @field model_class The class of the model, required for all classes
+        #' which inherit from `Model_cfg`.
         model_class = "SL",
+
+        #' @description
+        #' Create a new `SLEnsemble_cfg` object with specified settings.
+        #' @param cvControl A list of parameters for controlling the cross-validation used in SuperLearner. 
+        #' For more details, see `SuperLearner::SuperLearner.CV.control`.
+        #' @param learner_cfgs A list of `SLLearner_cfg` objects.
+        #' @param family `stats::family` object to determine how SuperLearner should be fitted.
+        #' @return A new `SLEnsemble_cfg` object.
+        #' @examples
+        #' SLEnsemble_cfg$new(learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam")))
         initialize = function(cvControl = NULL, learner_cfgs = NULL, family = stats::gaussian()) {
             self$family <- family
             if (!is.null(cvControl)) {
