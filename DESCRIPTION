@@ -1,5 +1,5 @@
 Package: tidyhte
-Title: Tidy semantics for the estimation of heterogeneous treatment effects
+Title: Tidy Semantics for the Estimation of Heterogeneous Treatment Effects
 Version: 0.0.0.2
 Authors@R: 
     person(given = "Drew",
@@ -31,6 +31,7 @@ Imports:
     rlang,
     nprobust,
     SuperLearner,
+    glmnet,
     pROC,
     vimp,
     purrr

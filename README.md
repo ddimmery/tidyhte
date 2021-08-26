@@ -6,8 +6,7 @@
 <!-- badges: start -->
 
 [![lint](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml)
-[![Test
-coverage](https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg)](https://codecov.io/gh/ddimmery/tidyhte?branch=main)
+[![codecov](https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg?token=AHT3X4S2KQ)](https://codecov.io/gh/ddimmery/tidyhte)
 [![R-CMD-check](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -37,6 +36,6 @@ example workflow can be found here:
 
 ``` r
 rnorm(10)
-#>  [1]  1.0275800  1.0746933 -0.2762567 -0.4094385  1.1217606  0.3980937
-#>  [7]  0.4509138  0.4175637  2.4591381  0.8482585
+#>  [1]  0.32874855 -0.26502912 -0.28528378 -2.79977924 -0.77660794  0.04182274
+#>  [7] -1.26241063 -1.55531401 -2.63753965  0.36430272
 ```

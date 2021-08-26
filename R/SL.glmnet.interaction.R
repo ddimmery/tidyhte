@@ -62,7 +62,7 @@ predict.SL.glmnet.interaction <- function(object, newdata,
                               remove_extra_cols = T,
                               add_missing_cols = T,
                               ...) {
-  SuperLearner:::.SL.require("glmnet")
+  .SL.require("glmnet")
 
   # TODO: support sparse matrices.
   if (!is.matrix(newdata)) {
