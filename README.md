@@ -160,8 +160,8 @@ outcomes in an easy way:
 data %>%
     make_splits(userid, .num_splits = 12) -> data
 
-foreach(outcome = list_of_outcomes, .combine = "bind_rows") %dopar%
-data %>%
+foreach(outcome = list_of_outcomes, .combine = "bind_rows") %dopar% {
+    data %>%
     produce_plugin_estimates(
         outcome,
         treatment_variable,
@@ -171,6 +171,7 @@ data %>%
     construct_pseudo_outcomes(outcome, treatment_variable) %>%
     estimate_QoI(outcome, treatment_variable, covariate1, covariate2, .HTE_cfg = cfg) %>%
     mutate(outcome = rlang::as_string(outcome))
+}
 ```
 
 I’m sure you could do that purely tidily if you wanted.
