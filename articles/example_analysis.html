@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.3</span>
       </span>
     </div>
 
@@ -313,8 +313,8 @@ div.main-container {
 ## $ term      &lt;chr&gt; "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", …
 ## $ value     &lt;dbl&gt; -2.996263, -2.934763, -2.873263, -2.811763, -2.750263, -2.68…
 ## $ level     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ estimate  &lt;dbl&gt; 2.409263, 2.337506, 2.262083, 2.217071, 2.197745, 2.186970, …
-## $ std_error &lt;dbl&gt; 0.6229545, 0.5799490, 0.5398972, 0.5033992, 0.4692550, 0.437…</code></pre>
+## $ estimate  &lt;dbl&gt; 2.568550, 2.559415, 2.536778, 2.507192, 2.480860, 2.456951, …
+## $ std_error &lt;dbl&gt; 0.4801964, 0.4520449, 0.4253273, 0.4004288, 0.3772879, 0.355…</code></pre>
 </div>
 <div id="write-results-to-file" class="section level1">
 <h1 class="hasAnchor">
@@ -444,12 +444,20 @@ div.main-container {
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p><img src="example_analysis_files/figure-html/cts_pcate_plot-1.png" width="700"><img src="example_analysis_files/figure-html/cts_pcate_plot-2.png" width="700"><img src="example_analysis_files/figure-html/cts_pcate_plot-3.png" width="700"></p>
+<pre><code>## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
+## -Inf</code></pre>
+<p><img src="example_analysis_files/figure-html/cts_pcate_plot-1.png" width="700"></p>
+<pre><code>## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
+## -Inf</code></pre>
+<p><img src="example_analysis_files/figure-html/cts_pcate_plot-2.png" width="700"></p>
+<pre><code>## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning
+## -Inf</code></pre>
+<p><img src="example_analysis_files/figure-html/cts_pcate_plot-3.png" width="700"></p>
 </div>
 <div id="plot-discrete-covariates-mcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-discrete-covariates-mcate" class="anchor"></a>Plot Discrete Covariates’ MCATE</h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">discrete_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -469,7 +477,7 @@ div.main-container {
 <div id="plot-discrete-covariates-pcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-discrete-covariates-pcate" class="anchor"></a>Plot Discrete Covariates’ PCATE</h2>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">discrete_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"PCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -484,8 +492,12 @@ div.main-container {
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p><img src="example_analysis_files/figure-html/discrete_pcate_plot-1.png" width="700"><img src="example_analysis_files/figure-html/discrete_pcate_plot-2.png" width="700"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_pointrange).</code></pre>
+<pre><code>## Warning: Removed 3 rows containing missing values (geom_segment).</code></pre>
+<p><img src="example_analysis_files/figure-html/discrete_pcate_plot-1.png" width="700"></p>
+<pre><code>## Warning: Removed 3 rows containing missing values (geom_pointrange).</code></pre>
+<p><img src="example_analysis_files/figure-html/discrete_pcate_plot-2.png" width="700"></p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Might need to embed fonts depending on the theme.</span>
 <span class="va">plot_filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">OUTPUT_FOLDER</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"plots_"</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">outcome_variable</span><span class="op">)</span>, <span class="st">".pdf"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html">pdf</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">plot_filename</span>, height <span class="op">=</span> <span class="fl">7</span>, width <span class="op">=</span> <span class="fl">7</span>, fonts <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span>
