@@ -92,15 +92,15 @@ for (cov in discrete_moderators) {
 }
 
 qoi.cfg <- QoI_cfg$new(
-    mcate = MCATE.cfg$new(cfgs = qoi.list),
-    pcate = PCATE.cfg$new(
+    mcate = MCATE_cfg$new(cfgs = qoi.list),
+    pcate = PCATE_cfg$new(
         cfgs = qoi.list,
         effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     ),
-    vimp = VIMP.cfg$new(model_cfg = regression.cfg),
-    diag = Diagnostics.cfg$new(
+    vimp = VIMP_cfg$new(model_cfg = regression.cfg),
+    diag = Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE"),
         effect = c("SL_risk", "SL_coefs")
     )

@@ -16,7 +16,7 @@ make_splits(.data, id_col, ..., .num_splits)
 \item{.num_splits}{number of splits to create}
 }
 \value{
-dataframe with additional \code{.split_id} column
+original dataframe with additional \code{.split_id} column
 }
 \description{
 This takes a dataset, a column with a unique identifier and an

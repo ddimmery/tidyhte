@@ -34,9 +34,21 @@ SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
     )
 )
 
+#' Base Class of Model Configurations
+#'
+#' @description
+#' `Model_cfg` is the base class from which all other model configurations
+#' inherit.
+#' @export
 Model_cfg <- R6::R6Class("Model_cfg",
     list(
+        #' @field model_class The class of the model, required for all classes
+        #' which inherit from `Model_cfg`.
         model_class = NULL,
+
+        #' @description
+        #' Create a new `Model_cfg` object with any necessary parameters.
+        #' @return A new `Model_cfg` object.
         initialize = function() {
         }
     )

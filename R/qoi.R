@@ -15,15 +15,15 @@ construct_pseudo_outcomes <- function(.data, y_col, a_col) {
 }
 
 #' @export
-calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
+calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
     for (covariate in dots) {
-        .Model_cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
+        .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_string(covariate)]]
         data <- Model_data$new(.data, {{ .outcome }}, {{ covariate }})
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
-        if (.MCATE.cfg$std_errors) {
+        if (.MCATE_cfg$std_errors) {
             result <- model$predict_se(data)
             result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(
@@ -52,16 +52,16 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE.cfg) {
 
 #' @importFrom rlang .data
 #' @export
-calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE.cfg) {
+calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
     for (covariate in dots) {
         fx_data <- fx_model$predict(.data, covariate)
-        .Model_cfg <- .MCATE.cfg$cfgs[[rlang::as_string(covariate)]]
+        .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_string(covariate)]]
         data <- Model_data$new(fx_data, .data$.hte, .data$covariate_value)
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
-        if (.MCATE.cfg$std_errors) {
+        if (.MCATE_cfg$std_errors) {
             result <- model$predict_se(data)
             result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(

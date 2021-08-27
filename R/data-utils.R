@@ -1,5 +1,3 @@
-
-#' @export
 HTEFold <- R6::R6Class("HTEFold", list(
     train = NULL,
     holdout = NULL,
@@ -22,16 +20,16 @@ HTEFold <- R6::R6Class("HTEFold", list(
 #' data corresponding to a training set and a holdout.
 #' @param .data dataframe
 #' @param split_id integer representing the split to construct
-#' @return Returns an R6 object `HTEFold` with two properties:
+#' @return Returns an R6 object `HTEFold` with three public fields:
 #' - `train` - The split to be used for training the plugin estimates
 #' - `holdout` - The split not used for training
+#' - `in_holdout` - A logical vector indicating for each unit whether they lie in the holdout.
 #' @export
 split_data <- function(.data, split_id) {
     HTEFold$new(.data, split_id)
 }
 
 
-#' @export
 #' @importFrom stats model.matrix model.frame
 Model_data <- R6::R6Class("Model_data", list(
     label = NULL,

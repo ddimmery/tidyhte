@@ -8,7 +8,7 @@
 #' @param id_col unquoted name of unique identifier column
 #' @param ... variables on which to stratify
 #' @param .num_splits number of splits to create
-#' @return dataframe with additional `.split_id` column
+#' @return original dataframe with additional `.split_id` column
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
 #' @export
@@ -37,7 +37,18 @@ make_splits <- function(.data, id_col, ..., .num_splits) {
     dplyr::left_join(.data, tmp, by = join_cols)
 }
 
+#' Estimate models of nuisance functions
 #'
+#' This takes a dataset with an identified outcome and treatment column along
+#' with any number of covariates and appends three columns to the dataset corresponding
+#' to an estimate of the conditional expectation of treatment (`.pi_hat`), along with the
+#' conditional expectation of the control and treatment potential outcome surfaces
+#' (`.mu0_hat` and `.mu1_hat` respectively).
+#' @param .data dataframe
+#' @param y_col Unquoted name of the outcome variable.
+#' @param a_col Unquoted name of the treatment variable.
+#' @param ... Unquoted names of covariates to include in the models of the nuisance functions.
+#' @param .HTE_cfg `HTE_cfg` object representing the full configuration of the HTE analysis.
 #' @export
 produce_plugin_estimates <- function(.data, y_col, a_col, ..., .HTE_cfg=NULL) {
     dots <- rlang::enexprs(...)
@@ -131,13 +142,13 @@ estimate_QoI <- function(
             .data,
             .data$.pseudo_outcome,
             !!!dots,
-            .MCATE.cfg = .QoI_cfg$mcate
+            .MCATE_cfg = .QoI_cfg$mcate
         )
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
     }
 
     if (!is.null(.QoI_cfg$vimp)) {
-        result <- calculate_vimp(.data, .data$.pseudo_outcome, !!!dots, .VIMP.cfg = .QoI_cfg$vimp)
+        result <- calculate_vimp(.data, .data$.pseudo_outcome, !!!dots, .VIMP_cfg = .QoI_cfg$vimp)
         result_list <- c(result_list, list(result))
     }
 
@@ -150,7 +161,7 @@ estimate_QoI <- function(
             .data$.pseudo_outcome,
             fx_mod$model,
             !!!dots,
-            .MCATE.cfg = .QoI_cfg$mcate
+            .MCATE_cfg = .QoI_cfg$mcate
         )
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "PCATE")))
     }

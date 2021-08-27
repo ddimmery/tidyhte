@@ -12,10 +12,11 @@ split_data(.data, split_id)
 \item{split_id}{integer representing the split to construct}
 }
 \value{
-Returns an R6 object \code{HTEFold} with two properties:
+Returns an R6 object \code{HTEFold} with three public fields:
 \itemize{
 \item \code{train} - The split to be used for training the plugin estimates
 \item \code{holdout} - The split not used for training
+\item \code{in_holdout} - A logical vector indicating for each unit whether they lie in the holdout.
 }
 }
 \description{

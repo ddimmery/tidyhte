@@ -1,10 +1,10 @@
 #' @export
-calculate_vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
+calculate_vimp <- function(.data, .outcome, ..., .VIMP_cfg) {
     dots <- rlang::enexprs(...)
 
     data <- Model_data$new(.data, {{ .outcome }}, !!!dots)
 
-    full_model <- predictor_factory(.VIMP.cfg$model_cfg)
+    full_model <- predictor_factory(.VIMP_cfg$model_cfg)
     full_model <- full_model$fit(data)
     full_model_predictions <- drop(full_model$model$SL.predict)
 
@@ -45,8 +45,8 @@ calculate_vimp <- function(.data, .outcome, ..., .VIMP.cfg) {
         #     X = data$model_frame,
         #     indx = idx,
         #     run_regression = TRUE,
-        #     SL.library = .VIMP.cfg$model_cfg$SL.library,
-        #     env = .VIMP.cfg$model_cfg$SL.env,
+        #     SL.library = .VIMP_cfg$model_cfg$SL.library,
+        #     env = .VIMP_cfg$model_cfg$SL.env,
         #     type = "r_squared",
         #     sample_splitting = TRUE
         # )

@@ -5,6 +5,37 @@
   invisible(TRUE)
 }
 
+#' @title Elastic net regression with pairwise interactions
+#'
+#' @description
+#' Penalized regression using elastic net. Alpha = 0 corresponds to ridge
+#' regression and alpha = 1 corresponds to Lasso. Included in the model
+#' are pairwise interactions between covariates.
+#'
+#' See \code{vignette("glmnet_beta", package = "glmnet")} for a nice tutorial on
+#' glmnet.
+#'
+#' @param Y Outcome variable
+#' @param X Covariate dataframe
+#' @param newX Dataframe to predict the outcome
+#' @param obsWeights Optional observation-level weights
+#' @param id Optional id to group observations from the same unit (not used
+#'   currently).
+#' @param family "gaussian" for regression, "binomial" for binary
+#'   classification. Untested options: "multinomial" for multiple classification
+#'   or "mgaussian" for multiple response, "poisson" for non-negative outcome
+#'   with proportional mean and variance, "cox".
+#' @param alpha Elastic net mixing parameter, range [0, 1]. 0 = ridge regression
+#'   and 1 = lasso.
+#' @param nfolds Number of folds for internal cross-validation to optimize lambda.
+#' @param nlambda Number of lambda values to check, recommended to be 100 or more.
+#' @param loss Loss function, can be "deviance", "mse", or "mae". If family =
+#'   binomial can also be "auc" or "class" (misclassification error).
+#' @param useMin If TRUE use lambda that minimizes risk, otherwise use 1
+#'   standard-error rule which chooses a higher penalty with performance within
+#'   one standard error of the minimum (see Breiman et al. 1984 on CART for
+#'   background).
+#' @param ... Any additional arguments are passed through to cv.glmnet.
 #' @export
 #' @importFrom stats predict model.matrix
 SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,

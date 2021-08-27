@@ -68,39 +68,39 @@ test_that("Configs can be constructed successfully.", {
         qoi.list[[cov]] <- Stratified_cfg$new(cov)
     }
 
-    diag.cfg <<- Diagnostics.cfg$new(
+    diag.cfg <<- Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE"),
         effect = c("SL_risk", "SL_coefs")
     )
 
-    Diagnostics.cfg$new(
+    Diagnostics_cfg$new(
         ps = "MSE"
     )
 
-    mcate.cfg <<- MCATE.cfg$new(cfgs = qoi.list)
+    mcate.cfg <<- MCATE_cfg$new(cfgs = qoi.list)
 
-    PCATE.cfg$new(
+    PCATE_cfg$new(
         cfgs = qoi.list,
         effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = 10
     )
 
-    expect_error(PCATE.cfg$new(
+    expect_error(PCATE_cfg$new(
         cfgs = qoi.list,
         effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = "not a number"
     ), "Unknown type of num_mc_samples")
 
-    pcate.cfg <<- PCATE.cfg$new(
+    pcate.cfg <<- PCATE_cfg$new(
         cfgs = qoi.list,
         effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     )
 
-    vimp.cfg <<- VIMP.cfg$new(model_cfg = regression.cfg)
+    vimp.cfg <<- VIMP_cfg$new(model_cfg = regression.cfg)
 
     qoi.cfg <<- QoI_cfg$new(
         mcate = mcate.cfg,
@@ -133,8 +133,8 @@ test_that("Config types are as expected.", {
     checkmate::expect_environment(regression.cfg$SL.env)
     checkmate::expect_character(regression.cfg$SL.library, len = 79)
     checkmate::expect_r6(trt.cfg, classes = c("Known_cfg", "Model_cfg"))
-    checkmate::expect_r6(vimp.cfg, classes = "VIMP.cfg")
-    checkmate::expect_r6(pcate.cfg, classes = "PCATE.cfg")
-    checkmate::expect_r6(mcate.cfg, classes = "MCATE.cfg")
-    checkmate::expect_r6(diag.cfg, classes = "Diagnostics.cfg")
+    checkmate::expect_r6(vimp.cfg, classes = "VIMP_cfg")
+    checkmate::expect_r6(pcate.cfg, classes = "PCATE_cfg")
+    checkmate::expect_r6(mcate.cfg, classes = "MCATE_cfg")
+    checkmate::expect_r6(diag.cfg, classes = "Diagnostics_cfg")
 })
