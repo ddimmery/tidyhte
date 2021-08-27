@@ -143,9 +143,10 @@ data corresponding to a training set and a holdout.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns an R6 object <code>HTEFold</code> with two properties:</p><ul>
+    <p>Returns an R6 object <code>HTEFold</code> with three public fields:</p><ul>
 <li><p><code>train</code> - The split to be used for training the plugin estimates</p></li>
 <li><p><code>holdout</code> - The split not used for training</p></li>
+<li><p><code>in_holdout</code> - A logical vector indicating for each unit whether they lie in the holdout.</p></li>
 </ul>
 
 

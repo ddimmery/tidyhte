@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Configuration for a Stratification Estimator — Stratified_cfg • tidyhte</title>
+<title>Elastic net regression with pairwise interactions — SL.glmnet.interaction • tidyhte</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,12 @@
 
 
 
-<meta property="og:title" content="Configuration for a Stratification Estimator — Stratified_cfg" />
-<meta property="og:description" content="Stratified_cfg is a configuration class for stratifying a covariate
-and calculating statistics within each cell." />
+<meta property="og:title" content="Elastic net regression with pairwise interactions — SL.glmnet.interaction" />
+<meta property="og:description" content="Penalized regression using elastic net. Alpha = 0 corresponds to ridge
+regression and alpha = 1 corresponds to Lasso. Included in the model
+are pairwise interactions between covariates.
+See vignette(&quot;glmnet_beta&quot;, package = &quot;glmnet&quot;) for a nice tutorial on
+glmnet." />
 
 
 
@@ -116,89 +119,97 @@ and calculating statistics within each cell." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Configuration for a Stratification Estimator</h1>
+    <h1>Elastic net regression with pairwise interactions</h1>
     
-    <div class="hidden name"><code>Stratified_cfg.Rd</code></div>
+    <div class="hidden name"><code>SL.glmnet.interaction.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>Stratified_cfg</code> is a configuration class for stratifying a covariate
-and calculating statistics within each cell.</p>
+    <p>Penalized regression using elastic net. Alpha = 0 corresponds to ridge
+regression and alpha = 1 corresponds to Lasso. Included in the model
+are pairwise interactions between covariates.</p>
+<p>See <code>vignette("glmnet_beta", package = "glmnet")</code> for a nice tutorial on
+glmnet.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>SL.glmnet.interaction</span><span class='op'>(</span>
+  <span class='va'>Y</span>,
+  <span class='va'>X</span>,
+  <span class='va'>newX</span>,
+  <span class='va'>family</span>,
+  <span class='va'>obsWeights</span>,
+  <span class='va'>id</span>,
+  alpha <span class='op'>=</span> <span class='fl'>1</span>,
+  nfolds <span class='op'>=</span> <span class='fl'>10</span>,
+  nlambda <span class='op'>=</span> <span class='fl'>100</span>,
+  useMin <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  loss <span class='op'>=</span> <span class='st'>"deviance"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>Y</th>
+      <td><p>Outcome variable</p></td>
+    </tr>
+    <tr>
+      <th>X</th>
+      <td><p>Covariate dataframe</p></td>
+    </tr>
+    <tr>
+      <th>newX</th>
+      <td><p>Dataframe to predict the outcome</p></td>
+    </tr>
+    <tr>
+      <th>family</th>
+      <td><p>"gaussian" for regression, "binomial" for binary
+classification. Untested options: "multinomial" for multiple classification
+or "mgaussian" for multiple response, "poisson" for non-negative outcome
+with proportional mean and variance, "cox".</p></td>
+    </tr>
+    <tr>
+      <th>obsWeights</th>
+      <td><p>Optional observation-level weights</p></td>
+    </tr>
+    <tr>
+      <th>id</th>
+      <td><p>Optional id to group observations from the same unit (not used
+currently).</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>Elastic net mixing parameter, range 0, 1. 0 = ridge regression
+and 1 = lasso.</p></td>
+    </tr>
+    <tr>
+      <th>nfolds</th>
+      <td><p>Number of folds for internal cross-validation to optimize lambda.</p></td>
+    </tr>
+    <tr>
+      <th>nlambda</th>
+      <td><p>Number of lambda values to check, recommended to be 100 or more.</p></td>
+    </tr>
+    <tr>
+      <th>useMin</th>
+      <td><p>If TRUE use lambda that minimizes risk, otherwise use 1
+standard-error rule which chooses a higher penalty with performance within
+one standard error of the minimum (see Breiman et al. 1984 on CART for
+background).</p></td>
+    </tr>
+    <tr>
+      <th>loss</th>
+      <td><p>Loss function, can be "deviance", "mse", or "mae". If family =
+binomial can also be "auc" or "class" (misclassification error).</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Any additional arguments are passed through to cv.glmnet.</p></td>
+    </tr>
+    </table>
 
 
-    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
-
-    <p><code><a href='Model_cfg.html'>tidyhte::Model_cfg</a></code> -&gt; <code>Stratified_cfg</code></p>
-    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
-
-    <p><div class="r6-fields"></p><dl>
-<dt><code>model_class</code></dt><dd><p>The class of the model, required for all classes
-which inherit from <code>Model_cfg</code>.</p></dd>
-
-<dt><code>covariate</code></dt><dd><p>The name of the column in the dataset
-which corresponds to the covariate on which to stratify.</p></dd>
-
-</dl><p></div></p>
-    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
-
-    
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
-
-<ul>
-<li><p><a href='#method-new'><code>Stratified_cfg$new()</code></a></p></li>
-<li><p><a href='#method-clone'><code>Stratified_cfg$clone()</code></a></p></li>
-</ul>
-<p><details open ><summary>Inherited methods</summary>
-<ul>
-</ul>
-</details>
-
-<hr>
-<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
-<p>Create a new <code>Stratified_cfg</code> object with specified number of evaluation points.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>covariate</span><span class='op'>)</span></pre><p></div></p>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>covariate</code></dt><dd><p>The name of the column in the dataset
-which corresponds to the covariate on which to stratify.</p></dd>
-
-</dl><p></div></p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>A new <code>Stratified_cfg</code> object.</p>
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre><span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>covariate <span class='op'>=</span> <span class='st'>"test_covariate"</span><span class='op'>)</span>
-</pre><p></div></p>
-
-<p><hr>
-<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
-<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
-
-<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
-<p><div class="arguments"></p><dl>
-<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
-
-</dl><p></div></p>
-
-
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'>## ------------------------------------------------</span>
-<span class='co'>## Method `Stratified_cfg$new`</span>
-<span class='co'>## ------------------------------------------------</span>
-
-<span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>covariate <span class='op'>=</span> <span class='st'>"test_covariate"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;Stratified_cfg&gt;
-#&gt;   Inherits from: &lt;Model_cfg&gt;
-#&gt;   Public:
-#&gt;     clone: function (deep = FALSE) 
-#&gt;     covariate: test_covariate
-#&gt;     initialize: function (covariate) 
-#&gt;     model_class: Stratified</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

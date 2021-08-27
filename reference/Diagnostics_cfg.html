@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Configuration for a Stratification Estimator — Stratified_cfg • tidyhte</title>
+<title>Configuration of Model Diagnostics — Diagnostics_cfg • tidyhte</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Configuration for a Stratification Estimator — Stratified_cfg" />
-<meta property="og:description" content="Stratified_cfg is a configuration class for stratifying a covariate
-and calculating statistics within each cell." />
+<meta property="og:title" content="Configuration of Model Diagnostics — Diagnostics_cfg" />
+<meta property="og:description" content="Diagnostics_cfg is a configuration class for estimating a variety of diagnostics for the models
+trained in the course of HTE estimation." />
 
 
 
@@ -116,29 +116,26 @@ and calculating statistics within each cell." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Configuration for a Stratification Estimator</h1>
+    <h1>Configuration of Model Diagnostics</h1>
     
-    <div class="hidden name"><code>Stratified_cfg.Rd</code></div>
+    <div class="hidden name"><code>Diagnostics_cfg.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>Stratified_cfg</code> is a configuration class for stratifying a covariate
-and calculating statistics within each cell.</p>
+    <p><code>Diagnostics_cfg</code> is a configuration class for estimating a variety of diagnostics for the models
+trained in the course of HTE estimation.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
-
-    <p><code><a href='Model_cfg.html'>tidyhte::Model_cfg</a></code> -&gt; <code>Stratified_cfg</code></p>
     <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
     <p><div class="r6-fields"></p><dl>
-<dt><code>model_class</code></dt><dd><p>The class of the model, required for all classes
-which inherit from <code>Model_cfg</code>.</p></dd>
+<dt><code>ps</code></dt><dd><p>Model diagnostics for the propensity score model.</p></dd>
 
-<dt><code>covariate</code></dt><dd><p>The name of the column in the dataset
-which corresponds to the covariate on which to stratify.</p></dd>
+<dt><code>outcome</code></dt><dd><p>Model diagnostics for the outcome models.</p></dd>
+
+<dt><code>effect</code></dt><dd><p>Model diagnostics for the joint effect model.</p></dd>
 
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
@@ -147,35 +144,36 @@ which corresponds to the covariate on which to stratify.</p></dd>
 <h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
 
 <ul>
-<li><p><a href='#method-new'><code>Stratified_cfg$new()</code></a></p></li>
-<li><p><a href='#method-clone'><code>Stratified_cfg$clone()</code></a></p></li>
+<li><p><a href='#method-new'><code>Diagnostics_cfg$new()</code></a></p></li>
+<li><p><a href='#method-clone'><code>Diagnostics_cfg$clone()</code></a></p></li>
 </ul>
-<p><details open ><summary>Inherited methods</summary>
-<ul>
-</ul>
-</details>
-
-<hr>
+<p><hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
-<p>Create a new <code>Stratified_cfg</code> object with specified number of evaluation points.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>covariate</span><span class='op'>)</span></pre><p></div></p>
+<p>Create a new <code>Diagnostics_cfg</code> object with specified diagnostics to estimate.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>ps <span class='op'>=</span> <span class='cn'>NULL</span>, outcome <span class='op'>=</span> <span class='cn'>NULL</span>, effect <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
-<dt><code>covariate</code></dt><dd><p>The name of the column in the dataset
-which corresponds to the covariate on which to stratify.</p></dd>
+<dt><code>ps</code></dt><dd><p>Model diagnostics for the propensity score model.</p></dd>
+
+<dt><code>outcome</code></dt><dd><p>Model diagnostics for the outcome models.</p></dd>
+
+<dt><code>effect</code></dt><dd><p>Model diagnostics for the joint effect model.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
-<p>A new <code>Stratified_cfg</code> object.</p>
+<p>A new <code>Diagnostics_cfg</code> object.</p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
-<p><div class="r example copy"></p><pre><span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>covariate <span class='op'>=</span> <span class='st'>"test_covariate"</span><span class='op'>)</span>
+<p><div class="r example copy"></p><pre><span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+   outcome <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"MSE"</span><span class='op'>)</span>,
+   ps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"AUC"</span><span class='op'>)</span>
+<span class='op'>)</span>
 </pre><p></div></p>
 
 <p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
@@ -188,17 +186,20 @@ which corresponds to the covariate on which to stratify.</p></dd>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'>## ------------------------------------------------</span>
-<span class='co'>## Method `Stratified_cfg$new`</span>
+<span class='co'>## Method `Diagnostics_cfg$new`</span>
 <span class='co'>## ------------------------------------------------</span>
 
-<span class='va'>Stratified_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>covariate <span class='op'>=</span> <span class='st'>"test_covariate"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;Stratified_cfg&gt;
-#&gt;   Inherits from: &lt;Model_cfg&gt;
+<span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
+   outcome <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"MSE"</span><span class='op'>)</span>,
+   ps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"AUC"</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;Diagnostics_cfg&gt;
 #&gt;   Public:
 #&gt;     clone: function (deep = FALSE) 
-#&gt;     covariate: test_covariate
-#&gt;     initialize: function (covariate) 
-#&gt;     model_class: Stratified</div></pre>
+#&gt;     effect: 
+#&gt;     initialize: function (ps = NULL, outcome = NULL, effect = NULL) 
+#&gt;     outcome: SL_risk SL_coefs MSE
+#&gt;     ps: SL_risk SL_coefs AUC</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
