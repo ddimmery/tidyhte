@@ -59,7 +59,6 @@ for (cov in discrete_moderators) {
 
 qoi.cfg <- QoI_cfg$new(
     mcate = MCATE_cfg$new(cfgs = qoi.list),
-    # Don't use! The PCATE is still broken.
     pcate = PCATE_cfg$new(
         cfgs = qoi.list,
         effect_cfg = regression.cfg,
@@ -67,7 +66,6 @@ qoi.cfg <- QoI_cfg$new(
         #num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     ),
-    vimp = VIMP_cfg$new(model_cfg = regression.cfg),
     diag = Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE"),
         effect = c("SL_risk", "SL_coefs")
@@ -135,7 +133,6 @@ n_rows <- (
     2 + # MSE for y(0) & y(1)
     3 * 3 + # one row per model in the ensemble for each PO / fx for SL risk
     3 * 3 + # one row per model in the ensemble for each PO / fx for SL coefficient
-    5 + # one row per moderator for variable importance
     2 * 3 * 100 + # 100 rows per continuous moderator for local regression for MCATE and for PCATE
     2 * (4 + 3) # 2 rows per discrete moderator level for MCATE and for PCATE
 )

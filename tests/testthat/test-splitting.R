@@ -37,3 +37,37 @@ test_that("check that 7 splits are legit", {
     checkmate::expect_integerish(s_id, len = n, any.missing = FALSE, lower = 1, upper = 10)
     checkmate::expect_integer(table(s_id), lower = floor(n / 7), upper = ceiling(n / 7))
 })
+
+n <- 100
+d <- dplyr::tibble(
+    uid = 1:n,
+    cov1 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
+    cov2 = sample(rep(1:2, c(n / 20, 19 * n / 20)), n, replace = TRUE)
+)
+
+s_df <- make_splits(d, uid, cov2, .num_splits = 2)
+test_that("check that stratification on one variable works", {
+    s_df %>%
+    dplyr::group_by(cov2) %>%
+    dplyr::summarize(all_splits = all(1:2 %in% .split_id)) %>%
+    dplyr::summarize(all_splits = all(all_splits)) %>%
+    unlist() -> result
+    expect_true(result)
+})
+
+s_df <- make_splits(d, uid, cov1, cov2, .num_splits = 2)
+test_that("check that stratification on multiple variables works", {
+    s_df %>%
+    dplyr::group_by(cov2) %>%
+    dplyr::summarize(all_splits = all(1:2 %in% .split_id)) %>%
+    dplyr::summarize(all_splits = all(all_splits)) %>%
+    unlist() -> result
+    expect_true(result)
+
+    s_df %>%
+    dplyr::group_by(cov1) %>%
+    dplyr::summarize(all_splits = all(1:2 %in% .split_id)) %>%
+    dplyr::summarize(all_splits = all(all_splits)) %>%
+    unlist() -> result
+    expect_true(result)
+})

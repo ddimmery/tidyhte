@@ -11,30 +11,40 @@
 #' @return original dataframe with additional `.split_id` column
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
+#' @importFrom stats model.matrix
 #' @export
 make_splits <- function(.data, id_col, ..., .num_splits) {
-    .data %>%
-    dplyr::group_by({{id_col}}, ...) %>%
-    dplyr::tally() %>%
-    dplyr::group_by(...) %>%
-    dplyr::mutate(
-        .split_id = sample(c(
-            rep(
-                1:.num_splits,
-                rep(as.integer(floor(dplyr::n() / .num_splits), .num_splits))
-            ),
-            sample(
-                .num_splits,
-                (
-                    dplyr::n() -
-                    .num_splits * as.integer(floor(dplyr::n() / .num_splits))
+    dots <- rlang::enexprs(...)
+    if (length(dots) > 1) {
+        block_data <-  stats::model.matrix(~. + 0, dplyr::select(.data, ...))
+        qb <- quickblock::quickblock(block_data, size_constraint = .num_splits)
+        .data$.split_id <- quickblock::assign_treatment(qb, treatments = 1:.num_splits)
+    } else {
+        .data %>%
+        dplyr::group_by({{ id_col }}, !!!dots) %>%
+        dplyr::tally() %>%
+        dplyr::group_by(!!!dots) %>%
+        dplyr::mutate(
+            .split_id = sample(c(
+                rep(
+                    1:.num_splits,
+                    rep(as.integer(floor(dplyr::n() / .num_splits), .num_splits))
+                ),
+                sample(
+                    .num_splits,
+                    (
+                        dplyr::n() -
+                        .num_splits * as.integer(floor(dplyr::n() / .num_splits))
+                    )
                 )
-            )
-        ))
-    ) %>%
-    dplyr::select(-.data$n) -> tmp
-    join_cols <- names(dplyr::select(tmp, -.data$.split_id))
-    dplyr::left_join(.data, tmp, by = join_cols)
+            ))
+        ) %>%
+        dplyr::select(-.data$n) -> tmp
+        join_cols <- names(dplyr::select(tmp, -.data$.split_id))
+        .data <- dplyr::left_join(.data, tmp, by = join_cols)
+    }
+    attr(.data, "num_splits") <- .num_splits
+    .data
 }
 
 #' Estimate models of nuisance functions
@@ -63,7 +73,7 @@ produce_plugin_estimates <- function(.data, y_col, a_col, ..., .HTE_cfg=NULL) {
         mu1 = list()
     )
 
-    for (split_id in 1:(num_splits - 1)) {
+    for (split_id in seq(num_splits)) {
         folds <- split_data(.data, split_id)
 
         a_model <- fit_plugin_A(

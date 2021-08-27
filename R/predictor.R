@@ -65,7 +65,7 @@ SLPredictor <- R6::R6Class("SLPredictor",
         fit = function(data) {
             self$model <- SuperLearner::SuperLearner(
                 Y = data$label, X = data$model_frame, family = self$family,
-                SL.library = self$SL.library, env = self$SL.env
+                SL.library = self$SL.library, env = self$SL.env, cvControl = data$SL_cv_control()
             )
             invisible(self)
         },
@@ -99,14 +99,15 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                 cluster <- NULL
             } else {
                 bw <- "imse-rot"
-                cluster <- as.integer(as.factor(self$covariates))
+                cluster <- as.factor(as.integer(as.factor(self$covariates)))
             }
             self$model <- nprobust::lprobust(
                 self$label,
                 self$covariates,
                 neval = self$neval,
                 bwselect = bw,
-                cluster = cluster
+                # cluster = cluster,
+                # vce = "hc0"
             )
             invisible(self)
         },

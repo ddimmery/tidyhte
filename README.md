@@ -8,6 +8,8 @@
 [![lint](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml)
 [![codecov](https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg?token=AHT3X4S2KQ)](https://codecov.io/gh/ddimmery/tidyhte)
 [![R-CMD-check](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml)
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 `tidyhte` provides tidy semantics for estimation of heterogeneous

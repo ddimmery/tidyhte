@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-utils.R
 \name{split_data}
 \alias{split_data}
-\title{Given a particular split ID, partition the data}
+\title{Partition the data into folds}
 \usage{
 split_data(.data, split_id)
 }
