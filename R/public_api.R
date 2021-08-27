@@ -16,6 +16,7 @@
 make_splits <- function(.data, id_col, ..., .num_splits) {
     dots <- rlang::enexprs(...)
     if (length(dots) > 1) {
+        .SL.require("quickblock")
         block_data <-  stats::model.matrix(~. + 0, dplyr::select(.data, ...))
         qb <- quickblock::quickblock(block_data, size_constraint = .num_splits)
         .data$.split_id <- quickblock::assign_treatment(qb, treatments = 1:.num_splits)

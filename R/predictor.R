@@ -91,24 +91,31 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
             self$neval <- neval
         },
         fit = function(data) {
-            # check that covariate is just 1D
             self$label <- data$label
             self$covariates <- drop(data$features)
             if (length(unique(self$covariates)) == length(self$covariates)) {
-                bw <- "imse-dpi"
-                cluster <- NULL
+                self$model <- nprobust::lprobust(
+                    self$label,
+                    self$covariates,
+                    neval = self$neval
+                )
             } else {
-                bw <- "imse-rot"
                 cluster <- as.factor(as.integer(as.factor(self$covariates)))
+                agg_tbl <- dplyr::tibble(y = self$label, x = self$covariates) %>%
+                    dplyr::group_by(.data$x) %>%
+                    dplyr::summarize(y = mean(.data$y), n = dplyr::n())
+                agg_y <- agg_tbl$y
+                agg_x <- agg_tbl$x
+                bws <- nprobust::lpbwselect(agg_y, agg_x, neval = self$neval)
+                self$model <- nprobust::lprobust(
+                    self$label,
+                    self$covariates,
+                    neval = self$neval,
+                    bwselect = "imse-rot",
+                    cluster = cluster,
+                    h = bws$bws[, "h"]
+                )
             }
-            self$model <- nprobust::lprobust(
-                self$label,
-                self$covariates,
-                neval = self$neval,
-                bwselect = bw,
-                # cluster = cluster,
-                # vce = "hc0"
-            )
             invisible(self)
         },
         predict = function(data) {
@@ -145,9 +152,7 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
             self$covariate <- covariate
         },
         fit = function(data) {
-            #check number of levels of covariate - should be less than 50 or so
-            # throw warning if there's very sparse strata
-            # create mapping from unique covariate values to mean + std err
+            # This doesn't deal with the clustering under PCATE
             self$map <- dplyr::tibble(x = unlist(data$model_frame), y = data$label) %>%
                 dplyr::group_by(.data$x) %>%
                 dplyr::summarize(

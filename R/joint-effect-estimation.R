@@ -26,7 +26,7 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
             .data_aggregated <- dplyr::bind_rows(!!!data_list)
 
             result <- rep(NA_real_, nrow(.data_aggregated))
-            for (split_id in 1:(self$num_splits - 1)) {
+            for (split_id in seq(self$num_splits)) {
                 folds <- split_data(.data_aggregated, split_id)
                 pred_data <- Model_data$new(folds$holdout, NULL, !!!self$covariates)
                 result[folds$in_holdout] <- self$models[[split_id]]$predict(pred_data)
@@ -51,7 +51,7 @@ fit_fx_predictor <- function(.data, psi_col, ...,
         fx = list()
     )
     fx_hat <- rep(NA_real_, nrow(.data))
-    for (split_id in 1:(num_splits - 1)) {
+    for (split_id in seq(num_splits)) {
         folds <- split_data(.data, split_id)
         fx_model <- fit_effect(
             folds$train, {{ psi_col }}, !!!dots,
