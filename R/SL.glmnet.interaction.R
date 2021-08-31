@@ -1,10 +1,3 @@
-.SL.require <- function(package) {
-  if (!requireNamespace(package, quietly = FALSE)) {
-    stop(paste("loading required package (", package, ") failed", sep = ""), call. = FALSE)
-  }
-  invisible(TRUE)
-}
-
 #' @title Elastic net regression with pairwise interactions
 #'
 #' @description
@@ -25,7 +18,7 @@
 #'   classification. Untested options: "multinomial" for multiple classification
 #'   or "mgaussian" for multiple response, "poisson" for non-negative outcome
 #'   with proportional mean and variance, "cox".
-#' @param alpha Elastic net mixing parameter, range [0, 1]. 0 = ridge regression
+#' @param alpha Elastic net mixing parameter, range \[0, 1\]. 0 = ridge regression
 #'   and 1 = lasso.
 #' @param nfolds Number of folds for internal cross-validation to optimize lambda.
 #' @param nlambda Number of lambda values to check, recommended to be 100 or more.
@@ -38,11 +31,12 @@
 #' @param ... Any additional arguments are passed through to cv.glmnet.
 #' @export
 #' @importFrom stats predict model.matrix
+#' @import SuperLearner
 SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
                       alpha = 1, nfolds = 10, nlambda = 100, useMin = TRUE,
                       loss = "deviance",
                       ...) {
-  .SL.require("glmnet")
+  soft_require("glmnet")
 
   # X must be a matrix, should we use model.matrix or as.matrix
   # TODO: support sparse matrices.
@@ -89,11 +83,12 @@ SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
 #'
 #' @export
 #' @importFrom stats model.matrix
+#' @import SuperLearner
 predict.SL.glmnet.interaction <- function(object, newdata,
                               remove_extra_cols = T,
                               add_missing_cols = T,
                               ...) {
-  .SL.require("glmnet")
+  soft_require("glmnet")
 
   # TODO: support sparse matrices.
   if (!is.matrix(newdata)) {

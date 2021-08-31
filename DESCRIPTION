@@ -1,6 +1,6 @@
 Package: tidyhte
 Title: Tidy Semantics for the Estimation of Heterogeneous Treatment Effects
-Version: 0.0.0.4
+Version: 0.0.0.5
 Authors@R: 
     person(given = "Drew",
            family = "Dimmery",
@@ -22,7 +22,11 @@ Suggests:
     ggplot2,
     testthat (>= 3.0.0),
     covr,
-    quickblock
+    quickblock,
+    nprobust,
+    glmnet,
+    pROC,
+    vimp
 Config/testthat/edition: 3
 Imports: 
     checkmate,
@@ -30,10 +34,7 @@ Imports:
     dplyr,
     R6,
     rlang,
-    nprobust,
-    SuperLearner,
-    glmnet,
-    pROC,
-    vimp,
-    purrr
+    purrr,
+    tibble,
+    SuperLearner
 VignetteBuilder: knitr

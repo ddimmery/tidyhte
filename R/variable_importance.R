@@ -8,7 +8,7 @@
 #' will be calculated for each of these covariates.
 #' @param .VIMP_cfg A `VIMP_cfg` object defining how the joint effect model should be estimated.
 #' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
-#' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22. 
+#' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
 #' [https://doi.org/10.1111/biom.13392](https://doi.org/10.1111/biom.13392)
 #' @details The current implementation of the variable importance measures assume the
 #' that the HTE function lies within a Donsker class.

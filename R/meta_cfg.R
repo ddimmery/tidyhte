@@ -114,6 +114,7 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
         #' @examples
         #' VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
         initialize = function(model_cfg) {
+            soft_require("vimp")
             self$model_cfg <- model_cfg
         }
     )
@@ -169,6 +170,8 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
         vimp = NULL,
         #' @field diag A configuration object of type `Diagnostics_cfg` of model diagnostics to calculate.
         diag = NULL,
+        #' @field ate Logical flag indicating whether an estimate of the ATE should be returned.
+        ate = logical(),
 
         #' @description
         #' Create a new `QoI_cfg` object with specified Quantities of Interest to estimate.
@@ -176,6 +179,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
         #' @param pcate A configuration object of type `PCATE_cfg` of partial effects to calculate.
         #' @param vimp A configuration object of type `VIMP_cfg` of variable importance to calculate.
         #' @param diag A configuration object of type `Diagnostics_cfg` of model diagnostics to calculate.
+        #' @param ate A logical flag for whether to calculate the Average Treatment Effect (ATE) or not.
         #' @return A new `Diagnostics_cfg` object.
         #' @examples
         #' mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
@@ -197,7 +201,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
         #'     diag = diag_cfg
         #' )
         initialize = function(
-            mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL
+            mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL, ate = TRUE
         ) {
             if (is.null(mcate) && is.null(pcate) && is.null(vimp) && is.null(diag)) {
                 stop("Must define at least one QoI!")
@@ -206,6 +210,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
             if (!is.null(pcate)) self$pcate <- pcate
             if (!is.null(vimp)) self$vimp <- vimp
             if (!is.null(diag)) self$diag <- diag
+            self$ate <- ate
         }
     )
 )

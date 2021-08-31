@@ -20,7 +20,7 @@ test_that("make_splits output", {
 
 s_df <- make_splits(d, uid, .num_splits = 2)
 s_id <- s_df$.split_id
-test_that("check that 2 splits are legit", {
+test_that("check that 2 splits are ok", {
     expect_length(unique(s_id), 2)
     checkmate::expect_integerish(s_id, len = n, any.missing = FALSE, lower = 1, upper = 2)
     expect_true(all(table(s_id) == (n / 2)))
@@ -32,7 +32,7 @@ test_that("check that splits can be used to create dataframes", {
 })
 
 s_id <- make_splits(d, uid, .num_splits = 7)$.split_id
-test_that("check that 7 splits are legit", {
+test_that("check that 7 splits are ok", {
     expect_length(unique(s_id), 7)
     checkmate::expect_integerish(s_id, len = n, any.missing = FALSE, lower = 1, upper = 10)
     checkmate::expect_integer(table(s_id), lower = floor(n / 7), upper = ceiling(n / 7))
@@ -70,4 +70,63 @@ test_that("check that stratification on multiple variables works", {
     dplyr::summarize(all_splits = all(all_splits)) %>%
     unlist() -> result
     expect_true(result)
+})
+
+
+d <- dplyr::tibble(
+    uid = paste0("uid is ", as.character(1:n)),
+    cov1 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
+    cov2 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE)
+)
+
+test_that("character uids", {
+        checkmate::expect_data_frame(
+            make_splits(d, uid, .num_splits = 2),
+            any.missing = FALSE,
+            nrows = 100,
+            ncols = 4,
+            col.names = "named"
+        )
+        expect_true(".split_id" %in% names(make_splits(d, uid, .num_splits = 2)))
+})
+
+
+d <- dplyr::tibble(
+    uid = paste0("uid is ", as.character(1:n)),
+    cov1 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
+    cov2 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
+    cov3 = rnorm(n),
+    cov4 = runif(n)
+)
+
+test_that("lots of covariates informing the strata", {
+        newd <- make_splits(d, uid, cov1, cov2, cov3, cov4, .num_splits = 2)
+        checkmate::expect_data_frame(
+            newd,
+            any.missing = FALSE,
+            nrows = 100,
+            ncols = 6,
+            col.names = "named"
+        )
+        expect_true(".split_id" %in% names(newd))
+})
+
+d <- dplyr::tibble(
+    uid = rep(paste0("uid is ", as.character(1:(n/2))), 2),
+    cov1 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
+    cov2 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
+    cov3 = rnorm(n),
+    cov4 = runif(n)
+)
+
+test_that("clustered data", {
+        newd <- make_splits(d, uid, cov1, cov2, cov3, cov4, .num_splits = 2)
+        checkmate::expect_data_frame(
+            newd,
+            any.missing = FALSE,
+            nrows = 100,
+            ncols = 6,
+            col.names = "named"
+        )
+        expect_true(".split_id" %in% names(newd))
 })

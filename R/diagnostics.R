@@ -6,12 +6,12 @@ SL_model_slot <- function(prediction) {
     else stop("Unknown model slot.")
 }
 
-#' @export
-#' @importFrom pROC auc
+
 #' @importFrom stats sd
 #' @importFrom rlang .data
 estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     if (tolower(diag_name) == "auc") {
+        soft_require("pROC")
         labels <- .data[[label]]
         predictions <- .data[[prediction]]
         n1 <- sum(.data[[label]])
@@ -57,7 +57,7 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     result
 }
 
-#' @export
+
 calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
     ps_cfg <- .diag.cfg$ps
     y_cfg <- .diag.cfg$outcome

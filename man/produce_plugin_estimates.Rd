@@ -4,14 +4,14 @@
 \alias{produce_plugin_estimates}
 \title{Estimate models of nuisance functions}
 \usage{
-produce_plugin_estimates(.data, y_col, a_col, ..., .HTE_cfg = NULL)
+produce_plugin_estimates(.data, outcome, treatment, ..., .HTE_cfg = NULL)
 }
 \arguments{
 \item{.data}{dataframe}
 
-\item{y_col}{Unquoted name of the outcome variable.}
+\item{outcome}{Unquoted name of the outcome variable.}
 
-\item{a_col}{Unquoted name of the treatment variable.}
+\item{treatment}{Unquoted name of the treatment variable.}
 
 \item{...}{Unquoted names of covariates to include in the models of the nuisance functions.}
 

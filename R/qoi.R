@@ -1,4 +1,13 @@
 
+#' Construct Pseudo-outcomes
+#'
+#' `construct_pseudo_outcomes` takes a dataset which has been prepared
+#' with plugin estimators of nuisance parameters and transforms these into
+#' a "pseudo-outcome": an unbiased estimator of the conditional average
+#' treatment effect under exogeneity.
+#' @param .data dataframe
+#' @param y_col Unquoted name of outcome variable.
+#' @param a_col Unquoted name of treatment variable.
 #' @export
 construct_pseudo_outcomes <- function(.data, y_col, a_col) {
     # check that plugins are in the df
@@ -14,9 +23,23 @@ construct_pseudo_outcomes <- function(.data, y_col, a_col) {
     .data
 }
 
-#' @export
+#' @importFrom dplyr summarize
+#' @importFrom rlang .data
+calculate_ate <- function(.data) {
+    dplyr::summarize(
+        .data,
+        estimand = "ATE",
+        estimate = mean(.data$.pseudo_outcome),
+        std_error = sd(.data$.pseudo_outcome) / sqrt(dplyr::n()),
+        sample_size = dplyr::n()
+    )
+}
+
+
 calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
+    .outcome <- rlang::enexpr(.outcome)
+
     result_list <- list()
     for (covariate in dots) {
         .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_string(covariate)]]
@@ -51,7 +74,6 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
 }
 
 #' @importFrom rlang .data
-#' @export
 calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()

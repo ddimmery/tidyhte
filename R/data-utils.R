@@ -37,10 +37,12 @@ Model_data <- R6::R6Class("Model_data", list(
     model_frame = NULL,
     split_id = NULL,
     num_splits = NULL,
+    cluster = NULL,
     initialize = function(.data, label_col, ...) {
         self$label <- unlist(dplyr::select(.data, {{ label_col }}))
         self$features <- model.matrix(~. + 0, data = dplyr::select(.data, ...))
         self$model_frame <- model.frame(~. + 0, data = dplyr::select(.data, ...))
+        self$cluster <- .data[[attr(.data, "identifier")]]
         if (".split_id" %in% names(.data)) {
             self$split_id <- .data$.split_id
             self$num_splits <- attr(.data, "num_splits")
@@ -48,6 +50,18 @@ Model_data <- R6::R6Class("Model_data", list(
     },
     SL_cv_control = function() {
         validRows <- purrr::map(unique(self$split_id), ~which(.x == self$split_id))
-        SuperLearner.CV.control(V = length(validRows), validRows = validRows)
+        SuperLearner::SuperLearner.CV.control(V = length(validRows), validRows = validRows)
     }
 ))
+
+check_splits <- function(data) {
+    attrs <- names(attributes(data))
+    if (!(".split_id" %in% names(data)))
+        stop("You must first construct splits with `tidyhte::make_splits`.")
+
+    if (!("num_splits" %in% attrs))
+        stop("You must first construct splits with `tidyhte::make_splits`.")
+
+    if (!("identifier" %in% attrs))
+        stop("You must first construct splits with `tidyhte::make_splits`.")
+}

@@ -29,12 +29,15 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
             for (split_id in seq(self$num_splits)) {
                 folds <- split_data(.data_aggregated, split_id)
                 pred_data <- Model_data$new(folds$holdout, NULL, !!!self$covariates)
-                result[folds$in_holdout] <- self$models[[split_id]]$predict(pred_data)
+                result[folds$in_holdout] <- self$models[[split_id]]$predict(pred_data)$estimate
             }
-            dplyr::tibble(
+            o <- dplyr::tibble(
                 covariate_value = rep(unq_values, rep(sample_size, length(unq_values))),
-                .hte = result
+                .hte = result,
+                .id = .data_aggregated[[attr(data, "identifier")]]
             )
+            attr(o, "identifier") <- ".id"
+            o
         }
     )
 )
@@ -59,7 +62,7 @@ fit_fx_predictor <- function(.data, psi_col, ...,
         )
         fx_models[[split_id]] <- fx_model$fx
         pred_data <- Model_data$new(folds$holdout, NULL, !!!dots)
-        fx_hat[folds$in_holdout] <- fx_model$fx$predict(pred_data)
+        fx_hat[folds$in_holdout] <- fx_model$fx$predict(pred_data)$estimate
 
         if (.pcate.cfg$effect_cfg$model_class == "SL") {
             SL_coef <- dplyr::tibble(

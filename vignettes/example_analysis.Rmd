@@ -340,7 +340,7 @@ For simplicity, this example simply provides results in one of two ways:
 - Discrete covariates are stratified and the conditional effect is plotted at each distinct level of the covariate.
 - Continuous covariates have the effect surface estimated using local-linear regression via `nprobust` of Calonico, Cattaneo and Farrell (2018). See, similarly, Kennedy, Ma, McHugh and Small (2017) for justification of this approach. Results are obtained for a grid of 100 quantiles across the domain of the covariate.
 
-An additional quantity of interest provided is the variable importance of a learned joint model of conditional effects (over all covariates). The approach implemented is described in Williamson, Gilbert, Carone and Simon (2020)
+An additional quantity of interest provided is the variable importance of a learned joint model of conditional effects (over all covariates). The approach implemented is described in Williamson, Gilbert, Carone and Simon (2020).
 
 ```{r def_qoi}
 qoi.list <- list()
@@ -358,7 +358,8 @@ qoi.cfg <- QoI_cfg$new(
         cfgs = qoi.list,
         effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
-        #num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)
+        # In a real analysis, this should be higher so as to reduce Monte Carlo error.
+        # num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     ),
     vimp = VIMP_cfg$new(model_cfg = regression.cfg),
@@ -415,7 +416,7 @@ data %>%
         .HTE_cfg = cfg
     ) %>%
     construct_pseudo_outcomes({{ outcome_variable }}, {{ treatment_variable }}) %>%
-    estimate_QoI({{ outcome_variable }}, {{ treatment_variable }}, !!!moderators, .HTE_cfg = cfg) -> results
+    estimate_QoI(!!!moderators, .HTE_cfg = cfg) -> results
 ```
 
 ```{r show_qoi, message=FALSE}

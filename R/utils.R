@@ -21,3 +21,21 @@ muffle_messages <- function(expr, ...) {
         }
     )
 }
+
+soft_require <- function(package, load = FALSE) {
+    if (load) {
+        is_ok <- requireNamespace(package, quietly = FALSE)
+    } else {
+        path <- find.package(package, quiet = TRUE)
+        is_ok <- length(path) > 0
+    }
+    if (!is_ok) {
+        stop(paste("loading required package (", package, ") failed", sep = ""), call. = FALSE)
+    }
+}
+
+clustered_se_of_mean <- function(y, cluster, yhat = mean(y)) {
+    n <- length(y)
+    H <- length(unique(cluster))
+    sqrt(sum(tapply(y - yhat, cluster, sum)^2) / n ^ 2 * H / (H - 1))
+}

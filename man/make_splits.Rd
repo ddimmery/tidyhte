@@ -4,12 +4,12 @@
 \alias{make_splits}
 \title{Define splits for cross-fitting}
 \usage{
-make_splits(.data, id_col, ..., .num_splits)
+make_splits(.data, identifier, ..., .num_splits)
 }
 \arguments{
 \item{.data}{dataframe}
 
-\item{id_col}{unquoted name of unique identifier column}
+\item{identifier}{Unquoted name of unique identifier column}
 
 \item{...}{variables on which to stratify}
 

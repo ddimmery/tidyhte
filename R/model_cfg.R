@@ -44,7 +44,7 @@ Model_cfg <- R6::R6Class("Model_cfg",
     list(
         #' @field model_class The class of the model, required for all classes
         #' which inherit from `Model_cfg`.
-        model_class = NULL,
+        model_class = character(length = 1),
 
         #' @description
         #' Create a new `Model_cfg` object with any necessary parameters.
@@ -85,6 +85,30 @@ Known_cfg <- R6::R6Class("Known_cfg",
     )
 )
 
+#' Configuration of a Constant Estimator
+#'
+#' @description
+#' `Constant_cfg` is a configuration class for estimating a constant model.
+#' That is, the model is a simple, one-parameter mean model.
+#' @export
+Constant_cfg <- R6::R6Class("Constant_cfg",
+    inherit = Model_cfg,
+    public = list(
+        #' @field model_class The class of the model, required for all classes
+        #' which inherit from `Model_cfg`.
+        model_class = "Constant",
+
+        #' @description
+        #' Create a new `Constant_cfg` object.
+        #' @return A new `Constant_cfg` object.
+        #' @examples
+        #' Constant_cfg$new()
+        initialize = function() {
+        }
+    )
+)
+
+
 #' Configuration for a Kernel Smoother
 #'
 #' @description
@@ -113,6 +137,7 @@ KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
         #' @examples
         #' KernelSmooth_cfg$new(neval = 100)
         initialize = function(neval = 100) {
+            soft_require("nprobust")
             self$neval <- neval
         }
     )
@@ -153,6 +178,7 @@ Stratified_cfg <- R6::R6Class("Stratified_cfg",
 #' @description
 #' `SLEnsemble_cfg` is a configuration class for estimation of a model
 #' using an ensemble of models using `SuperLearner`.
+#' @import SuperLearner
 #' @export
 SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
     inherit = Model_cfg,
@@ -180,6 +206,8 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
         #' @examples
         #' SLEnsemble_cfg$new(learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam")))
         initialize = function(cvControl = NULL, learner_cfgs = NULL, family = stats::gaussian()) {
+            soft_require("SuperLearner", load = TRUE)
+
             self$family <- family
             if (!is.null(cvControl)) {
                 self$cvControl <- cvControl

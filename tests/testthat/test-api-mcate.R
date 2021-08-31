@@ -114,11 +114,12 @@ test_that("Construct Pseudo-outcomes", {
 
 test_that("Estimate QoIs", {
     # skip_on_cran()
-    results <<- estimate_QoI(data4, {{ outcome_variable }}, {{ treatment_variable }}, !!!moderators, .HTE_cfg = cfg)
+    results <<- estimate_QoI(data4, !!!moderators, .HTE_cfg = cfg)
     checkmate::expect_data_frame(results)
 })
 
 n_rows <- (
+    1 + # ATE estimate
     2 + # MSE for y(0) & y(1)
     1 + # AUC for pscore
     2 * 7 + 1 + # one row per model in the ensemble for each PO + ps for SL risk

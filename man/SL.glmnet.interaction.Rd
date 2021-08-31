@@ -36,7 +36,7 @@ with proportional mean and variance, "cox".}
 \item{id}{Optional id to group observations from the same unit (not used
 currently).}
 
-\item{alpha}{Elastic net mixing parameter, range \link{0, 1}. 0 = ridge regression
+\item{alpha}{Elastic net mixing parameter, range [0, 1]. 0 = ridge regression
 and 1 = lasso.}
 
 \item{nfolds}{Number of folds for internal cross-validation to optimize lambda.}

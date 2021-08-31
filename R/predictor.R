@@ -1,5 +1,7 @@
 predictor_factory <- function(cfg, ...) {
-    if (cfg$model_class == "known") {
+    if (!("model_class" %in% names(cfg))) {
+        stop("Unknown model class.")
+    } else if (cfg$model_class == "known") {
         KnownPredictor$new(cfg$covariate_name)
     } else if (cfg$model_class == "SL") {
         SLPredictor$new(cfg$SL.library, cfg$SL.env, family = cfg$family, ...)
@@ -7,7 +9,9 @@ predictor_factory <- function(cfg, ...) {
         KernelSmoothPredictor$new(neval = cfg$neval)
     } else if (cfg$model_class == "Stratified") {
         StratifiedPredictor$new(cfg$covariate)
-    } else{
+    } else if (cfg$model_class == "Constant") {
+        ConstantPredictor$new()
+    } else {
         stop("Unknown model class.")
     }
 }
@@ -16,7 +20,7 @@ predictor_factory <- function(cfg, ...) {
 Predictor <- R6::R6Class("Predictor",
     list(
         initialize = function(...) {
-            stop("Not Implemented")
+            warning("Not Implemented")
         },
         fit = function(labels, features) {
             stop("Not Implemented")
@@ -43,7 +47,33 @@ KnownPredictor <- R6::R6Class("KnownPredictor",
             invisible(self)
         },
         predict = function(data) {
-            data$model_frame[[self$covariate]]
+            dplyr::tibble(
+                x = rep(NA_real_, nrow(data$model_frame)),
+                estimate = data$model_frame[[self$covariate]],
+                sample_size = rep(NA_real_, nrow(data$model_frame))
+            )
+        }
+    )
+)
+
+
+ConstantPredictor <- R6::R6Class("ConstantPredictor",
+    inherit = Predictor,
+    public = list(
+        model = NULL,
+        covariate = character(),
+        initialize = function() {
+        },
+        fit = function(data) {
+            self$model <- dplyr::tibble(
+                x = NA,
+                estimate = mean(data$label),
+                sample_size = length(data$label)
+            )
+            invisible(self)
+        },
+        predict = function(data) {
+            self$model
         }
     )
 )
@@ -70,16 +100,23 @@ SLPredictor <- R6::R6Class("SLPredictor",
             invisible(self)
         },
         predict = function(data) {
-            muffle_warnings(
+            # needs to be rewritten to pass out a df w/ x, estimate, sample_size
+            pred <- muffle_warnings(
                 drop(predict(self$model, newdata = data$model_frame)$pred),
                 "rank-deficient fit"
+            )
+            covs <- rep(NA_real_, length(pred))
+            if (ncol(data$model_frame) == 1) covs = drop(unlist(data$model_frame))
+            dplyr::tibble(
+                x = covs,
+                estimate = pred,
+                sample_size = rep(1, length(pred))
             )
         }
     )
 )
 
-#' @export
-#' @importFrom nprobust lprobust
+
 KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
     inherit = Predictor,
     list(
@@ -100,19 +137,17 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                     neval = self$neval
                 )
             } else {
-                cluster <- as.factor(as.integer(as.factor(self$covariates)))
                 agg_tbl <- dplyr::tibble(y = self$label, x = self$covariates) %>%
                     dplyr::group_by(.data$x) %>%
                     dplyr::summarize(y = mean(.data$y), n = dplyr::n())
                 agg_y <- agg_tbl$y
                 agg_x <- agg_tbl$x
-                bws <- nprobust::lpbwselect(agg_y, agg_x, neval = self$neval)
+                bws <- nprobust::lpbwselect(agg_y, agg_x, neval = self$neval, bwselect = "imse-dpi")
                 self$model <- nprobust::lprobust(
                     self$label,
                     self$covariates,
                     neval = self$neval,
-                    bwselect = "imse-rot",
-                    cluster = cluster,
+                    cluster = factor(self$covariates), # data$cluster
                     h = bws$bws[, "h"]
                 )
             }
@@ -138,7 +173,6 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
     )
 )
 
-#' @export
 #' @importFrom stats sd
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
@@ -152,14 +186,13 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
             self$covariate <- covariate
         },
         fit = function(data) {
-            # This doesn't deal with the clustering under PCATE
-            self$map <- dplyr::tibble(x = unlist(data$model_frame), y = data$label) %>%
-                dplyr::group_by(.data$x) %>%
-                dplyr::summarize(
-                    estimate = mean(.data$y),
-                    std_error = stats::sd(.data$y) / sqrt(dplyr::n()),
-                    sample_size = dplyr::n()
-                )
+            self$map <- dplyr::tibble(x = unlist(data$model_frame), y = data$label, cluster = data$cluster) %>%
+            dplyr::group_by(.data$x) %>%
+            dplyr::summarize(
+                estimate = mean(.data$y),
+                std_error = clustered_se_of_mean(.data$y, .data$cluster),
+                sample_size = length(unique(.data$cluster))
+            )
             invisible(self)
         },
         predict = function(data) {
