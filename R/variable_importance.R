@@ -10,13 +10,11 @@
 #' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
 #' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
 #' [https://doi.org/10.1111/biom.13392](https://doi.org/10.1111/biom.13392)
-#' @details The current implementation of the variable importance measures assume the
-#' that the HTE function lies within a Donsker class.
 #' @export
-calculate_vimp <- function(.data, .outcome, ..., .VIMP_cfg) {
+calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
     dots <- rlang::enexprs(...)
 
-    data <- Model_data$new(.data, {{ .outcome }}, !!!dots)
+    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots)
 
     # full_model <- predictor_factory(.VIMP_cfg$model_cfg)
     # full_model <- full_model$fit(data)
@@ -24,7 +22,8 @@ calculate_vimp <- function(.data, .outcome, ..., .VIMP_cfg) {
 
     result_list <- list()
     idx <- 1
-    for (covariate in dots) {
+    cv_ctl <- data$SL_cv_control()
+    for (covariate in names(data$model_frame)) {
         # dots_reduced <- purrr::discard(dots, ~ .x == covariate)
         # reduced_data <- Model_data$new(.data, {{ .outcome }}, !!!dots_reduced)
         # reduced_model <- SuperLearner::SuperLearner(
@@ -34,16 +33,16 @@ calculate_vimp <- function(.data, .outcome, ..., .VIMP_cfg) {
         # )
         # reduced_model_predictions <- drop(reduced_model$SL.predict)
         muffle_warnings({
-            result <- vimp::vim(
+            result <- vimp::vimp_rsquared(
             Y = data$label,
             X = data$model_frame,
             indx = idx,
             run_regression = TRUE,
             SL.library = .VIMP_cfg$model_cfg$SL.library,
             env = .VIMP_cfg$model_cfg$SL.env,
-            type = "r_squared",
-            sample_splitting = TRUE,
-            family = stats::gaussian()
+            cvControl = cv_ctl,
+            V = cv_ctl$V,
+            sample_splitting = TRUE
         )
         }, "estimate < 0")
         # result <- vimp::vim(
@@ -59,7 +58,7 @@ calculate_vimp <- function(.data, .outcome, ..., .VIMP_cfg) {
         idx <- idx + 1
         result <- dplyr::tibble(
             estimand = "VIMP",
-            term = rlang::quo_name(rlang::enquo(covariate)),
+            term = covariate,
             estimate = result$est,
             std_error = result$se
         )

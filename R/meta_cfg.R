@@ -232,6 +232,8 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
         #' @field qoi `QoI_cfg` object indicating what the Quantities of Interest are and providing all
         #' necessary detail on how they should be estimated.
         qoi = list(),
+        #' @field verbose Logical indicating whether to print debugging information.
+        verbose = logical(),
 
         #' @description
         #' Create a new `HTE_cfg` object with all necessary information about how to carry out an HTE
@@ -240,6 +242,7 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
         #' @param treatment `Model_cfg` object indicating how the propensity score model should be estimated.
         #' @param qoi `QoI_cfg` object indicating what the Quantities of Interest are and providing all
         #' necessary detail on how they should be estimated.
+        #' @param verbose Logical indicating whether to print debugging information.
         #' @examples
         #' mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
         #' pcate_cfg <- PCATE_cfg$new(
@@ -267,7 +270,7 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
         #' )
         #' HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, qoi = qoi_cfg)
         initialize = function(
-            outcome=NULL, treatment=NULL, qoi=NULL
+            outcome = NULL, treatment = NULL, qoi = NULL, verbose = FALSE
         ) {
             if (is.null(outcome)) outcome <- SLEnsemble_cfg$new()
             if (is.null(treatment)) treatment <- SLEnsemble_cfg$new()
@@ -275,6 +278,7 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
             self$outcome <- outcome
             self$treatment <- treatment
             self$qoi <- qoi
+            self$verbose <- verbose
         }
     )
 )

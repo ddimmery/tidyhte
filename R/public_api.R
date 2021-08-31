@@ -69,6 +69,7 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
 #' @param treatment Unquoted name of the treatment variable.
 #' @param ... Unquoted names of covariates to include in the models of the nuisance functions.
 #' @param .HTE_cfg `HTE_cfg` object representing the full configuration of the HTE analysis.
+#' @importFrom progress progress_bar
 #' @export
 produce_plugin_estimates <- function(.data, outcome, treatment, ..., .HTE_cfg=NULL) {
     dots <- rlang::enexprs(...)
@@ -87,6 +88,10 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .HTE_cfg=NU
         mu1 = list()
     )
 
+    pb <- progress::progress_bar$new(
+        total = num_splits,
+        format = "estimating nuisance models [:bar] splits: :current / :total"
+    )
     for (split_id in seq(num_splits)) {
         folds <- split_data(.data, split_id)
 
@@ -143,6 +148,8 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .HTE_cfg=NU
 
         mu1_hat[folds$in_holdout] <- y_model$mu1$predict(pred_data)$estimate
         mu0_hat[folds$in_holdout] <- y_model$mu0$predict(pred_data)$estimate
+
+        pb$tick()
     }
     .data$.pi_hat <- pi_hat
     .data$.mu1_hat <- mu1_hat

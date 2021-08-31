@@ -79,7 +79,6 @@ qoi.cfg2 <- QoI_cfg$new(
         model_covariates = model_covariate_names,
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     ),
-    vimp = VIMP_cfg$new(model_cfg = regression.cfg),
     diag = Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE"),
         effect = c("SL_risk", "SL_coefs")

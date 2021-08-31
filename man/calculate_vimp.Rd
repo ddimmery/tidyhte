@@ -20,10 +20,6 @@ will be calculated for each of these covariates.}
 \code{calculate_vimp} estimates the reduction in (population) $R^2$ from removing a particular moderator
 from a model containing all moderators.
 }
-\details{
-The current implementation of the variable importance measures assume the
-that the HTE function lies within a Donsker class.
-}
 \references{
 Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
 assessment using machine learning techniques. \emph{Biometrics}. 2021; 77: 9-- 22.

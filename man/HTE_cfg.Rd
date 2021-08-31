@@ -49,6 +49,8 @@ HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, qoi = qoi_cfg)
 
 \item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest are and providing all
 necessary detail on how they should be estimated.}
+
+\item{\code{verbose}}{Logical indicating whether to print debugging information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -66,7 +68,7 @@ necessary detail on how they should be estimated.}
 Create a new \code{HTE_cfg} object with all necessary information about how to carry out an HTE
 analysis.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{HTE_cfg$new(outcome = NULL, treatment = NULL, qoi = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{HTE_cfg$new(outcome = NULL, treatment = NULL, qoi = NULL, verbose = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -78,6 +80,8 @@ analysis.
 
 \item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest are and providing all
 necessary detail on how they should be estimated.}
+
+\item{\code{verbose}}{Logical indicating whether to print debugging information.}
 }
 \if{html}{\out{</div>}}
 }
