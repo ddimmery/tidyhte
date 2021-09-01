@@ -17,7 +17,11 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
 
     ident_name <- attr(.data, "identifier")
     ident <- rlang::ensym(ident_name)
-    .data <- make_splits(.data, {{ ident }}, !!!dots, .num_splits = .VIMP_cfg$num_splits)
+    if (package_present("quickblock")) {
+        .data <- make_splits(.data, {{ ident }}, !!!dots, .num_splits = .VIMP_cfg$num_splits)
+    } else {
+        .data <- make_splits(.data, {{ ident }}, .num_splits = .VIMP_cfg$num_splits)
+    }
 
     data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots)
 

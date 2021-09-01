@@ -26,12 +26,16 @@ soft_require <- function(package, load = FALSE) {
     if (load) {
         is_ok <- requireNamespace(package, quietly = FALSE)
     } else {
-        path <- find.package(package, quiet = TRUE)
-        is_ok <- length(path) > 0
+        is_ok <- package_present(package)
     }
     if (!is_ok) {
         stop(paste("loading required package (", package, ") failed", sep = ""), call. = FALSE)
     }
+}
+
+package_present <- function(package) {
+    path <- find.package(package, quiet = TRUE)
+    length(path) > 0
 }
 
 clustered_se_of_mean <- function(y, cluster, yhat = mean(y)) {
