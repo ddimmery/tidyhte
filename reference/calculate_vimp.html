@@ -73,7 +73,7 @@ from a model containing all moderators." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@ from a model containing all moderators." />
 from a model containing all moderators.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calculate_vimp</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>.outcome</span>, <span class='va'>...</span>, <span class='va'>.VIMP_cfg</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>calculate_vimp</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>pseudo_outcome</span>, <span class='va'>...</span>, <span class='va'>.VIMP_cfg</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -136,7 +136,7 @@ from a model containing all moderators.</p>
       <td><p>dataframe</p></td>
     </tr>
     <tr>
-      <th>.outcome</th>
+      <th>pseudo_outcome</th>
       <td><p>Unquoted name of the pseudo-outcome.</p></td>
     </tr>
     <tr>
@@ -150,10 +150,6 @@ will be calculated for each of these covariates.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The current implementation of the variable importance measures assume the
-that the HTE function lies within a Donsker class.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance

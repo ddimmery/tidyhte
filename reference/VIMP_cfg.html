@@ -73,7 +73,7 @@ This provides a meaningful measure of which moderators explain the most of the C
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
       </span>
     </div>
 
@@ -136,6 +136,8 @@ regression (joint across all moderators).</p></dd>
 
 <dt><code>estimand</code></dt><dd><p>String indicating the estimand to target.</p></dd>
 
+<dt><code>num_splits</code></dt><dd><p>Integer indicating the number of splits to use in the variable importance calculation.</p></dd>
+
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
@@ -149,12 +151,15 @@ regression (joint across all moderators).</p></dd>
 <p><hr>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Create a new <code>VIMP_cfg</code> object with specified model configuration.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>VIMP_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>model_cfg</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>VIMP_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='va'>model_cfg</span>, num_splits <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
 <dt><code>model_cfg</code></dt><dd><p>A <code>Model_cfg</code> object indicating how to fit the second level effect
 regression (joint across all moderators).</p></dd>
+
+<dt><code>num_splits</code></dt><dd><p>Integer indicating the number of splits to use in the variable importance calculation.
+This number must be even due to the bilevel cross-validation routine employed by <code><a href='https://bdwilliamson.github.io/vimp/reference/cv_vim.html'>vimp::cv_vim</a></code>.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
@@ -187,8 +192,9 @@ regression (joint across all moderators).</p></dd>
 #&gt;   Public:
 #&gt;     clone: function (deep = FALSE) 
 #&gt;     estimand: VIMP
-#&gt;     initialize: function (model_cfg) 
-#&gt;     model_cfg: SLLearner_cfg, R6</div></pre>
+#&gt;     initialize: function (model_cfg, num_splits = 10) 
+#&gt;     model_cfg: SLLearner_cfg, R6
+#&gt;     num_splits: 10</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

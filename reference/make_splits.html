@@ -75,7 +75,7 @@ corresponding to an identifier for the split." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@ It returns the original dataset with an additional column <code>.split_id</code>
 corresponding to an identifier for the split.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make_splits</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>id_col</span>, <span class='va'>...</span>, <span class='va'>.num_splits</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>make_splits</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>identifier</span>, <span class='va'>...</span>, <span class='va'>.num_splits</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,8 +140,8 @@ corresponding to an identifier for the split.</p>
       <td><p>dataframe</p></td>
     </tr>
     <tr>
-      <th>id_col</th>
-      <td><p>unquoted name of unique identifier column</p></td>
+      <th>identifier</th>
+      <td><p>Unquoted name of unique identifier column</p></td>
     </tr>
     <tr>
       <th>...</th>

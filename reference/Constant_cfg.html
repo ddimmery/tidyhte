@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Partition the data into folds — split_data • tidyhte</title>
+<title>Configuration of a Constant Estimator — Constant_cfg • tidyhte</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Partition the data into folds — split_data" />
-<meta property="og:description" content="This takes a dataset and a split ID and generates two subsets of the
-data corresponding to a training set and a holdout." />
+<meta property="og:title" content="Configuration of a Constant Estimator — Constant_cfg" />
+<meta property="og:description" content="Constant_cfg is a configuration class for estimating a constant model.
+That is, the model is a simple, one-parameter mean model." />
 
 
 
@@ -116,40 +116,79 @@ data corresponding to a training set and a holdout." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Partition the data into folds</h1>
+    <h1>Configuration of a Constant Estimator</h1>
     
-    <div class="hidden name"><code>split_data.Rd</code></div>
+    <div class="hidden name"><code>Constant_cfg.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This takes a dataset and a split ID and generates two subsets of the
-data corresponding to a training set and a holdout.</p>
+    <p><code>Constant_cfg</code> is a configuration class for estimating a constant model.
+That is, the model is a simple, one-parameter mean model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>split_data</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>split_id</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>.data</th>
-      <td><p>dataframe</p></td>
-    </tr>
-    <tr>
-      <th>split_id</th>
-      <td><p>integer representing the split to construct</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
 
-    <p>Returns an R6 object <code>HTEFold</code> with three public fields:</p><ul>
-<li><p><code>train</code> - The split to be used for training the plugin estimates</p></li>
-<li><p><code>holdout</code> - The split not used for training</p></li>
-<li><p><code>in_holdout</code> - A logical vector indicating for each unit whether they lie in the holdout.</p></li>
+    <p><code><a href='Model_cfg.html'>tidyhte::Model_cfg</a></code> -&gt; <code>Constant_cfg</code></p>
+    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
+
+    <p><div class="r6-fields"></p><dl>
+<dt><code>model_class</code></dt><dd><p>The class of the model, required for all classes
+which inherit from <code>Model_cfg</code>.</p></dd>
+
+</dl><p></div></p>
+    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
+
+    
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
+
+<ul>
+<li><p><a href='#method-new'><code>Constant_cfg$new()</code></a></p></li>
+<li><p><a href='#method-clone'><code>Constant_cfg$clone()</code></a></p></li>
 </ul>
+<p><details open ><summary>Inherited methods</summary>
+<ul>
+</ul>
+</details>
+
+<hr>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
+<p>Create a new <code>Constant_cfg</code> object.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>Constant_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Returns</h4>
+<p>A new <code>Constant_cfg</code> object.</p>
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
+<p><div class="r example copy"></p><pre><span class='va'>Constant_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='op'>)</span>
+</pre><p></div></p>
+
+<p><hr>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>Constant_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
+
+</dl><p></div></p>
 
 
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='co'>## ------------------------------------------------</span>
+<span class='co'>## Method `Constant_cfg$new`</span>
+<span class='co'>## ------------------------------------------------</span>
+
+<span class='va'>Constant_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;Constant_cfg&gt;
+#&gt;   Inherits from: &lt;Model_cfg&gt;
+#&gt;   Public:
+#&gt;     clone: function (deep = FALSE) 
+#&gt;     initialize: function () 
+#&gt;     model_class: Constant</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

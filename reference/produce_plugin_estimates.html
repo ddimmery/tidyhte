@@ -76,7 +76,7 @@ conditional expectation of the control and treatment potential outcome surfaces
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
       </span>
     </div>
 
@@ -132,7 +132,7 @@ conditional expectation of the control and treatment potential outcome surfaces
 (<code>.mu0_hat</code> and <code>.mu1_hat</code> respectively).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>produce_plugin_estimates</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>y_col</span>, <span class='va'>a_col</span>, <span class='va'>...</span>, .HTE_cfg <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>produce_plugin_estimates</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>outcome</span>, <span class='va'>treatment</span>, <span class='va'>...</span>, .HTE_cfg <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,11 +142,11 @@ conditional expectation of the control and treatment potential outcome surfaces
       <td><p>dataframe</p></td>
     </tr>
     <tr>
-      <th>y_col</th>
+      <th>outcome</th>
       <td><p>Unquoted name of the outcome variable.</p></td>
     </tr>
     <tr>
-      <th>a_col</th>
+      <th>treatment</th>
       <td><p>Unquoted name of the treatment variable.</p></td>
     </tr>
     <tr>

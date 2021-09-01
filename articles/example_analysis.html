@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@
       <h1 data-toc-skip>Example HTE Analysis</h1>
                         <h4 class="author">Drew Dimmery (<a href="mailto:drew.dimmery@gmail.com" class="email">drew.dimmery@gmail.com</a>)</h4>
             
-            <h4 class="date">27 August, 2021</h4>
+            <h4 class="date">01 September, 2021</h4>
       
       
       <div class="hidden name"><code>example_analysis.Rmd</code></div>
@@ -232,7 +232,7 @@ div.main-container {
 <a href="#define-quantities-of-interest" class="anchor"></a>Define Quantities of interest</h1>
 <p>Quantities of Interest determine how results are reported to the user. You can think about this as determining, for instance how results should be plotted in a resulting chart.</p>
 <p>For simplicity, this example simply provides results in one of two ways: - Discrete covariates are stratified and the conditional effect is plotted at each distinct level of the covariate. - Continuous covariates have the effect surface estimated using local-linear regression via <code>nprobust</code> of Calonico, Cattaneo and Farrell (2018). See, similarly, Kennedy, Ma, McHugh and Small (2017) for justification of this approach. Results are obtained for a grid of 100 quantiles across the domain of the covariate.</p>
-<p>An additional quantity of interest provided is the variable importance of a learned joint model of conditional effects (over all covariates). The approach implemented is described in Williamson, Gilbert, Carone and Simon (2020)</p>
+<p>An additional quantity of interest provided is the variable importance of a learned joint model of conditional effects (over all covariates). The approach implemented is described in Williamson, Gilbert, Carone and Simon (2020).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">qoi.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">continuous_moderators</span><span class="op">)</span> <span class="op">{</span>
@@ -249,7 +249,8 @@ div.main-container {
         cfgs <span class="op">=</span> <span class="va">qoi.list</span>,
         effect_cfg <span class="op">=</span> <span class="va">regression.cfg</span>,
         model_covariates <span class="op">=</span> <span class="va">model_covariate_names</span>,
-        <span class="co">#num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)</span>
+        <span class="co"># In a real analysis, this should be higher so as to reduce Monte Carlo error.</span>
+        <span class="co"># num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)</span>
         num_mc_samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fl">5</span>, x2 <span class="op">=</span> <span class="fl">10</span>, x3 <span class="op">=</span> <span class="fl">10</span>, x4 <span class="op">=</span> <span class="fl">5</span>, x5 <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
     <span class="op">)</span>,
     vimp <span class="op">=</span> <span class="va"><a href="../reference/VIMP_cfg.html">VIMP_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>model_cfg <span class="op">=</span> <span class="va">regression.cfg</span><span class="op">)</span>,
@@ -303,18 +304,18 @@ div.main-container {
         <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>,
         .HTE_cfg <span class="op">=</span> <span class="va">cfg</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">construct_pseudo_outcomes</span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">estimate_QoI</span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
+    <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 633
+<pre><code>## Rows: 634
 ## Columns: 6
 ## $ estimand  &lt;chr&gt; "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE…
 ## $ term      &lt;chr&gt; "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", …
-## $ value     &lt;dbl&gt; -2.996263, -2.934763, -2.873263, -2.811763, -2.750263, -2.68…
+## $ value     &lt;dbl&gt; -1.6365102, -1.5213897, -1.4725538, -1.3974162, -1.3575229, …
 ## $ level     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ estimate  &lt;dbl&gt; 2.568550, 2.559415, 2.536778, 2.507192, 2.480860, 2.456951, …
-## $ std_error &lt;dbl&gt; 0.4801964, 0.4520449, 0.4253273, 0.4004288, 0.3772879, 0.355…</code></pre>
+## $ estimate  &lt;dbl&gt; 1.844155, 1.786028, 1.761467, 1.723694, 1.703583, 1.684873, …
+## $ std_error &lt;dbl&gt; 0.13175542, 0.11962403, 0.11503019, 0.10857853, 0.10544900, …</code></pre>
 </div>
 <div id="write-results-to-file" class="section level1">
 <h1 class="hasAnchor">

@@ -74,7 +74,7 @@ models and what Quantities of Interest to calculate based off those underlying m
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
       </span>
     </div>
 
@@ -140,6 +140,8 @@ models and what Quantities of Interest to calculate based off those underlying m
 <dt><code>qoi</code></dt><dd><p><code>QoI_cfg</code> object indicating what the Quantities of Interest are and providing all
 necessary detail on how they should be estimated.</p></dd>
 
+<dt><code>verbose</code></dt><dd><p>Logical indicating whether to print debugging information.</p></dd>
+
 </dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
@@ -154,7 +156,7 @@ necessary detail on how they should be estimated.</p></dd>
 <a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>new()</code></h3>
 <p>Create a new <code>HTE_cfg</code> object with all necessary information about how to carry out an HTE
 analysis.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
-<p><div class="r"></p><pre><span class='va'>HTE_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>outcome <span class='op'>=</span> <span class='cn'>NULL</span>, treatment <span class='op'>=</span> <span class='cn'>NULL</span>, qoi <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
+<p><div class="r"></p><pre><span class='va'>HTE_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>outcome <span class='op'>=</span> <span class='cn'>NULL</span>, treatment <span class='op'>=</span> <span class='cn'>NULL</span>, qoi <span class='op'>=</span> <span class='cn'>NULL</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
 
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
 <p><div class="arguments"></p><dl>
@@ -164,6 +166,8 @@ analysis.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#argum
 
 <dt><code>qoi</code></dt><dd><p><code>QoI_cfg</code> object indicating what the Quantities of Interest are and providing all
 necessary detail on how they should be estimated.</p></dd>
+
+<dt><code>verbose</code></dt><dd><p>Logical indicating whether to print debugging information.</p></dd>
 
 </dl><p></div></p>
 <h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Examples</h4>
@@ -241,10 +245,11 @@ necessary detail on how they should be estimated.</p></dd>
 </div><div class='output co'>#&gt; &lt;HTE_cfg&gt;
 #&gt;   Public:
 #&gt;     clone: function (deep = FALSE) 
-#&gt;     initialize: function (outcome = NULL, treatment = NULL, qoi = NULL) 
+#&gt;     initialize: function (outcome = NULL, treatment = NULL, qoi = NULL, verbose = FALSE) 
 #&gt;     outcome: SLEnsemble_cfg, Model_cfg, R6
 #&gt;     qoi: QoI_cfg, R6
-#&gt;     treatment: SLEnsemble_cfg, Model_cfg, R6</div></pre>
+#&gt;     treatment: SLEnsemble_cfg, Model_cfg, R6
+#&gt;     verbose: FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

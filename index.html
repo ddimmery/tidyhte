@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tidy Semantics for the Estimation of Heterogeneous Treatment Effects • tidyhte</title>
+<title>Tidy Estimation of Heterogeneous Treatment Effects • tidyhte</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Tidy Semantics for the Estimation of Heterogeneous Treatment Effects">
+<script src="pkgdown.js"></script><meta property="og:title" content="Tidy Estimation of Heterogeneous Treatment Effects">
 <meta property="og:description" content="Tools for the estimation of heterogeneous treatment effects
     using tidy semantics. Methods are based on the doubly-robust learner
     of Kennedy (n.d.).">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
       </span>
     </div>
 
@@ -170,14 +170,14 @@
         <span class="va">covariate1</span>, <span class="va">covariate2</span>, <span class="va">covariate3</span>, <span class="va">covariate4</span>, <span class="va">covariate5</span>, <span class="va">covariate6</span>,
         .HTE_cfg <span class="op">=</span> <span class="va">cfg</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">construct_pseudo_outcomes</span><span class="op">(</span><span class="va">outcome_variable</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">data</span>
+    <span class="fu"><a href="reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">outcome_variable</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">data</span>
 
 <span class="va">data</span> <span class="op">%&gt;%</span>
-    <span class="fu">estimate_QoI</span><span class="op">(</span><span class="va">outcome_variable</span>, <span class="va">treatment_variable</span>, <span class="va">covariate1</span>, <span class="va">covariate2</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
+    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">outcome_variable</span>, <span class="va">treatment_variable</span>, <span class="va">covariate1</span>, <span class="va">covariate2</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
 <p>To get information on a moderator not included above would just require rerunning the final line:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">%&gt;%</span>
-    <span class="fu">estimate_QoI</span><span class="op">(</span><span class="va">outcome_variable</span>, <span class="va">treatment_variable</span>, <span class="va">covariate3</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
+    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">outcome_variable</span>, <span class="va">treatment_variable</span>, <span class="va">covariate3</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
 <p>Replicating this on a new outcome would be as simple as running the following, with no reconfiguration necessary.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">%&gt;%</span>
@@ -187,8 +187,8 @@
         <span class="va">covariate1</span>, <span class="va">covariate2</span>, <span class="va">covariate3</span>, <span class="va">covariate4</span>, <span class="va">covariate5</span>, <span class="va">covariate6</span>,
         .HTE_cfg <span class="op">=</span> <span class="va">cfg</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">construct_pseudo_outcomes</span><span class="op">(</span><span class="va">second_outcome_variable</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">estimate_QoI</span><span class="op">(</span><span class="va">second_outcome_variable</span>, <span class="va">treatment_variable</span>, <span class="va">covariate1</span>, <span class="va">covariate2</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
+    <span class="fu"><a href="reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">second_outcome_variable</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">second_outcome_variable</span>, <span class="va">treatment_variable</span>, <span class="va">covariate1</span>, <span class="va">covariate2</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
 <p>This leads to the ability to easily chain together analyses across many outcomes in an easy way:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">%&gt;%</span>
@@ -202,8 +202,8 @@
         <span class="va">covariate1</span>, <span class="va">covariate2</span>, <span class="va">covariate3</span>, <span class="va">covariate4</span>, <span class="va">covariate5</span>, <span class="va">covariate6</span>,
         .HTE_cfg <span class="op">=</span> <span class="va">cfg</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">construct_pseudo_outcomes</span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">estimate_QoI</span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment_variable</span>, <span class="va">covariate1</span>, <span class="va">covariate2</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment_variable</span>, <span class="va">covariate1</span>, <span class="va">covariate2</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu">mutate</span><span class="op">(</span>outcome <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">outcome</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>I’m sure you could do that purely tidily if you wanted.</p>
@@ -229,6 +229,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml"><img src="https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml/badge.svg" alt="lint"></a></li>
 <li><a href="https://codecov.io/gh/ddimmery/tidyhte"><img src="https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg?token=AHT3X4S2KQ" alt="codecov"></a></li>
 <li><a href="https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
