@@ -49,7 +49,7 @@ regression.cfg <- SLEnsemble_cfg$new(
 
 qoi.list <- list()
 for (cov in continuous_moderators) {
-    qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100)
+    qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100, eval_min_quantile = 0.05)
 }
 for (cov in discrete_moderators) {
     qoi.list[[rlang::as_string(cov)]] <- Stratified_cfg$new(cov)

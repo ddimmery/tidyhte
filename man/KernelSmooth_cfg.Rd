@@ -29,6 +29,8 @@ which inherit from \code{Model_cfg}.}
 \item{\code{neval}}{The number of points at which to evaluate the local
 regression. More points will provide a smoother line at the cost
 of somewhat higher computation.}
+
+\item{\code{eval_min_quantile}}{Minimum quantile at which to evaluate the smoother.}
 }
 \if{html}{\out{</div>}}
 }
@@ -51,7 +53,7 @@ of somewhat higher computation.}
 \subsection{Method \code{new()}}{
 Create a new \code{KernelSmooth_cfg} object with specified number of evaluation points.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KernelSmooth_cfg$new(neval = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KernelSmooth_cfg$new(neval = 100, eval_min_quantile = 0.05)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -60,6 +62,10 @@ Create a new \code{KernelSmooth_cfg} object with specified number of evaluation 
 \item{\code{neval}}{The number of points at which to evaluate the local
 regression. More points will provide a smoother line at the cost
 of somewhat higher computation.}
+
+\item{\code{eval_min_quantile}}{Minimum quantile at which to evaluate the smoother.
+A value of zero will do no clipping. Clipping is performed from both the top and the bottom
+of the empirical distribution. A value of alpha would evaluate over [alpha, 1 - alpha].}
 }
 \if{html}{\out{</div>}}
 }

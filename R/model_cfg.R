@@ -127,18 +127,26 @@ KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
         #' regression. More points will provide a smoother line at the cost
         #' of somewhat higher computation.
         neval = integer(),
+        #' @field eval_min_quantile Minimum quantile at which to evaluate the smoother.
+        eval_min_quantile = double(),
 
         #' @description
         #' Create a new `KernelSmooth_cfg` object with specified number of evaluation points.
         #' @param neval The number of points at which to evaluate the local
         #' regression. More points will provide a smoother line at the cost
         #' of somewhat higher computation.
+        #' @param eval_min_quantile Minimum quantile at which to evaluate the smoother.
+        #' A value of zero will do no clipping. Clipping is performed from both the top and the bottom
+        #' of the empirical distribution. A value of alpha would evaluate over \[alpha, 1 - alpha\].
         #' @return A new `KernelSmooth_cfg` object.
         #' @examples
         #' KernelSmooth_cfg$new(neval = 100)
-        initialize = function(neval = 100) {
+        initialize = function(neval = 100, eval_min_quantile = 0.05) {
             soft_require("nprobust")
             self$neval <- neval
+            eval_min_quantile <- pmin(eval_min_quantile, 1 - eval_min_quantile)
+            checkmate::check_double(eval_min_quantile, lower = 0.0, upper = 0.5)
+            self$eval_min_quantile <- eval_min_quantile
         }
     )
 )

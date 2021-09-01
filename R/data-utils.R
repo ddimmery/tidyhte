@@ -75,10 +75,11 @@ check_nuisance_models <- function(data) {
 }
 
 
+#' @importFrom stats complete.cases
 listwise_deletion <- function(data, ...) {
     dots <- rlang::enexprs(...)
     start_rows <- nrow(data)
-    ok <- complete.cases(dplyr::select(data, !!!dots))
+    ok <- stats::complete.cases(dplyr::select(data, !!!dots))
     data <- data[ok, ]
     end_rows <- nrow(data)
 

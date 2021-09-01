@@ -88,6 +88,7 @@ calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cf
     result_list <- list()
     pb <- progress::progress_bar$new(
         total = length(dots),
+        show_after = 0,
         format = "estimating PCATEs [:bar] covariates: :current / :total"
     )
     pb$tick(0)

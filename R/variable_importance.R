@@ -3,7 +3,7 @@
 #' `calculate_vimp` estimates the reduction in (population) $R^2$ from removing a particular moderator
 #' from a model containing all moderators.
 #' @param .data dataframe
-#' @param .outcome Unquoted name of the pseudo-outcome.
+#' @param pseudo_outcome Unquoted name of the pseudo-outcome.
 #' @param ... Unquoted names of covariates to include in the joint effect model. The variable importance
 #' will be calculated for each of these covariates.
 #' @param .VIMP_cfg A `VIMP_cfg` object defining how the joint effect model should be estimated.

@@ -6,7 +6,7 @@ predictor_factory <- function(cfg, ...) {
     } else if (cfg$model_class == "SL") {
         SLPredictor$new(cfg$SL.library, cfg$SL.env, family = cfg$family, ...)
     } else if (cfg$model_class == "KernelSmooth") {
-        KernelSmoothPredictor$new(neval = cfg$neval)
+        KernelSmoothPredictor$new(neval = cfg$neval, eval_min_quantile = cfg$eval_min_quantile)
     } else if (cfg$model_class == "Stratified") {
         StratifiedPredictor$new(cfg$covariate)
     } else if (cfg$model_class == "Constant") {
@@ -68,7 +68,7 @@ ConstantPredictor <- R6::R6Class("ConstantPredictor",
             self$model <- dplyr::tibble(
                 x = NA,
                 estimate = mean(data$label),
-                sample_size = length(data$label)
+                sample_size = length(unique(data$cluster))
             )
             invisible(self)
         },
@@ -124,17 +124,23 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
         label = character(),
         covariates = character(),
         neval = integer(),
-        initialize = function(neval) {
+        eval_min_quantile = double(),
+        initialize = function(neval, eval_min_quantile) {
             self$neval <- neval
+            self$eval_min_quantile <- eval_min_quantile
         },
         fit = function(data) {
             self$label <- data$label
             self$covariates <- drop(data$features)
+            eval_pts <- quantile(
+                self$covariates,
+                probs = seq(self$eval_min_quantile, 1 - self$eval_min_quantile, length = self$neval)
+            )
             if (length(unique(self$covariates)) == length(self$covariates)) {
                 self$model <- nprobust::lprobust(
                     self$label,
                     self$covariates,
-                    neval = self$neval
+                    eval = eval_pts
                 )
             } else {
                 agg_tbl <- dplyr::tibble(y = self$label, x = self$covariates) %>%
@@ -146,7 +152,8 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                 self$model <- nprobust::lprobust(
                     self$label,
                     self$covariates,
-                    neval = self$neval,
+                    eval = eval_pts,
+                    #cluster = data$cluster,
                     #cluster = factor(self$covariates), # data$cluster
                     h = bws$bws[, "h"]
                 )
