@@ -41,6 +41,11 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
     .outcome <- rlang::enexpr(.outcome)
 
     result_list <- list()
+    pb <- progress::progress_bar$new(
+        total = length(dots),
+        format = "estimating MCATEs [:bar] covariates: :current / :total"
+    )
+    pb$tick(0)
     for (covariate in dots) {
         .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_string(covariate)]]
         data <- Model_data$new(.data, {{ .outcome }}, {{ covariate }})
@@ -68,6 +73,7 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
             stop("Unknown type of result!")
         }
         result_list <- c(result_list, list(result))
+        pb$tick()
     }
 
     dplyr::bind_rows(!!!result_list)
@@ -77,6 +83,11 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
 calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
+    pb <- progress::progress_bar$new(
+        total = length(dots),
+        format = "estimating PCATEs [:bar] covariates: :current / :total"
+    )
+    pb$tick(0)
     for (covariate in dots) {
         fx_data <- fx_model$predict(.data, covariate)
         .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_string(covariate)]]
@@ -107,6 +118,7 @@ calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cf
             stop("Unknown type of result!")
         }
         result_list <- c(result_list, list(result))
+        pb$tick()
     }
 
     dplyr::bind_rows(!!!result_list)

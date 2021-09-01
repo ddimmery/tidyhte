@@ -54,6 +54,12 @@ fit_fx_predictor <- function(.data, psi_col, ...,
         fx = list()
     )
     fx_hat <- rep(NA_real_, nrow(.data))
+
+    pb <- progress::progress_bar$new(
+        total = num_splits,
+        format = "fitting effect models [:bar] splits: :current / :total"
+    )
+    pb$tick(0)
     for (split_id in seq(num_splits)) {
         folds <- split_data(.data, split_id)
         fx_model <- fit_effect(
@@ -73,6 +79,7 @@ fit_fx_predictor <- function(.data, psi_col, ...,
             )
             SL_coefs[["fx"]] <- c(SL_coefs[["fx"]], list(SL_coef))
         }
+        pb$tick()
     }
 
     .data$.pseudo_outcome_hat <- fx_hat

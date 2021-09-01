@@ -78,6 +78,8 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .HTE_cfg=NU
 
     check_splits(.data)
 
+    .data <- listwise_deletion(.data, {{ outcome }}, {{ treatment }}, !!!dots)
+
     num_splits <- max(.data$.split_id)
     pi_hat <- rep(NA_real_, nrow(.data))
     mu0_hat <- rep(NA_real_, nrow(.data))
@@ -92,6 +94,7 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .HTE_cfg=NU
         total = num_splits,
         format = "estimating nuisance models [:bar] splits: :current / :total"
     )
+    pb$tick(0)
     for (split_id in seq(num_splits)) {
         folds <- split_data(.data, split_id)
 
@@ -173,6 +176,9 @@ estimate_QoI <- function(
     .data, ..., .HTE_cfg=NULL
 ) {
     dots <- rlang::enexprs(...)
+
+    check_splits(.data)
+    check_nuisance_models(.data)
 
     .QoI_cfg <- .HTE_cfg$qoi
     result_list <- list()

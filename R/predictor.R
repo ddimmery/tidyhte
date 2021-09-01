@@ -147,7 +147,7 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                     self$label,
                     self$covariates,
                     neval = self$neval,
-                    cluster = factor(self$covariates), # data$cluster
+                    #cluster = factor(self$covariates), # data$cluster
                     h = bws$bws[, "h"]
                 )
             }

@@ -56,12 +56,44 @@ Model_data <- R6::R6Class("Model_data", list(
 
 check_splits <- function(data) {
     attrs <- names(attributes(data))
-    if (!(".split_id" %in% names(data)))
-        stop("You must first construct splits with `tidyhte::make_splits`.")
+    ok <- TRUE
+    if (!(".split_id" %in% names(data))) ok <- FALSE
+    if (!("num_splits" %in% attrs)) ok <- FALSE
+    if (!("identifier" %in% attrs)) ok <- FALSE
 
-    if (!("num_splits" %in% attrs))
-        stop("You must first construct splits with `tidyhte::make_splits`.")
+    if (!ok) stop("You must first construct splits with `tidyhte::make_splits`.")
+}
 
-    if (!("identifier" %in% attrs))
-        stop("You must first construct splits with `tidyhte::make_splits`.")
+check_nuisance_models <- function(data) {
+    cols <- names(data)
+    ok <- TRUE
+    if (!(".pi_hat" %in% cols)) ok <- FALSE
+    if (!(".mu0_hat" %in% cols)) ok <- FALSE
+    if (!(".mu1_hat" %in% cols)) ok <- FALSE
+
+    if (!ok) stop("You must first estimate plugin models with `tidyhte::produce_plugin_estimates`.")
+}
+
+
+listwise_deletion <- function(data, ...) {
+    dots <- rlang::enexprs(...)
+    start_rows <- nrow(data)
+    ok <- complete.cases(dplyr::select(data, !!!dots))
+    data <- data[ok, ]
+    end_rows <- nrow(data)
+
+    if (end_rows < start_rows) {
+        dropped <- start_rows - end_rows
+        msg <- paste0(
+            "Dropped ",
+            dropped,
+            " of ",
+            start_rows,
+            " rows (",
+            round(dropped / start_rows * 100, digits = 1),
+            "%) through listwise deletion."
+        )
+        message(msg)
+    }
+    data
 }

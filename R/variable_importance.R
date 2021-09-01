@@ -10,6 +10,7 @@
 #' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
 #' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
 #' [https://doi.org/10.1111/biom.13392](https://doi.org/10.1111/biom.13392)
+#' @importFrom progress progress_bar
 #' @export
 calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
     dots <- rlang::enexprs(...)
@@ -23,6 +24,12 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
     result_list <- list()
     idx <- 1
     cv_ctl <- data$SL_cv_control()
+
+    pb <- progress::progress_bar$new(
+        total = ncol(data$model_frame),
+        format = "estimating VIMP [:bar] covariates: :current / :total"
+    )
+    pb$tick(0)
     for (covariate in names(data$model_frame)) {
         # dots_reduced <- purrr::discard(dots, ~ .x == covariate)
         # reduced_data <- Model_data$new(.data, {{ .outcome }}, !!!dots_reduced)
@@ -33,18 +40,20 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
         # )
         # reduced_model_predictions <- drop(reduced_model$SL.predict)
         muffle_warnings({
-            result <- vimp::vimp_rsquared(
+            result <- vimp::cv_vim(
             Y = data$label,
             X = data$model_frame,
             indx = idx,
             run_regression = TRUE,
             SL.library = .VIMP_cfg$model_cfg$SL.library,
             env = .VIMP_cfg$model_cfg$SL.env,
-            cvControl = cv_ctl,
+            cvControl = list(V = 2 * cv_ctl$V),
             V = cv_ctl$V,
             sample_splitting = TRUE
         )
-        }, "estimate < 0")
+        }, "estimate < 0", "rank-deficient fit")
+        # print(covariate)
+        # print(result)
         # result <- vimp::vim(
         #     Y = data$label,
         #     f1 = full_model_predictions,
@@ -63,6 +72,7 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
             std_error = result$se
         )
         result_list <- c(result_list, list(result))
+        pb$tick()
     }
     dplyr::bind_rows(!!!result_list)
 }
