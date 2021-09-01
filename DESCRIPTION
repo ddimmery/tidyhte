@@ -10,6 +10,7 @@ Authors@R:
 Description: Tools for the estimation of heterogeneous treatment effects
     using tidy semantics. Methods are based on the doubly-robust learner
     of Kennedy (n.d.).
+URL: http://github.com/ddimmery/tidyhte https://ddimmery.github.io/tidyhte/index.html
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
