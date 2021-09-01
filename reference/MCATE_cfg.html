@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -44,7 +44,7 @@
 treatment effect estimates. &quot;Marginal&quot; in this context implies that all other covariates are marginalized.
 Thus, if two covariates are highly correlated, it is likely that their MCATE surfaces will be extremely similar." />
 
-
+<meta name="robots" content="noindex" />
 
 
 <!-- mathjax -->
@@ -56,6 +56,16 @@ Thus, if two covariates are highly correlated, it is likely that their MCATE sur
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R58XC167ZD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R58XC167ZD');
+</script>
 
 
   </head>
@@ -103,7 +113,12 @@ Thus, if two covariates are highly correlated, it is likely that their MCATE sur
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="http://github.com/ddimmery/tidyhte/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -118,7 +133,7 @@ Thus, if two covariates are highly correlated, it is likely that their MCATE sur
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Configuration of Marginal CATEs</h1>
-    
+    <small class="dont-index">Source: <a href='http://github.com/ddimmery/tidyhte/blob/master/R/meta_cfg.R'><code>R/meta_cfg.R</code></a></small>
     <div class="hidden name"><code>MCATE_cfg.Rd</code></div>
     </div>
 
