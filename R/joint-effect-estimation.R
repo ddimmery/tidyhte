@@ -57,6 +57,7 @@ fit_fx_predictor <- function(.data, psi_col, ...,
 
     pb <- progress::progress_bar$new(
         total = num_splits,
+        show_after = 0,
         format = "fitting effect models [:bar] splits: :current / :total"
     )
     pb$tick(0)

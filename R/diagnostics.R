@@ -13,16 +13,24 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     if (tolower(diag_name) == "auc") {
         soft_require("pROC")
         labels <- .data[[label]]
-        predictions <- .data[[prediction]]
-        n1 <- sum(.data[[label]])
-        result <- muffle_messages(as.double(pROC::auc(labels, predictions)), "Setting levels", "Setting direction")
-        result <- dplyr::tibble(
-            estimand = "AUC",
-            term = label,
-            estimate = result,
-            # Hanley and McNeil (1982) bound on the variance of AUC
-            std_error = 1 / 2 / sqrt(pmin(n1, length(labels) - n1))
-        )
+        if (checkmate::test_integerish(labels, lower = 0, upper = 1)) {
+            predictions <- .data[[prediction]]
+            n1 <- sum(.data[[label]])
+            result <- muffle_messages(
+                as.double(pROC::auc(labels, predictions)), 
+                "Setting levels", 
+                "Setting direction"
+            )
+            result <- dplyr::tibble(
+                estimand = "AUC",
+                term = label,
+                estimate = result,
+                # Hanley and McNeil (1982) bound on the variance of AUC
+                std_error = 1 / 2 / sqrt(pmin(n1, length(labels) - n1))
+            )
+        } else {
+            message("Cannot calculate AUC because labels are not binary.")
+        }
     } else if (tolower(diag_name) == "mse") {
         sqerr <- (.data[[label]] - .data[[prediction]]) ^ 2
         result <- mean(sqerr)
@@ -34,6 +42,10 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
             std_error = stderr
         )
     } else if (tolower(diag_name) == "sl_coefs") {
+        if (
+            ("SL_coefs" %in% names(attributes(.data))) &&
+            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs")))
+        ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
             dplyr::group_by(.data$model_name) %>%
@@ -43,7 +55,14 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
                 estimand = "SL coefficient"
             ) %>%
             dplyr::rename(term = .data$model_name)
+        } else {
+            message("Cannot calculate SL_coefs because the model is not SuperLearner.")
+        }
     } else if (tolower(diag_name) == "sl_risk") {
+        if (
+            ("SL_coefs" %in% names(attributes(.data))) &&
+            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs")))
+        ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
             dplyr::group_by(.data$model_name) %>%
@@ -53,6 +72,9 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
                 estimand = "SL risk"
             ) %>%
             dplyr::rename(term = .data$model_name)
+        } else {
+            message("Cannot calculate SL_rish because the model is not SuperLearner.")
+        }
     }
     result
 }

@@ -21,7 +21,7 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
     if (length(dots) > 0) {
         soft_require("quickblock")
         block_data <-  tibble::as_tibble(stats::model.matrix(~. + 0, dplyr::select(.data, ...)))
-        block_data$id_col <- .data[[rlang::as_string(identifier)]]
+        block_data$id_col <- .data[[rlang::as_name(identifier)]]
         block_data %>%
             dplyr::group_by(.data$id_col) %>%
             dplyr::summarize_all(mean) -> block_data
@@ -31,7 +31,7 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
             as.matrix() %>%
             quickblock::quickblock(size_constraint = .num_splits) -> qb
         ids <- structure(quickblock::assign_treatment(qb, treatments = 1:.num_splits), names = ids)
-        .data$.split_id <- ids[.data[[rlang::as_string(identifier)]]]
+        .data$.split_id <- ids[.data[[rlang::as_name(identifier)]]]
     } else {
         .data %>%
         dplyr::mutate(
@@ -92,6 +92,7 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .HTE_cfg=NU
 
     pb <- progress::progress_bar$new(
         total = num_splits,
+        show_after = 0,
         format = "estimating nuisance models [:bar] splits: :current / :total"
     )
     pb$tick(0)

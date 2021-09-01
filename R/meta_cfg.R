@@ -106,16 +106,26 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
         model_cfg = list(),
         #' @field estimand String indicating the estimand to target.
         estimand = "VIMP",
+        #' @field num_splits Integer indicating the number of splits to use in the variable importance calculation.
+        num_splits = integer(),
         #' @description
         #' Create a new `VIMP_cfg` object with specified model configuration.
         #' @param model_cfg A `Model_cfg` object indicating how to fit the second level effect
         #' regression (joint across all moderators).
+        #' @param num_splits Integer indicating the number of splits to use in the variable importance calculation.
+        #' This number must be even due to the bilevel cross-validation routine employed by `vimp::cv_vim`.
         #' @return A new `VIMP_cfg` object.
         #' @examples
         #' VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
-        initialize = function(model_cfg) {
+        initialize = function(model_cfg, num_splits = 10) {
             soft_require("vimp")
             self$model_cfg <- model_cfg
+            V <- num_splits / 2
+            if (!checkmate::test_integerish(V, lower = floor(V), upper = ceiling(V))) {
+                message("`num_splits` must be even for VIMP. Rounding up.")
+                V <- ceiling(V)
+            }
+            self$num_splits <- 2 * V
         }
     )
 )

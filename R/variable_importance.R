@@ -15,11 +15,11 @@
 calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
     dots <- rlang::enexprs(...)
 
-    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots)
+    ident_name <- attr(.data, "identifier")
+    ident <- rlang::ensym(ident_name)
+    .data <- make_splits(.data, {{ ident }}, !!!dots, .num_splits = .VIMP_cfg$num_splits)
 
-    # full_model <- predictor_factory(.VIMP_cfg$model_cfg)
-    # full_model <- full_model$fit(data)
-    # full_model_predictions <- drop(full_model$model$SL.predict)
+    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots)
 
     result_list <- list()
     idx <- 1
@@ -27,18 +27,11 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
 
     pb <- progress::progress_bar$new(
         total = ncol(data$model_frame),
+        show_after = 0,
         format = "estimating VIMP [:bar] covariates: :current / :total"
     )
     pb$tick(0)
     for (covariate in names(data$model_frame)) {
-        # dots_reduced <- purrr::discard(dots, ~ .x == covariate)
-        # reduced_data <- Model_data$new(.data, {{ .outcome }}, !!!dots_reduced)
-        # reduced_model <- SuperLearner::SuperLearner(
-        #         Y = reduced_data$label, X = reduced_data$model_frame, family = full_model$family,
-        #         SL.library = full_model$SL.library, env = full_model$SL.env,
-        #         cvControl = data$SL_cv_control()
-        # )
-        # reduced_model_predictions <- drop(reduced_model$SL.predict)
         muffle_warnings({
             result <- vimp::cv_vim(
             Y = data$label,
@@ -47,23 +40,11 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
             run_regression = TRUE,
             SL.library = .VIMP_cfg$model_cfg$SL.library,
             env = .VIMP_cfg$model_cfg$SL.env,
-            cvControl = list(V = 2 * cv_ctl$V),
-            V = cv_ctl$V,
+            cvControl = cv_ctl,
+            V = as.integer(cv_ctl$V / 2),
             sample_splitting = TRUE
         )
         }, "estimate < 0", "rank-deficient fit")
-        # print(covariate)
-        # print(result)
-        # result <- vimp::vim(
-        #     Y = data$label,
-        #     f1 = full_model_predictions,
-        #     f2 = reduced_model_predictions,
-        #     indx = idx,
-        #     sample_splitting_folds = .data$.split_id,
-        #     type = "r_squared",
-        #     run_regression = FALSE,
-        #     sample_splitting = FALSE
-        # )
         idx <- idx + 1
         result <- dplyr::tibble(
             estimand = "VIMP",

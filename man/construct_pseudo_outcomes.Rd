@@ -4,14 +4,14 @@
 \alias{construct_pseudo_outcomes}
 \title{Construct Pseudo-outcomes}
 \usage{
-construct_pseudo_outcomes(.data, y_col, a_col)
+construct_pseudo_outcomes(.data, outcome, treatment)
 }
 \arguments{
 \item{.data}{dataframe}
 
-\item{y_col}{Unquoted name of outcome variable.}
+\item{outcome}{Unquoted name of outcome variable.}
 
-\item{a_col}{Unquoted name of treatment variable.}
+\item{treatment}{Unquoted name of treatment variable.}
 }
 \description{
 \code{construct_pseudo_outcomes} takes a dataset which has been prepared

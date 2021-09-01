@@ -6,32 +6,34 @@
 #' a "pseudo-outcome": an unbiased estimator of the conditional average
 #' treatment effect under exogeneity.
 #' @param .data dataframe
-#' @param y_col Unquoted name of outcome variable.
-#' @param a_col Unquoted name of treatment variable.
+#' @param outcome Unquoted name of outcome variable.
+#' @param treatment Unquoted name of treatment variable.
 #' @export
-construct_pseudo_outcomes <- function(.data, y_col, a_col) {
+construct_pseudo_outcomes <- function(.data, outcome, treatment) {
     # check that plugins are in the df
-    YA <- unlist(dplyr::select(.data, {{ y_col }}))
-    A <- unlist(dplyr::select(.data, {{ a_col }}))
+    YA <- unlist(dplyr::select(.data, {{ outcome }}))
+    A <- unlist(dplyr::select(.data, {{ treatment }}))
     mu0 <- .data[[".mu0_hat"]]
     mu1 <- .data[[".mu1_hat"]]
     pi <- .data[[".pi_hat"]]
     muA <- A * mu1 + (1 - A) * mu0
     .data$.pseudo_outcome <- (A - pi) / (pi * (1 - pi)) * (YA - muA) + mu1 - mu0
-    attr(.data, "treatment") <- rlang::as_string(a_col)
-    attr(.data, "outcome") <- rlang::as_string(y_col)
+    attr(.data, "treatment") <- rlang::as_string(treatment)
+    attr(.data, "outcome") <- rlang::as_string(outcome)
     .data
 }
 
 #' @importFrom dplyr summarize
 #' @importFrom rlang .data
 calculate_ate <- function(.data) {
+    id_col <- attr(.data, "identifier")
     dplyr::summarize(
         .data,
         estimand = "ATE",
         estimate = mean(.data$.pseudo_outcome),
-        std_error = sd(.data$.pseudo_outcome) / sqrt(dplyr::n()),
-        sample_size = dplyr::n()
+        std_error = clustered_se_of_mean(.data$.pseudo_outcome, .data[[id_col]]),
+        #sd(.data$.pseudo_outcome) / sqrt(dplyr::n()),
+        sample_size = length(unique(.data[[id_col]]))
     )
 }
 
@@ -43,6 +45,7 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
     result_list <- list()
     pb <- progress::progress_bar$new(
         total = length(dots),
+        show_after = 0,
         format = "estimating MCATEs [:bar] covariates: :current / :total"
     )
     pb$tick(0)
