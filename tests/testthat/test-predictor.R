@@ -1,6 +1,4 @@
 
-
-
 test_that("predictor factory", {
     model_cfg <- SLEnsemble_cfg$new()
     checkmate::expect_r6(predictor_factory(model_cfg), classes = "Predictor")
@@ -21,4 +19,12 @@ test_that("base Predictor class", {
     expect_error(pred$fit(y, x))
     expect_error(pred$predict(data))
     expect_error(pred$predict_se(data))
+})
+
+test_that("check check_nuisance_models", {
+    df <- dplyr::tibble(a = 1:10, b = letters[1:10])
+    expect_error(
+        check_nuisance_models(df),
+        "You must first estimate plugin models with `tidyhte::produce_plugin_estimates`."
+    )
 })

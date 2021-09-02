@@ -102,6 +102,11 @@ test_that("Configs can be constructed successfully.", {
 
     vimp.cfg <<- VIMP_cfg$new(model_cfg = regression.cfg)
 
+    expect_message(
+        VIMP_cfg$new(model_cfg = regression.cfg, num_splits = 5),
+        "`num_splits` must be even for VIMP. Rounding up."
+    )
+
     qoi.cfg <<- QoI_cfg$new(
         mcate = mcate.cfg,
         vimp = vimp.cfg,

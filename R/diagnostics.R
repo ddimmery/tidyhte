@@ -29,6 +29,7 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
                 std_error = 1 / 2 / sqrt(pmin(n1, length(labels) - n1))
             )
         } else {
+            result <- NULL
             message("Cannot calculate AUC because labels are not binary.")
         }
     } else if (tolower(diag_name) == "mse") {
@@ -56,6 +57,7 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
             ) %>%
             dplyr::rename(term = .data$model_name)
         } else {
+            result <- NULL
             message("Cannot calculate SL_coefs because the model is not SuperLearner.")
         }
     } else if (tolower(diag_name) == "sl_risk") {
@@ -73,7 +75,8 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
             ) %>%
             dplyr::rename(term = .data$model_name)
         } else {
-            message("Cannot calculate SL_rish because the model is not SuperLearner.")
+            result <- NULL
+            message("Cannot calculate SL_risk because the model is not SuperLearner.")
         }
     }
     result

@@ -32,7 +32,6 @@ calculate_ate <- function(.data) {
         estimand = "ATE",
         estimate = mean(.data$.pseudo_outcome),
         std_error = clustered_se_of_mean(.data$.pseudo_outcome, .data[[id_col]]),
-        #sd(.data$.pseudo_outcome) / sqrt(dplyr::n()),
         sample_size = length(unique(.data[[id_col]]))
     )
 }
@@ -50,7 +49,7 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
     )
     pb$tick(0)
     for (covariate in dots) {
-        .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_string(covariate)]]
+        .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_name(covariate)]]
         data <- Model_data$new(.data, {{ .outcome }}, {{ covariate }})
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
@@ -62,7 +61,7 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
             )
         } else {
             result <- model$predict(data)
-            result$term <- rlang::quo_name(rlang::enquo(covariate))
+            result$term <- rlang::as_name(rlang::enquo(covariate))
             result <- dplyr::select(
                 result, .data$term, .data$x, .data$estimate
             )
@@ -94,13 +93,13 @@ calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cf
     pb$tick(0)
     for (covariate in dots) {
         fx_data <- fx_model$predict(.data, covariate)
-        .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_string(covariate)]]
+        .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_name(covariate)]]
         data <- Model_data$new(fx_data, .data$.hte, .data$covariate_value)
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
         if (.MCATE_cfg$std_errors) {
             result <- model$predict_se(data)
-            result$term <- rlang::quo_name(rlang::enquo(covariate))
+            result$term <- rlang::as_name(rlang::enquo(covariate))
             result <- dplyr::select(
                 result, .data$term, .data$x, .data$estimate, .data$std_error, .data$sample_size
             )

@@ -18,6 +18,8 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
     dots <- rlang::enexprs(...)
     identifier <- rlang::enexpr(identifier)
 
+    check_identifier(.data, rlang::as_name(identifier))
+
     if (length(dots) > 0) {
         soft_require("quickblock")
         block_data <-  tibble::as_tibble(stats::model.matrix(~. + 0, dplyr::select(.data, !!!dots)))
@@ -30,30 +32,26 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
             dplyr::select(-.data$id_col) %>%
             as.matrix() %>%
             quickblock::quickblock(size_constraint = .num_splits) -> qb
-        ids <- structure(quickblock::assign_treatment(qb, treatments = 1:.num_splits), names = ids)
-        .data$.split_id <- ids[.data[[rlang::as_name(identifier)]]]
+        ids <- structure(quickblock::assign_treatment(qb, treatments = 1:.num_splits), names = as.character(ids))
+        .data$.split_id <- ids[as.character(.data[[rlang::as_name(identifier)]])]
     } else {
+        num_per_split <- as.integer(floor(length(unique(.data[[rlang::as_name(identifier)]])) / .num_splits))
         .data %>%
+        dplyr::group_by({{ identifier }}) %>%
+        dplyr::tally() %>%
         dplyr::mutate(
             .split_id = sample(c(
-                rep(
-                    1:.num_splits,
-                    rep(as.integer(floor(dplyr::n() / .num_splits), .num_splits))
-                ),
-                sample(
-                    .num_splits,
-                    (
-                        dplyr::n() -
-                        .num_splits * as.integer(floor(dplyr::n() / .num_splits))
-                    )
-                )
+                rep(1:.num_splits, rep(num_per_split, .num_splits)),
+                sample(.num_splits, dplyr::n() - .num_splits * num_per_split)
             ))
-        ) -> tmp
-        join_cols <- names(dplyr::select(tmp, -.data$.split_id))
-        .data <- dplyr::left_join(.data, tmp, by = join_cols)
+        ) %>%
+        dplyr::select(-.data$n) -> tmp
+        if (".split_id" %in% names(.data)) .data$.split_id <- NULL
+        .data <- dplyr::left_join(.data, tmp, by = rlang::as_name(identifier))
     }
     attr(.data, "num_splits") <- .num_splits
     attr(.data, "identifier") <- rlang::as_name(identifier)
+
     .data
 }
 
@@ -194,11 +192,6 @@ estimate_QoI <- function(
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
     }
 
-    if (!is.null(.QoI_cfg$vimp)) {
-        result <- calculate_vimp(.data, .data$.pseudo_outcome, !!!dots, .VIMP_cfg = .QoI_cfg$vimp)
-        result_list <- c(result_list, list(result))
-    }
-
     if (!is.null(.QoI_cfg$pcate)) {
         covs <- rlang::syms(.QoI_cfg$pcate$model_covariates)
         fx_mod <- fit_fx_predictor(.data, .data$.pseudo_outcome, !!!covs, .pcate.cfg = .QoI_cfg$pcate)
@@ -211,6 +204,11 @@ estimate_QoI <- function(
             .MCATE_cfg = .QoI_cfg$mcate
         )
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "PCATE")))
+    }
+
+    if (!is.null(.QoI_cfg$vimp)) {
+        result <- calculate_vimp(.data, .data$.pseudo_outcome, !!!dots, .VIMP_cfg = .QoI_cfg$vimp)
+        result_list <- c(result_list, list(result))
     }
 
     if (!is.null(.QoI_cfg$diag)) {

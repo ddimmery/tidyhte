@@ -23,5 +23,5 @@ from a model containing all moderators.
 \references{
 Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
 assessment using machine learning techniques. \emph{Biometrics}. 2021; 77: 9-- 22.
-\url{https://doi.org/10.1111/biom.13392}
+\doi{10.1111/biom.13392}
 }

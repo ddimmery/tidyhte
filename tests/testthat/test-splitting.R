@@ -1,4 +1,4 @@
-set.seed(20051920) # 20051920 == 'test'
+set.seed(20051920) # 20051920 is derived from 'test'
 
 n <- 100
 d <- dplyr::tibble(
@@ -20,15 +20,27 @@ test_that("make_splits output", {
 
 s_df <- make_splits(d, uid, .num_splits = 2)
 s_id <- s_df$.split_id
-test_that("check that 2 splits are ok", {
+test_that("2 splits are ok", {
     expect_length(unique(s_id), 2)
     checkmate::expect_integerish(s_id, len = n, any.missing = FALSE, lower = 1, upper = 2)
     expect_true(all(table(s_id) == (n / 2)))
 })
 
+test_that("check_splits", {
+    expect_error(check_splits(d), "You must first construct splits with `tidyhte::make_splits`.")
+})
+
 test_that("check that splits can be used to create dataframes", {
     checkmate::expect_r6(split_data(s_df, 1), classes = "HTEFold")
     expect_error(split_data(d, 1), "Must construct split identifiers before splitting.")
+})
+
+test_that("train split is larger than holdout", {
+    s_df <- make_splits(d, uid, .num_splits = 4)
+    fold <- split_data(s_df, 1)
+    checkmate::expect_r6(fold, classes = "HTEFold")
+    expect_true(nrow(fold$train) == (3 * nrow(fold$holdout)))
+    expect_true(nrow(fold$holdout) == sum(fold$in_holdout))
 })
 
 s_id <- make_splits(d, uid, .num_splits = 7)$.split_id

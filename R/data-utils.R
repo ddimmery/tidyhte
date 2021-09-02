@@ -98,3 +98,24 @@ listwise_deletion <- function(data, ...) {
     }
     data
 }
+
+
+check_identifier <- function(data, id_col) {
+    N <- nrow(data)
+    ids <- data[[id_col]]
+    ok <- TRUE
+    if (is.null(ids)) ok <- FALSE
+    if (length(ids) != N) ok <- FALSE
+
+    is_int <- checkmate::test_integerish(ids)
+    is_fct <- checkmate::test_factor(ids)
+    is_chr <- checkmate::test_character(ids)
+    is_dbl <- checkmate::test_double(ids)
+
+    if (!(is_int | is_fct | is_chr) & is_dbl) ok <- FALSE
+
+    if (!ok) {
+        msg <- "Invalid identifier. Each unit / cluster must have its own unique ID."
+        stop(msg)
+    }
+}

@@ -9,9 +9,9 @@
 #' @param .VIMP_cfg A `VIMP_cfg` object defining how the joint effect model should be estimated.
 #' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
 #' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
-#' [https://doi.org/10.1111/biom.13392](https://doi.org/10.1111/biom.13392)
+#' \doi{10.1111/biom.13392}
 #' @importFrom progress progress_bar
-#' @export
+#' @import SuperLearner
 calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
     dots <- rlang::enexprs(...)
 

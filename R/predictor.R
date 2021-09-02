@@ -100,7 +100,6 @@ SLPredictor <- R6::R6Class("SLPredictor",
             invisible(self)
         },
         predict = function(data) {
-            # needs to be rewritten to pass out a df w/ x, estimate, sample_size
             pred <- muffle_warnings(
                 drop(predict(self$model, newdata = data$model_frame)$pred),
                 "rank-deficient fit"

@@ -1,4 +1,4 @@
-set.seed(20051920) # 20051920 == 'test'
+set.seed(20051920) # 20051920 is derived from 'test'
 
 n <- 250
 data <- dplyr::tibble(
@@ -119,7 +119,7 @@ test_that("Construct Pseudo-outcomes", {
 })
 
 test_that("Estimate QoIs", {
-    # skip_on_cran()
+    skip_on_cran()
     results <<- estimate_QoI(data4, !!!moderators, .HTE_cfg = cfg)
     checkmate::expect_data_frame(results)
     results2 <<- estimate_QoI(data4, !!!moderators, .HTE_cfg = cfg2)
@@ -137,7 +137,7 @@ n_rows <- (
 
 
 test_that("Check results data", {
-    # skip_on_cran()
+    skip_on_cran()
     checkmate::expect_tibble(
         results,
         all.missing = FALSE,

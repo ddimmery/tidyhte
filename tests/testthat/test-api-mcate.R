@@ -1,4 +1,4 @@
-set.seed(20051920) # 20051920 == 'test'
+set.seed(20051920) # 20051920 is derived from 'test'
 
 n <- 250
 data <- dplyr::tibble(

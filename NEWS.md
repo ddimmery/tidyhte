@@ -1,3 +1,13 @@
+# tidyhte 0.0.0.12
+
+* Add tests for VIMP, `listwise_deletion`
+
+* Add validity checking for the identifier column.
+
+* Fix R CMD check issue with VIMP not having SuperLearner attached.
+
+* Fix VIMP issue from using `make_splits` after a `.split_id` column already exists in the data.
+
 # tidyhte 0.0.0.11
 
 * Add sorting to API Reference web page

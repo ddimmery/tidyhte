@@ -25,6 +25,7 @@ muffle_messages <- function(expr, ...) {
 soft_require <- function(package, load = FALSE) {
     if (load) {
         is_ok <- requireNamespace(package, quietly = FALSE)
+        if (is_ok) try(attachNamespace(package), silent = TRUE)
     } else {
         is_ok <- package_present(package)
     }

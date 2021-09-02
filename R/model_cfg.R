@@ -225,11 +225,16 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
             }
             sl_lib <- character()
             self$SL.env <- new.env()
+            sl_ns <- as.list(getNamespace("SuperLearner"), all.names = TRUE)
+            # for (name in names(sl_ns)) {
+            #     assign(name, sl_ns[[name]], envir = self$SL.env)
+            # }
             for (lrnr in learner_cfgs) {
                 learner_name <- lrnr$model_name
                 hyperparameters <- lrnr$hyperparameters
                 if (is.null(hyperparameters)) {
                     lrnrs <- learner_name
+                    self$SL.env[[learner_name]] <- sl_ns[[learner_name]]
                 } else {
                     learners <- create.Learner(
                         learner_name,
