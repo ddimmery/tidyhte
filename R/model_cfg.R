@@ -206,7 +206,7 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
 
         #' @description
         #' Create a new `SLEnsemble_cfg` object with specified settings.
-        #' @param cvControl A list of parameters for controlling the cross-validation used in SuperLearner. 
+        #' @param cvControl A list of parameters for controlling the cross-validation used in SuperLearner.
         #' For more details, see `SuperLearner::SuperLearner.CV.control`.
         #' @param learner_cfgs A list of `SLLearner_cfg` objects.
         #' @param family `stats::family` object to determine how SuperLearner should be fitted.

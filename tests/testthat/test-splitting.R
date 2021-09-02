@@ -112,7 +112,7 @@ test_that("lots of covariates informing the strata", {
 })
 
 d <- dplyr::tibble(
-    uid = rep(paste0("uid is ", as.character(1:(n/2))), 2),
+    uid = rep(paste0("uid is ", as.character(1:(n / 2))), 2),
     cov1 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
     cov2 = sample(rep(1:2, c(n / 2, n / 2)), n, replace = TRUE),
     cov3 = rnorm(n),

@@ -20,7 +20,7 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
 
     if (length(dots) > 0) {
         soft_require("quickblock")
-        block_data <-  tibble::as_tibble(stats::model.matrix(~. + 0, dplyr::select(.data, ...)))
+        block_data <-  tibble::as_tibble(stats::model.matrix(~. + 0, dplyr::select(.data, !!!dots)))
         block_data$id_col <- .data[[rlang::as_name(identifier)]]
         block_data %>%
             dplyr::group_by(.data$id_col) %>%

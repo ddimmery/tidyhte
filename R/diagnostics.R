@@ -17,8 +17,8 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
             predictions <- .data[[prediction]]
             n1 <- sum(.data[[label]])
             result <- muffle_messages(
-                as.double(pROC::auc(labels, predictions)), 
-                "Setting levels", 
+                as.double(pROC::auc(labels, predictions)),
+                "Setting levels",
                 "Setting direction"
             )
             result <- dplyr::tibble(

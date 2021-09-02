@@ -106,7 +106,7 @@ SLPredictor <- R6::R6Class("SLPredictor",
                 "rank-deficient fit"
             )
             covs <- rep(NA_real_, length(pred))
-            if (ncol(data$model_frame) == 1) covs = drop(unlist(data$model_frame))
+            if (ncol(data$model_frame) == 1) covs <- drop(unlist(data$model_frame))
             dplyr::tibble(
                 x = covs,
                 estimate = pred,
@@ -148,7 +148,7 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                     dplyr::summarize(y = mean(.data$y), n = dplyr::n())
                 agg_y <- agg_tbl$y
                 agg_x <- agg_tbl$x
-                bws <- nprobust::lpbwselect(agg_y, agg_x, neval = self$neval, bwselect = "imse-dpi")
+                bws <- nprobust::lpbwselect(agg_y, agg_x, eval = eval_pts, bwselect = "imse-dpi")
                 self$model <- nprobust::lprobust(
                     self$label,
                     self$covariates,

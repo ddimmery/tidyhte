@@ -20,6 +20,7 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
     if (package_present("quickblock")) {
         .data <- make_splits(.data, {{ ident }}, !!!dots, .num_splits = .VIMP_cfg$num_splits)
     } else {
+        message("`quickblock` is not installed, so falling back to un-stratified CV for VIMP.")
         .data <- make_splits(.data, {{ ident }}, .num_splits = .VIMP_cfg$num_splits)
     }
 
