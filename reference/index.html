@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.11</span>
       </span>
     </div>
 
@@ -95,6 +95,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -143,8 +146,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-public-api" class="hasAnchor"><a href="#section-public-api" class="anchor"></a>Public API</h2>
+          <p class="section-desc"><p>Tidy functions for performing an analysis of hetergeneous treatment effects.</p></p>
         </th>
       </tr>
       
@@ -155,10 +158,131 @@
       <tr>
         
         <td>
+          <p><code><a href="make_splits.html">make_splits()</a></code> </p>
+        </td>
+        <td><p>Define splits for cross-fitting</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="produce_plugin_estimates.html">produce_plugin_estimates()</a></code> </p>
+        </td>
+        <td><p>Estimate models of nuisance functions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="construct_pseudo_outcomes.html">construct_pseudo_outcomes()</a></code> </p>
+        </td>
+        <td><p>Construct Pseudo-outcomes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="estimate_QoI.html">estimate_QoI()</a></code> </p>
+        </td>
+        <td><p>Estimate Quantities of Interest</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-model-configuration" class="hasAnchor"><a href="#section-model-configuration" class="anchor"></a>Model Configuration</h2>
+          <p class="section-desc"><p>Classes to define the configuration of models to be used in the eventual HTE analysis.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-base-class" class="hasAnchor"><a href="#section-base-class" class="anchor"></a>Base Class</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="Model_cfg.html">Model_cfg</a></code> </p>
+        </td>
+        <td><p>Base Class of Model Configurations</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-models-for-displaying-results" class="hasAnchor"><a href="#section-models-for-displaying-results" class="anchor"></a>Models for displaying results</h3>
+          <p class="section-desc"><p>These model configurations include valid standard errors and are well suited for providing usable output to be plotted or returned for formal inference.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="Stratified_cfg.html">Stratified_cfg</a></code> </p>
+        </td>
+        <td><p>Configuration for a Stratification Estimator</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="KernelSmooth_cfg.html">KernelSmooth_cfg</a></code> </p>
+        </td>
+        <td><p>Configuration for a Kernel Smoother</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-models-for-nuisance-functions" class="hasAnchor"><a href="#section-models-for-nuisance-functions" class="anchor"></a>Models for nuisance functions</h3>
+          <p class="section-desc"><p>These models are most useful for estimating nuisance functions in the course of HTE estimation. In particular, <code>Known_cfg</code> may be used when the propensity score is known ex ante, while <code>SLEnsemble_cfg</code> may be used when a SuperLearner ensemble of machine learning models should be used to estimate an unknown nuisance function.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="Known_cfg.html">Known_cfg</a></code> </p>
+        </td>
+        <td><p>Configuration of Known Model</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="Constant_cfg.html">Constant_cfg</a></code> </p>
         </td>
         <td><p>Configuration of a Constant Estimator</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="SLEnsemble_cfg.html">SLEnsemble_cfg</a></code> </p>
+        </td>
+        <td><p>Configuration for a SuperLearner Ensemble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SLLearner_cfg.html">SLLearner_cfg</a></code> </p>
+        </td>
+        <td><p>Configuration of SuperLearner Submodel</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-analysis-configuration" class="hasAnchor"><a href="#section-analysis-configuration" class="anchor"></a>Analysis Configuration</h2>
+          <p class="section-desc"><p>These classes configure the overall shape of the HTE analysis: essentially, how all the various components and models should fit together. They explain what models should be estimated and how those models should be combined into relevant quantities of interest.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="Diagnostics_cfg.html">Diagnostics_cfg</a></code> </p>
@@ -173,16 +297,29 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="KernelSmooth_cfg.html">KernelSmooth_cfg</a></code> </p>
+          <p><code><a href="QoI_cfg.html">QoI_cfg</a></code> </p>
         </td>
-        <td><p>Configuration for a Kernel Smoother</p></td>
+        <td><p>Configuration of Quantities of Interest</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="Known_cfg.html">Known_cfg</a></code> </p>
+          <p><code><a href="VIMP_cfg.html">VIMP_cfg</a></code> </p>
         </td>
-        <td><p>Configuration of Known Model</p></td>
-      </tr><tr>
+        <td><p>Configuration of Variable Importance</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-configuration-of-hte-estimands" class="hasAnchor"><a href="#section-configuration-of-hte-estimands" class="anchor"></a>Configuration of HTE estimands</h3>
+          <p class="section-desc"><p>There are two configurations for HTE estimands. <code>MCATE_cfg</code> simply provides a one-dimensional slice of the effects over a particular dimension. It averages over all other moderators, so does not attempt to attribute heterogeneity to particular covariates. <code>PCATE_cfg</code>, however, does attempt to do this type of attribution. Estimation of these “partial” effects requires strong assumptions, even within the context of a randomized control trial. Essentially, one must assume that the moderator, too, is random conditional on treatment and other covariates.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="MCATE_cfg.html">MCATE_cfg</a></code> </p>
@@ -191,93 +328,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="Model_cfg.html">Model_cfg</a></code> </p>
-        </td>
-        <td><p>Base Class of Model Configurations</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="PCATE_cfg.html">PCATE_cfg</a></code> </p>
         </td>
         <td><p>Configuration of Partial CATEs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="QoI_cfg.html">QoI_cfg</a></code> </p>
-        </td>
-        <td><p>Configuration of Quantities of Interest</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SL.glmnet.interaction.html">SL.glmnet.interaction()</a></code> </p>
-        </td>
-        <td><p>Elastic net regression with pairwise interactions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SLEnsemble_cfg.html">SLEnsemble_cfg</a></code> </p>
-        </td>
-        <td><p>Configuration for a SuperLearner Ensemble</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="SLLearner_cfg.html">SLLearner_cfg</a></code> </p>
-        </td>
-        <td><p>Configuration of SuperLearner Submodel</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Stratified_cfg.html">Stratified_cfg</a></code> </p>
-        </td>
-        <td><p>Configuration for a Stratification Estimator</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="VIMP_cfg.html">VIMP_cfg</a></code> </p>
-        </td>
-        <td><p>Configuration of Variable Importance</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="calculate_vimp.html">calculate_vimp()</a></code> </p>
-        </td>
-        <td><p>Calculate Variable Importance of HTEs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_pseudo_outcomes.html">construct_pseudo_outcomes()</a></code> </p>
-        </td>
-        <td><p>Construct Pseudo-outcomes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="estimate_QoI.html">estimate_QoI()</a></code> </p>
-        </td>
-        <td><p>Estimate Quantities of Interest</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_splits.html">make_splits()</a></code> </p>
-        </td>
-        <td><p>Define splits for cross-fitting</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="predict.SL.glmnet.interaction.html">predict(<i>&lt;SL.glmnet.interaction&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Prediction for an SL.glmnet object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="produce_plugin_estimates.html">produce_plugin_estimates()</a></code> </p>
-        </td>
-        <td><p>Estimate models of nuisance functions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="split_data.html">split_data()</a></code> </p>
-        </td>
-        <td><p>Partition the data into folds</p></td>
       </tr>
     </tbody>
     </table>

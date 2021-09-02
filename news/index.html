@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Elastic net regression with pairwise interactions — SL.glmnet.interaction • tidyhte</title>
+<title>Changelog • tidyhte</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,7 @@
 
 
 
-<meta property="og:title" content="Elastic net regression with pairwise interactions — SL.glmnet.interaction" />
-<meta property="og:description" content="Penalized regression using elastic net. Alpha = 0 corresponds to ridge
-regression and alpha = 1 corresponds to Lasso. Included in the model
-are pairwise interactions between covariates.
-See vignette(&quot;glmnet_beta&quot;, package = &quot;glmnet&quot;) for a nice tutorial on
-glmnet." />
+<meta property="og:title" content="Changelog" />
 
 <meta name="robots" content="noindex" />
 
@@ -73,7 +68,7 @@ glmnet." />
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -137,103 +132,43 @@ glmnet." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Elastic net regression with pairwise interactions</h1>
-    <small class="dont-index">Source: <a href='http://github.com/ddimmery/tidyhte/blob/master/R/SL.glmnet.interaction.R'><code>R/SL.glmnet.interaction.R</code></a></small>
-    <div class="hidden name"><code>SL.glmnet.interaction.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='http://github.com/ddimmery/tidyhte/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    <p>Penalized regression using elastic net. Alpha = 0 corresponds to ridge
-regression and alpha = 1 corresponds to Lasso. Included in the model
-are pairwise interactions between covariates.</p>
-<p>See <code>vignette("glmnet_beta", package = "glmnet")</code> for a nice tutorial on
-glmnet.</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>SL.glmnet.interaction</span><span class='op'>(</span>
-  <span class='va'>Y</span>,
-  <span class='va'>X</span>,
-  <span class='va'>newX</span>,
-  <span class='va'>family</span>,
-  <span class='va'>obsWeights</span>,
-  <span class='va'>id</span>,
-  alpha <span class='op'>=</span> <span class='fl'>1</span>,
-  nfolds <span class='op'>=</span> <span class='fl'>10</span>,
-  nlambda <span class='op'>=</span> <span class='fl'>100</span>,
-  useMin <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  loss <span class='op'>=</span> <span class='st'>"deviance"</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>Y</th>
-      <td><p>Outcome variable</p></td>
-    </tr>
-    <tr>
-      <th>X</th>
-      <td><p>Covariate dataframe</p></td>
-    </tr>
-    <tr>
-      <th>newX</th>
-      <td><p>Dataframe to predict the outcome</p></td>
-    </tr>
-    <tr>
-      <th>family</th>
-      <td><p>"gaussian" for regression, "binomial" for binary
-classification. Untested options: "multinomial" for multiple classification
-or "mgaussian" for multiple response, "poisson" for non-negative outcome
-with proportional mean and variance, "cox".</p></td>
-    </tr>
-    <tr>
-      <th>obsWeights</th>
-      <td><p>Optional observation-level weights</p></td>
-    </tr>
-    <tr>
-      <th>id</th>
-      <td><p>Optional id to group observations from the same unit (not used
-currently).</p></td>
-    </tr>
-    <tr>
-      <th>alpha</th>
-      <td><p>Elastic net mixing parameter, range [0, 1]. 0 = ridge regression
-and 1 = lasso.</p></td>
-    </tr>
-    <tr>
-      <th>nfolds</th>
-      <td><p>Number of folds for internal cross-validation to optimize lambda.</p></td>
-    </tr>
-    <tr>
-      <th>nlambda</th>
-      <td><p>Number of lambda values to check, recommended to be 100 or more.</p></td>
-    </tr>
-    <tr>
-      <th>useMin</th>
-      <td><p>If TRUE use lambda that minimizes risk, otherwise use 1
-standard-error rule which chooses a higher penalty with performance within
-one standard error of the minimum (see Breiman et al. 1984 on CART for
-background).</p></td>
-    </tr>
-    <tr>
-      <th>loss</th>
-      <td><p>Loss function, can be "deviance", "mse", or "mae". If family =
-binomial can also be "auc" or "class" (misclassification error).</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Any additional arguments are passed through to cv.glmnet.</p></td>
-    </tr>
-    </table>
-
-
+    <div id="tidyhte-00011" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.0.11">
+<a href="#tidyhte-00011" class="anchor"></a>tidyhte 0.0.0.11</h1>
+<ul>
+<li><p>Add sorting to API Reference web page</p></li>
+<li><p>Add NEWS.md</p></li>
+<li><p>A small selection of stylistic changes to remove lint messages.</p></li>
+<li><p>Bandwidth selection in kernel smoothing for PCATEs now uses the appropriate evaluation points.</p></li>
+<li><p>Adds a message to the user when a lack of <code>quickblock</code> installed causes reversion to un-stratified CV.</p></li>
+</ul>
+</div>
+    <div id="tidyhte-00010" class="section level1">
+<h1 class="page-header" data-toc-text="0.0.0.10">
+<a href="#tidyhte-00010" class="anchor"></a>tidyhte 0.0.0.10</h1>
+<ul>
+<li>This is the first release of <code>tidyhte</code> documented in NEWS.md</li>
+</ul>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h2>
+<ul>
+<li>Lots of them</li>
+</ul>
+</div>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 
