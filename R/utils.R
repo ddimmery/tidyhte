@@ -30,7 +30,7 @@ soft_require <- function(package, load = FALSE) {
         is_ok <- package_present(package)
     }
     if (!is_ok) {
-        stop(paste("loading required package (", package, ") failed", sep = ""), call. = FALSE)
+        stop(paste0("loading required package (", package, ") failed"))
     }
 }
 

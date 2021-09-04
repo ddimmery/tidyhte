@@ -106,6 +106,7 @@ check_identifier <- function(data, id_col) {
     ok <- TRUE
     if (is.null(ids)) ok <- FALSE
     if (length(ids) != N) ok <- FALSE
+    if (any(is.na(ids))) ok <- FALSE
 
     is_int <- checkmate::test_integerish(ids)
     is_fct <- checkmate::test_factor(ids)

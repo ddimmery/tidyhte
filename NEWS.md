@@ -1,3 +1,7 @@
+# tidyhte (development)
+
+* Add tests for `check_identifier`, splitting multiple times on a dataset, `soft_require`, output of `SLPredictor`.
+
 # tidyhte 0.0.0.12
 
 * Add tests for VIMP, `listwise_deletion`

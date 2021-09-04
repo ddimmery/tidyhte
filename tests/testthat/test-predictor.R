@@ -28,3 +28,27 @@ test_that("check check_nuisance_models", {
         "You must first estimate plugin models with `tidyhte::produce_plugin_estimates`."
     )
 })
+
+test_that("SL_predictor gives expected output", {
+    slpred <- predictor_factory(SLEnsemble_cfg$new())
+    df <- dplyr::tibble(
+        uid = 1:100,
+        y = rnorm(100),
+        x1 = rnorm(100),
+        x2 = rnorm(100),
+        x3 = sample(4, 100, replace = TRUE)
+    )
+    df <- make_splits(df, uid, .num_splits = 5)
+    data <- Model_data$new(df, y, x1, x2, x3)
+    slpred$fit(data)
+    expect_error(o <- slpred$predict(data), NA)
+    checkmate::expect_data_frame(o, nrows = 100)
+    expect_true(all(is.na(o$x)))
+
+    data <- Model_data$new(df, y, x1)
+    slpred$fit(data)
+    expect_error(o <- slpred$predict(data), NA)
+    checkmate::expect_data_frame(o, nrows = 100)
+    expect_true(all(!is.na(o$x)))
+    expect_equal(o$x, df$x1, ignore_attr = TRUE)
+})

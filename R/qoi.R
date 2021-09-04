@@ -66,13 +66,11 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
                 result, .data$term, .data$x, .data$estimate
             )
         }
-        if (is.factor(result$x)) {
-            names(result)[names(result) == "x"] <- "level"
-            result$value <- as.integer(result$level)
-        } else if (is.double(result$x) || is.integer(result$x)) {
+        if (is.double(result$x) || is.integer(result$x)) {
             names(result)[names(result) == "x"] <- "value"
         } else {
-            stop("Unknown type of result!")
+            names(result)[names(result) == "x"] <- "level"
+            result$value <- as.integer(result$level)
         }
         result_list <- c(result_list, list(result))
         pb$tick()
@@ -112,13 +110,11 @@ calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cf
                 result, .data$term, .data$x, .data$estimate, .data$sample_size
             )
         }
-        if (is.factor(result$x)) {
-            names(result)[names(result) == "x"] <- "level"
-            result$value <- as.integer(result$level)
-        } else if (is.double(result$x) || is.integer(result$x)) {
+        if (is.double(result$x) || is.integer(result$x)) {
             names(result)[names(result) == "x"] <- "value"
         } else {
-            stop("Unknown type of result!")
+            names(result)[names(result) == "x"] <- "level"
+            result$value <- as.integer(result$level)
         }
         result_list <- c(result_list, list(result))
         pb$tick()

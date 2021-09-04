@@ -18,3 +18,18 @@ test_that("listwise_deletion", {
         fixed = TRUE
     )
 })
+
+test_that("check_identifier", {
+    df <- dplyr::tibble(
+        uid1 = 1:10,
+        uid2 = c(1:9, NA),
+        uid3 = rnorm(10),
+        uid4 = paste0("uid", 1:10)
+    )
+    msg <- "Invalid identifier. Each unit / cluster must have its own unique ID."
+    expect_error(check_identifier(df, "uid1"), NA)
+    expect_error(check_identifier(df, "uid2"), msg)
+    expect_error(check_identifier(df, "uid3"), msg)
+    expect_error(check_identifier(df, "uid4"), NA)
+    expect_error(check_identifier(df, "uid5"), msg)
+})

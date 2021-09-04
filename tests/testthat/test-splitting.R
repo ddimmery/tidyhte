@@ -26,6 +26,12 @@ test_that("2 splits are ok", {
     expect_true(all(table(s_id) == (n / 2)))
 })
 
+test_that("resplitting works", {
+    expect_error(s_df2 <- make_splits(s_df, uid, .num_splits = 4), NA)
+    checkmate::expect_data_frame(s_df2, min.rows = n, max.rows = n)
+    expect_true(".split_id" %in% names(s_df2))
+})
+
 test_that("check_splits", {
     expect_error(check_splits(d), "You must first construct splits with `tidyhte::make_splits`.")
 })
