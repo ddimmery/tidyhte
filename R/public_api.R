@@ -91,7 +91,8 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .HTE_cfg=NU
     pb <- progress::progress_bar$new(
         total = num_splits,
         show_after = 0,
-        format = "estimating nuisance models [:bar] splits: :current / :total"
+        format = "estimating nuisance models [:bar] splits: :current / :total",
+        force = TRUE
     )
     pb$tick(0)
     for (split_id in seq(num_splits)) {

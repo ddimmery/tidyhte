@@ -45,7 +45,8 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
     pb <- progress::progress_bar$new(
         total = length(dots),
         show_after = 0,
-        format = "estimating MCATEs [:bar] covariates: :current / :total"
+        format = "estimating MCATEs [:bar] covariates: :current / :total",
+        force = TRUE
     )
     pb$tick(0)
     for (covariate in dots) {
@@ -86,7 +87,8 @@ calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cf
     pb <- progress::progress_bar$new(
         total = length(dots),
         show_after = 0,
-        format = "estimating PCATEs [:bar] covariates: :current / :total"
+        format = "estimating PCATEs [:bar] covariates: :current / :total",
+        force = TRUE
     )
     pb$tick(0)
     for (covariate in dots) {

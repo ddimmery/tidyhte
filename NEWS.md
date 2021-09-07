@@ -1,6 +1,10 @@
-# tidyhte (development)
+# tidyhte (0.0.0.13)
 
 * Add tests for `check_identifier`, splitting multiple times on a dataset, `soft_require`, output of `SLPredictor`.
+
+* Test for correctness of clustered standard error estimates (against `estimatr::lm_robust`).
+
+* Force progress bar to print even if the stream doesn't seem to support it. This may cause some log-spew when used in batch mode, but will at least be informative about the place in the fitting process.
 
 # tidyhte 0.0.0.12
 
