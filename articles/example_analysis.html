@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@
       <h1 data-toc-skip>Example HTE Analysis</h1>
                         <h4 class="author">Drew Dimmery (<a href="mailto:drew.dimmery@gmail.com" class="email">drew.dimmery@gmail.com</a>)</h4>
             
-            <h4 class="date">07 September, 2021</h4>
+            <h4 class="date">21 September, 2021</h4>
       
       <small class="dont-index">Source: <a href="http://github.com/ddimmery/tidyhte/blob/master/vignettes/example_analysis.Rmd"><code>vignettes/example_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>example_analysis.Rmd</code></div>
@@ -315,17 +315,15 @@ div.main-container {
 <p>To actually perform the estimation, the following will be sufficient. Note that the configuration of covariate names at the top of the document makes all of this a little more complex with all the curly-brackets and bangs.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">%&gt;%</span>
-    <span class="co"># Will remove the `.HTE_cfg` arguments and add the following:</span>
-    <span class="co"># attach_config(cfg) %&gt;%</span>
+    <span class="fu"><a href="../reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">cfg</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">userid</span> <span class="op">}</span><span class="op">}</span>, .num_splits <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span>
         <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span>,
-        <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>,
-        .HTE_cfg <span class="op">=</span> <span class="va">cfg</span>
+        <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span>, .HTE_cfg <span class="op">=</span> <span class="va">cfg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
+    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></code></pre></div>
 <pre><code>## Rows: 634

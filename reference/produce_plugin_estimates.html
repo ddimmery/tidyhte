@@ -86,7 +86,7 @@ conditional expectation of the control and treatment potential outcome surfaces
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -150,14 +150,14 @@ conditional expectation of the control and treatment potential outcome surfaces
 (<code>.mu0_hat</code> and <code>.mu1_hat</code> respectively).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>produce_plugin_estimates</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>outcome</span>, <span class='va'>treatment</span>, <span class='va'>...</span>, .HTE_cfg <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>produce_plugin_estimates</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>outcome</span>, <span class='va'>treatment</span>, <span class='va'>...</span>, .weights <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>dataframe</p></td>
+      <td><p>dataframe (already prepared with <code>attach_config</code> and <code>make_splits</code>)</p></td>
     </tr>
     <tr>
       <th>outcome</th>
@@ -172,8 +172,9 @@ conditional expectation of the control and treatment potential outcome surfaces
       <td><p>Unquoted names of covariates to include in the models of the nuisance functions.</p></td>
     </tr>
     <tr>
-      <th>.HTE_cfg</th>
-      <td><p><code>HTE_cfg</code> object representing the full configuration of the HTE analysis.</p></td>
+      <th>.weights</th>
+      <td><p>Unquoted name of weights column. If NULL, all analysis will assume weights are all
+equal to one and sample-based quantities will be returned.</p></td>
     </tr>
     </table>
 

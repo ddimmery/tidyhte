@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -136,6 +136,28 @@
       <small>Source: <a href='http://github.com/ddimmery/tidyhte/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tidyhte-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#tidyhte-010" class="anchor"></a>tidyhte 0.1.0</h1>
+<ul>
+<li><p>Increment to first minor version number. The package is generally feature-complete enough for general usage, although there are still lots of things to do before an initial major version release.</p></li>
+<li><p>Public API no longer constantly passes in the <code>HTE_cfg</code>. Instead, a new public function is added, <code>attach_config</code>, which adds metadata to a given dataframe expressing how HTEs should be calculated.</p></li>
+<li><p>Listwise deletion no longer fully drops rows from the dataset. It instead will drop rows at each step based on the columns that are necessary to be non-missing in that particular step.</p></li>
+<li><p><code>soft_require</code> now uses the underlying <code><a href="https://rlang.r-lib.org/reference/is_installed.html">rlang::check_installed</a></code> to also prompt the end-user to install necessary pacakges.</p></li>
+</ul>
+<div id="population-weights" class="section level2">
+<h2 class="hasAnchor">
+<a href="#population-weights" class="anchor"></a>Population weights</h2>
+<p>Adds support for population weights. This is a large change affecting a lot of functionality.</p>
+<ul>
+<li><p>Discrete MCATEs now support population weights.</p></li>
+<li><p>Continuous MCATEs will thrown an error indicating that <code>nprobust</code> does not support weights, currently. A subsequent release will provide other ways to smooth a final estimate with, e.g., binscatter methods.</p></li>
+<li><p><code>calculate_ate</code> now returns both a SATE and (when weights are given) a PATE.</p></li>
+<li><p>Diagnostics now support weighting and will return the population version of themselves (e.g. AUC / MSE). This entailed switching AUC calculation from the <code>pROC</code> package to <code>WeightedROC</code>.</p></li>
+<li><p>An additional suite of tests have been added to check that weighted analyses work correctly and have at least some modicum of correctness.</p></li>
+</ul>
+</div>
+</div>
     <div id="tidyhte-00013" class="section level1">
 <h1 class="page-header" data-toc-text="0.0.0.13">
 <a href="#tidyhte-00013" class="anchor"></a>tidyhte 0.0.0.13</h1>

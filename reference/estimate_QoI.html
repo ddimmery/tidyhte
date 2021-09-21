@@ -84,7 +84,7 @@ quantities of interest (QoIs)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -146,22 +146,19 @@ plugin estimates and pseudo-outcomes and calculates the requested
 quantities of interest (QoIs).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>estimate_QoI</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span>, .HTE_cfg <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>estimate_QoI</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.data</th>
-      <td><p>data frame</p></td>
+      <td><p>data frame (already prepared with <code>attach_config</code>, <code>make_splits</code>,
+<code>produce_plugin_estimates</code> and <code>construct_pseudo_outcomes</code>)</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Unquoted names of moderators to calculate QoIs for.</p></td>
-    </tr>
-    <tr>
-      <th>.HTE_cfg</th>
-      <td><p><code>HTE_cfg</code> object representing the full analysis configuration.</p></td>
     </tr>
     </table>
 
