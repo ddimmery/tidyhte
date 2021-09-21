@@ -30,13 +30,20 @@ test_that("check check_nuisance_models", {
 })
 
 test_that("SL_predictor gives expected output", {
-    slpred <- predictor_factory(SLEnsemble_cfg$new())
+    slpred <- predictor_factory(
+        SLEnsemble_cfg$new(learner_cfgs = list(
+            SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam")
+        ))
+    )
     df <- dplyr::tibble(
         uid = 1:100,
         x1 = rnorm(100),
         x2 = rnorm(100),
         x3 = sample(4, 100, replace = TRUE)
-    ) %>% dplyr::mutate(y = x1 + x2 + x3 + rnorm(100))
+    ) %>% dplyr::mutate(
+        y = x1 + x2 + x3 + rnorm(100),
+        x3 = factor(x3)
+    )
     df <- make_splits(df, uid, .num_splits = 5)
     data <- Model_data$new(df, y, x1, x2, x3)
     slpred$fit(data)

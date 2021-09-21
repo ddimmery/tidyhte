@@ -1,3 +1,27 @@
+# tidyhte 0.1.0
+
+* Increment to first minor version number. The package is generally feature-complete enough for general usage, although there are still lots of things to do before an initial major version release.
+
+* Public API no longer constantly passes in the `HTE_cfg`. Instead, a new public function is added, `attach_config`, which adds metadata to a given dataframe expressing how HTEs should be calculated.
+
+* Listwise deletion no longer fully drops rows from the dataset. It instead will drop rows at each step based on the columns that are necessary to be non-missing in that particular step.
+
+* `soft_require` now uses the underlying `rlang::check_installed` to also prompt the end-user to install necessary pacakges.
+
+## Population weights
+
+Adds support for population weights. This is a large change affecting a lot of functionality.
+
+* Discrete MCATEs now support population weights.
+
+* Continuous MCATEs will thrown an error indicating that `nprobust` does not support weights, currently. A subsequent release will provide other ways to smooth a final estimate with, e.g., binscatter methods.
+
+* `calculate_ate` now returns both a SATE and (when weights are given) a PATE.
+
+* Diagnostics now support weighting and will return the population version of themselves (e.g. AUC / MSE). This entailed switching AUC calculation from the `pROC` package to `WeightedROC`.
+
+* An additional suite of tests have been added to check that weighted analyses work correctly and have at least some modicum of correctness.
+
 # tidyhte 0.0.0.13
 
 * Add tests for `check_identifier`, splitting multiple times on a dataset, `soft_require`, output of `SLPredictor`.

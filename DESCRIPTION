@@ -1,6 +1,6 @@
 Package: tidyhte
 Title: Tidy Estimation of Heterogeneous Treatment Effects
-Version: 0.0.0.13
+Version: 0.1.0
 Authors@R: 
     person(given = "Drew",
            family = "Dimmery",
@@ -15,7 +15,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     knitr,
     devtools,
@@ -26,7 +26,7 @@ Suggests:
     quickblock,
     nprobust,
     glmnet,
-    pROC,
+    WeightedROC,
     vimp,
     mockr,
     estimatr

@@ -67,7 +67,7 @@ ConstantPredictor <- R6::R6Class("ConstantPredictor",
         fit = function(data) {
             self$model <- dplyr::tibble(
                 x = NA,
-                estimate = mean(data$label),
+                estimate = weighted.mean(data$label, data$weights),
                 sample_size = length(unique(data$cluster))
             )
             invisible(self)
@@ -95,7 +95,8 @@ SLPredictor <- R6::R6Class("SLPredictor",
         fit = function(data) {
             self$model <- SuperLearner::SuperLearner(
                 Y = data$label, X = data$model_frame, family = self$family,
-                SL.library = self$SL.library, env = self$SL.env, cvControl = data$SL_cv_control()
+                SL.library = self$SL.library, env = self$SL.env, cvControl = data$SL_cv_control(),
+                obsWeights = data$weights
             )
             invisible(self)
         },
@@ -131,6 +132,7 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
         fit = function(data) {
             self$label <- data$label
             self$covariates <- drop(data$features)
+            if (any(data$weights != 1)) stop("`nprobust` does not support the use of weights.")
             eval_pts <- quantile(
                 self$covariates,
                 probs = seq(self$eval_min_quantile, 1 - self$eval_min_quantile, length = self$neval)
@@ -192,11 +194,16 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
             self$covariate <- covariate
         },
         fit = function(data) {
-            self$map <- dplyr::tibble(x = unlist(data$model_frame), y = data$label, cluster = data$cluster) %>%
+            self$map <- dplyr::tibble(
+                x = unlist(data$model_frame),
+                y = data$label,
+                cluster = data$cluster,
+                weights = data$weights
+                ) %>%
             dplyr::group_by(.data$x) %>%
             dplyr::summarize(
-                estimate = mean(.data$y),
-                std_error = clustered_se_of_mean(.data$y, .data$cluster),
+                estimate = weighted.mean(.data$y),
+                std_error = clustered_se_of_mean(.data$y, .data$cluster, weights = .data$weights),
                 sample_size = length(unique(.data$cluster))
             )
             invisible(self)

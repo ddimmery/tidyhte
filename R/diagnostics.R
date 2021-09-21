@@ -7,26 +7,31 @@ SL_model_slot <- function(prediction) {
 }
 
 
-#' @importFrom stats sd
+#' @importFrom stats sd weighted.mean
 #' @importFrom rlang .data
 estimate_diagnostic <- function(.data, label, prediction, diag_name) {
+    w_col <- attr(.data, "weights")
+    id_col <- attr(.data, "identifier")
     if (tolower(diag_name) == "auc") {
-        soft_require("pROC")
+        soft_require("WeightedROC")
         labels <- .data[[label]]
         if (checkmate::test_integerish(labels, lower = 0, upper = 1)) {
             predictions <- .data[[prediction]]
-            n1 <- sum(.data[[label]])
-            result <- muffle_messages(
-                as.double(pROC::auc(labels, predictions)),
-                "Setting levels",
-                "Setting direction"
-            )
+            n1 <- sum(.data[[label]] * .data[[w_col]])
+            n <- sum(.data[[w_col]])
+            # result <- muffle_messages(
+            #     as.double(pROC::auc(labels, predictions)),
+            #     "Setting levels",
+            #     "Setting direction"
+            # )
+            wroc <- WeightedROC::WeightedROC(predictions, labels, .data[[w_col]])
+            auc <- WeightedROC::WeightedAUC(wroc)
             result <- dplyr::tibble(
                 estimand = "AUC",
                 term = label,
-                estimate = result,
+                estimate = auc,
                 # Hanley and McNeil (1982) bound on the variance of AUC
-                std_error = 1 / 2 / sqrt(pmin(n1, length(labels) - n1))
+                std_error = 1 / 2 / sqrt(pmin(n1, n - n1))
             )
         } else {
             result <- NULL
@@ -34,8 +39,8 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
         }
     } else if (tolower(diag_name) == "mse") {
         sqerr <- (.data[[label]] - .data[[prediction]]) ^ 2
-        result <- mean(sqerr)
-        stderr <- sd(sqerr) / sqrt(length(sqerr))
+        result <- stats::weighted.mean(sqerr, .data[[w_col]])
+        stderr <- clustered_se_of_mean(sqerr, .data[[id_col]], .data[[w_col]])
         result <- dplyr::tibble(
             estimand = "MSE",
             term = label,

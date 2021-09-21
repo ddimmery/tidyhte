@@ -11,9 +11,10 @@ make_splits(.data, identifier, ..., .num_splits)
 
 \item{identifier}{Unquoted name of unique identifier column}
 
-\item{...}{variables on which to stratify}
+\item{...}{variables on which to stratify (requires that \code{quickblock} be installed.)}
 
-\item{.num_splits}{number of splits to create}
+\item{.num_splits}{number of splits to create. If VIMP is requested in \code{QoI_cfg}, this
+must be an even number.}
 }
 \value{
 original dataframe with additional \code{.split_id} column

@@ -33,3 +33,29 @@ test_that("check_identifier", {
     expect_error(check_identifier(df, "uid4"), NA)
     expect_error(check_identifier(df, "uid5"), msg)
 })
+
+test_that("check_weights", {
+    df <- dplyr::tibble(
+        uid = 1:10,
+        w1 = rexp(10),
+        w2 = rnorm(10),
+        w3 = paste0("weight is ", rexp(10))
+    )
+    expect_error(check_weights(df, "w1"), NA)
+    expect_error(check_weights(df, "test"), "Invalid weight column. Must exist in dataframe.")
+    expect_error(check_weights(df, "w2"), "Invalid weight column. Must be non-negative.")
+    expect_error(check_weights(df, "w3"), "Invalid weight column. Must be numeric.")
+})
+
+test_that("check_data_has_hte_cfg", {
+    df <- dplyr::tibble(
+        uid = 1:10,
+        x1 = rnorm(10),
+        y = rnorm(10),
+        a = sample(2, 10, replace = TRUE)
+    )
+    expect_error(
+        check_data_has_hte_cfg(df),
+        "Must attach HTE_cfg with `attach_config`."
+    )
+})

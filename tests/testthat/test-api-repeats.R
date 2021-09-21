@@ -10,7 +10,7 @@ data <- dplyr::tibble(
         ps = rep(0.5, n + n0),
         x1 = c(rnorm(n), rep(0, n0)),
         x2 = factor(sample(1:4, n + n0, prob = c(1 / 5, 1 / 5, 1 / 5, 2 / 5), replace = TRUE)),
-        y = a + x1 - 0.5 * a * (x1 - mean(x1)) + as.double(x2) + c(rnorm(n), rep(rnorm(1), n0))
+        y = a + x1 - 2.5 * a * (x1 - mean(x1)) + as.double(x2) + c(rnorm(n), rep(rnorm(1), n0))
     )
 
 userid <- rlang::expr(uid)
@@ -57,7 +57,7 @@ for (cov in discrete_moderators) {
 
 qoi.cfg <- QoI_cfg$new(
     mcate = MCATE_cfg$new(cfgs = qoi.list),
-    vimp = VIMP_cfg$new(model_cfg = regression.cfg, num_splits = 4),
+    vimp = VIMP_cfg$new(model_cfg = regression.cfg),
     diag = Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE")
     )
@@ -69,6 +69,12 @@ cfg <- HTE_cfg$new(
     qoi = qoi.cfg
 )
 
+test_that("add config", {
+    data <<- attach_config(data, cfg)
+    checkmate::expect_data_frame(data)
+    expect_true("HTE_cfg" %in% names(attributes(data)))
+})
+
 test_that("Split data", {
     data2 <<- make_splits(data, {{ userid }}, .num_splits = 4)
     checkmate::expect_data_frame(data2)
@@ -79,8 +85,7 @@ test_that("Estimate Plugin Models", {
         data2,
         {{ outcome_variable }},
         {{ treatment_variable }},
-        !!!model_covariates,
-        .HTE_cfg = cfg
+        !!!model_covariates
     )
     checkmate::expect_data_frame(data3)
 })
@@ -92,12 +97,21 @@ test_that("Construct Pseudo-outcomes", {
 
 test_that("Estimate QoIs", {
     skip_on_cran()
-    results <<- estimate_QoI(data4, !!!moderators, .HTE_cfg = cfg)
+    results <<- estimate_QoI(data4, !!!moderators)
     checkmate::expect_data_frame(results)
 })
 
+test_that("VIMP is valid", {
+    vimp <- results %>% dplyr::filter(grepl("VIMP", estimand))
+    vimp_z <- vimp$estimate / vimp$std_error
+    # expect small p-value for x1 which has actual HTE
+    expect_lt(2 * pnorm(vimp_z[1], lower.tail = FALSE), 0.01)
+    # expect large p-value for x2 which has no HTE
+    expect_gt(2 * pnorm(vimp_z[2], lower.tail = FALSE), 0.1)
+})
+
 n_rows <- (
-    1 + # ATE estimate
+    1 + # SATE estimate
     2 + # MSE for y(0) & y(1)
     2 * 3 + # one row per model in the ensemble for each PO + ps for SL risk
     2 * 3 + # one row per model in the ensemble for each PO + ps for SL coefficient

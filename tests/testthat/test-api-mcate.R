@@ -90,8 +90,14 @@ cfg <- HTE_cfg$new(
     qoi = qoi.cfg
 )
 
+test_that("add config", {
+    data1 <<- attach_config(data, cfg)
+    checkmate::expect_data_frame(data1)
+    expect_true("HTE_cfg" %in% names(attributes(data1)))
+})
+
 test_that("Split data", {
-    data2 <<- make_splits(data, {{ userid }}, .num_splits = 3)
+    data2 <<- make_splits(data1, {{ userid }}, .num_splits = 3)
     checkmate::expect_data_frame(data2)
 })
 
@@ -100,8 +106,7 @@ test_that("Estimate Plugin Models", {
         data2,
         {{ outcome_variable }},
         {{ treatment_variable }},
-        !!!model_covariates,
-        .HTE_cfg = cfg
+        !!!model_covariates
     )
     checkmate::expect_data_frame(data3)
 })
@@ -112,12 +117,12 @@ test_that("Construct Pseudo-outcomes", {
 })
 
 test_that("Estimate QoIs", {
-    results <<- estimate_QoI(data4, !!!moderators, .HTE_cfg = cfg)
+    results <<- estimate_QoI(data4, !!!moderators)
     checkmate::expect_data_frame(results)
 })
 
 n_rows <- (
-    1 + # ATE estimate
+    1 + # SATE estimate
     2 + # MSE for y(0) & y(1)
     1 + # AUC for pscore
     2 * 7 + 1 + # one row per model in the ensemble for each PO + ps for SL risk

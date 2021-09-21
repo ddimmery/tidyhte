@@ -3,6 +3,7 @@
 #' `calculate_vimp` estimates the reduction in (population) $R^2$ from removing a particular moderator
 #' from a model containing all moderators.
 #' @param .data dataframe
+#' @param weight_col Unquoted name of the weight column.
 #' @param pseudo_outcome Unquoted name of the pseudo-outcome.
 #' @param ... Unquoted names of covariates to include in the joint effect model. The variable importance
 #' will be calculated for each of these covariates.
@@ -12,19 +13,21 @@
 #' \doi{10.1111/biom.13392}
 #' @importFrom progress progress_bar
 #' @import SuperLearner
-calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
+calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
     dots <- rlang::enexprs(...)
+    weight_col <- rlang::enexpr(weight_col)
+    pseudo_outcome <- rlang::enexpr(pseudo_outcome)
 
-    ident_name <- attr(.data, "identifier")
-    ident <- rlang::ensym(ident_name)
-    if (package_present("quickblock")) {
-        .data <- make_splits(.data, {{ ident }}, !!!dots, .num_splits = .VIMP_cfg$num_splits)
-    } else {
-        message("`quickblock` is not installed, so falling back to un-stratified CV for VIMP.")
-        .data <- make_splits(.data, {{ ident }}, .num_splits = .VIMP_cfg$num_splits)
+    check_splits(.data)
+
+    num_splits_in_data <- length(unique(.data[[".split_id"]]))
+    num_splits_in_attr <- attr(.data, "num_splits")
+    if (num_splits_in_data != num_splits_in_attr) stop("Number of splits is inconsistent.")
+    if (ceiling(num_splits_in_data / 2) != floor(num_splits_in_data / 2)) {
+        stop("Number of splits must be even to calculate VIMP.")
     }
 
-    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots)
+    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots, .weight_col = {{ weight_col }})
 
     result_list <- list()
     idx <- 1
@@ -41,6 +44,8 @@ calculate_vimp <- function(.data, pseudo_outcome, ..., .VIMP_cfg) {
             result <- vimp::cv_vim(
             Y = data$label,
             X = data$model_frame,
+            # VIMP breaks when providing weights
+            # ipc_weights = data$weights,
             indx = idx,
             run_regression = TRUE,
             SL.library = .VIMP_cfg$model_cfg$SL.library,

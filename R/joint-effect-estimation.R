@@ -65,7 +65,7 @@ fit_fx_predictor <- function(.data, psi_col, ...,
     for (split_id in seq(num_splits)) {
         folds <- split_data(.data, split_id)
         fx_model <- fit_effect(
-            folds$train, {{ psi_col }}, !!!dots,
+            folds$train, .data$.weights, {{ psi_col }}, !!!dots,
             .Model_cfg = .pcate.cfg$effect_cfg
         )
         fx_models[[split_id]] <- fx_model$fx

@@ -5,7 +5,8 @@
 #' with plugin estimators of nuisance parameters and transforms these into
 #' a "pseudo-outcome": an unbiased estimator of the conditional average
 #' treatment effect under exogeneity.
-#' @param .data dataframe
+#' @param .data dataframe (already prepared with `attach_config`, `make_splits`,
+#' and `produce_plugin_estimates`)
 #' @param outcome Unquoted name of outcome variable.
 #' @param treatment Unquoted name of treatment variable.
 #' @export
@@ -24,22 +25,38 @@ construct_pseudo_outcomes <- function(.data, outcome, treatment) {
 }
 
 #' @importFrom dplyr summarize
+#' @importFrom stats weighted.mean
 #' @importFrom rlang .data
 calculate_ate <- function(.data) {
     id_col <- attr(.data, "identifier")
-    dplyr::summarize(
+    w_col <- attr(.data, "weights")
+    o <- dplyr::summarize(
         .data,
-        estimand = "ATE",
+        estimand = "SATE",
         estimate = mean(.data$.pseudo_outcome),
         std_error = clustered_se_of_mean(.data$.pseudo_outcome, .data[[id_col]]),
         sample_size = length(unique(.data[[id_col]]))
     )
+    if (!zero_range(.data[[w_col]])) {
+        o <- dplyr::bind_rows(
+            o,
+            dplyr::summarize(
+                .data,
+                estimand = "PATE",
+                estimate = stats::weighted.mean(.data$.pseudo_outcome, .data[[w_col]]),
+                std_error = clustered_se_of_mean(.data$.pseudo_outcome, .data[[id_col]], .data[[w_col]]),
+                sample_size = sum(.data[[w_col]])
+            )
+        )
+    }
+    o
 }
 
 
-calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
+calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     .outcome <- rlang::enexpr(.outcome)
+    .weights <- rlang::enexpr(.weights)
 
     result_list <- list()
     pb <- progress::progress_bar$new(
@@ -51,7 +68,7 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
     pb$tick(0)
     for (covariate in dots) {
         .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_name(covariate)]]
-        data <- Model_data$new(.data, {{ .outcome }}, {{ covariate }})
+        data <- Model_data$new(.data, {{ .outcome }}, {{ covariate }}, .weight_col = {{ .weights }})
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
         if (.MCATE_cfg$std_errors) {
@@ -81,7 +98,7 @@ calculate_mcate_quantities <- function(.data, .outcome, ..., .MCATE_cfg) {
 }
 
 #' @importFrom rlang .data
-calculate_pcate_quantities <- function(.data, .outcome, fx_model, ..., .MCATE_cfg) {
+calculate_pcate_quantities <- function(.data, .weights, .outcome, fx_model, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
     pb <- progress::progress_bar$new(

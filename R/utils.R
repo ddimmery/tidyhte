@@ -22,25 +22,42 @@ muffle_messages <- function(expr, ...) {
     )
 }
 
+#' @importFrom rlang check_installed
 soft_require <- function(package, load = FALSE) {
+    rlang::check_installed(package)
     if (load) {
-        is_ok <- requireNamespace(package, quietly = FALSE)
-        if (is_ok) try(attachNamespace(package), silent = TRUE)
-    } else {
-        is_ok <- package_present(package)
-    }
-    if (!is_ok) {
-        stop(paste0("loading required package (", package, ") failed"))
+        try(attachNamespace(package), silent = TRUE)
     }
 }
 
 package_present <- function(package) {
-    path <- find.package(package, quiet = TRUE)
-    length(path) > 0
+    rlang::is_installed(package)
 }
 
-clustered_se_of_mean <- function(y, cluster, yhat = mean(y)) {
+check_hte_cfg <- function(cfg) {
+    checkmate::check_r6(cfg, classes = "HTE_cfg")
+}
+
+zero_range <- function(x, tol = .Machine$double.eps ^ 0.5) {
+  if (length(x) == 1) return(TRUE)
+  x <- range(x) / mean(x)
+  isTRUE(all.equal(x[1], x[2], tolerance = tol))
+}
+
+#' @importFrom stats weighted.mean
+clustered_se_of_mean <- function(y, cluster, weights = rep(1, length(y))) {
     n <- length(y)
+    weights <- weights / sum(weights) * n
     H <- length(unique(cluster))
-    sqrt(sum(tapply(y - yhat, cluster, sum)^2) / n ^ 2 * H / (H - 1))
+    yhat <- stats::weighted.mean(y, weights)
+    if (H < n) {
+        dplyr::tibble(r = y - yhat, w = weights, cl = cluster) %>%
+        dplyr::group_by(.data$cl) %>%
+        dplyr::summarize(r = sum(tcrossprod(.data$w) * tcrossprod(.data$r))) %>%
+        dplyr::select(.data$r) %>%
+        unlist() -> cl_resids
+    } else {
+        cl_resids <- weights ^ 2 * (y - yhat) ^ 2
+    }
+    sqrt(sum(cl_resids) / n ^ 2 * H / (H - 1))
 }

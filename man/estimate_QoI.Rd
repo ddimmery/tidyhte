@@ -4,14 +4,13 @@
 \alias{estimate_QoI}
 \title{Estimate Quantities of Interest}
 \usage{
-estimate_QoI(.data, ..., .HTE_cfg = NULL)
+estimate_QoI(.data, ...)
 }
 \arguments{
-\item{.data}{data frame}
+\item{.data}{data frame (already prepared with \code{attach_config}, \code{make_splits},
+\code{produce_plugin_estimates} and \code{construct_pseudo_outcomes})}
 
 \item{...}{Unquoted names of moderators to calculate QoIs for.}
-
-\item{.HTE_cfg}{\code{HTE_cfg} object representing the full analysis configuration.}
 }
 \description{
 \code{estimate_QoI} takes a dataframe already prepared with split IDs,

@@ -38,10 +38,20 @@ Model_data <- R6::R6Class("Model_data", list(
     split_id = NULL,
     num_splits = NULL,
     cluster = NULL,
-    initialize = function(.data, label_col, ...) {
+    weights = NULL,
+    initialize = function(.data, label_col, ..., .weight_col = NULL) {
+        label_col <- rlang::enexpr(label_col)
+        .weight_col <- rlang::enexpr(.weight_col)
+        dots <- rlang::enexprs(...)
+
         self$label <- unlist(dplyr::select(.data, {{ label_col }}))
-        self$features <- model.matrix(~. + 0, data = dplyr::select(.data, ...))
-        self$model_frame <- model.frame(~. + 0, data = dplyr::select(.data, ...))
+        self$features <- model.matrix(~. + 0, data = dplyr::select(.data, !!!dots))
+        if (is.null(.weight_col)) {
+            self$weights <- rep(1, length(self$label))
+        } else {
+            self$weights <- unlist(dplyr::select(.data, {{ .weight_col }}))
+        }
+        self$model_frame <- model.frame(~. + 0, data = dplyr::select(.data, !!!dots))
         self$cluster <- .data[[attr(.data, "identifier")]]
         if (".split_id" %in% names(.data)) {
             self$split_id <- .data$.split_id
@@ -117,6 +127,34 @@ check_identifier <- function(data, id_col) {
 
     if (!ok) {
         msg <- "Invalid identifier. Each unit / cluster must have its own unique ID."
+        stop(msg)
+    }
+}
+
+check_weights <- function(data, weight_col) {
+    if (!(weight_col %in% names(data))) {
+        msg <- "Invalid weight column. Must exist in dataframe."
+        stop(msg)
+    }
+
+    wts <- data[[weight_col]]
+
+    is_num <- checkmate::test_numeric(wts)
+
+    if (!is_num) {
+        msg <- "Invalid weight column. Must be numeric."
+        stop(msg)
+    }
+
+    if(min(wts) < 0) {
+        msg <- "Invalid weight column. Must be non-negative."
+        stop(msg)
+    }
+}
+
+check_data_has_hte_cfg <- function(data) {
+    if (! "HTE_cfg" %in% names(attributes(data))) {
+        msg <- "Must attach HTE_cfg with `attach_config`."
         stop(msg)
     }
 }

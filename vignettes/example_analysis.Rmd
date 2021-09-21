@@ -406,17 +406,15 @@ To actually perform the estimation, the following will be sufficient. Note that 
 
 ```{r estimate, message=FALSE}
 data %>%
-    # Will remove the `.HTE_cfg` arguments and add the following:
-    # attach_config(cfg) %>%
+    attach_config(cfg) %>%
     make_splits({{ userid }}, .num_splits = 12) %>%
     produce_plugin_estimates(
         {{ outcome_variable }},
         {{ treatment_variable }},
-        !!!model_covariates,
-        .HTE_cfg = cfg
+        !!!model_covariates
     ) %>%
     construct_pseudo_outcomes({{ outcome_variable }}, {{ treatment_variable }}) %>%
-    estimate_QoI(!!!moderators, .HTE_cfg = cfg) -> results
+    estimate_QoI(!!!moderators) -> results
 ```
 
 ```{r show_qoi, message=FALSE}
