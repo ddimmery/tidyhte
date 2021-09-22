@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@
       <h1 data-toc-skip>Example HTE Analysis</h1>
                         <h4 class="author">Drew Dimmery (<a href="mailto:drew.dimmery@gmail.com" class="email">drew.dimmery@gmail.com</a>)</h4>
             
-            <h4 class="date">21 September, 2021</h4>
+            <h4 class="date">22 September, 2021</h4>
       
       <small class="dont-index">Source: <a href="http://github.com/ddimmery/tidyhte/blob/master/vignettes/example_analysis.Rmd"><code>vignettes/example_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>example_analysis.Rmd</code></div>
@@ -199,49 +199,46 @@ div.main-container {
 <p>To run the full set of models, uncomment the lines below.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regression.cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/SLEnsemble_cfg.html">SLEnsemble_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-        <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-            <span class="st">"SL.glm"</span>
-        <span class="op">)</span>,
-        <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-            <span class="st">"SL.glm.interaction"</span>
-        <span class="op">)</span>
-        <span class="co"># SLLearner_cfg$new(</span>
-        <span class="co">#     "SL.gam",</span>
-        <span class="co">#     list(</span>
-        <span class="co">#         deg.gam = c(2, 3, 4, 5, 7, 9) #13, 17</span>
-        <span class="co">#     )</span>
-        <span class="co"># ),</span>
-        <span class="co"># SLLearner_cfg$new(</span>
-        <span class="co">#     "SL.glmnet",</span>
-        <span class="co">#     list(</span>
-        <span class="co">#         alpha=c(0.05, 0.15, 0.2, 0.25),</span>
-        <span class="co">#         loss=c('mse', 'deviance')</span>
-        <span class="co">#     )</span>
-        <span class="co"># ),</span>
-        <span class="co"># SLLearner_cfg$new(</span>
-        <span class="co">#     "SL.glmnet.interaction",</span>
-        <span class="co">#     list(</span>
-        <span class="co">#         alpha=c(0.05, 0.15, 0.2, 0.25),</span>
-        <span class="co">#         loss=c('mse', 'deviance')</span>
-        <span class="co">#     )</span>
-        <span class="co"># ),</span>
-        <span class="co"># SLLearner_cfg$new(</span>
-        <span class="co">#     "SL.ranger",</span>
-        <span class="co">#     list(</span>
-        <span class="co">#         num.trees = c(25, 50, 100, 250, 500), #750, 1000, 2000</span>
-        <span class="co">#         splitrule=c('gini', 'extratrees', 'hellinger')</span>
-        <span class="co">#     )</span>
-        <span class="co"># ),</span>
-        <span class="co"># SLLearner_cfg$new(</span>
-        <span class="co">#     "SL.xgboost",</span>
-        <span class="co">#     list(</span>
-        <span class="co">#         ntrees = c(50, 100, 250, 500),#1000, 2500</span>
-        <span class="co">#         max_depth = c(1, 3, 5, 7, 9),</span>
-        <span class="co">#         shrinkage = c(0.01, 0.1)</span>
-        <span class="co">#     )</span>
-        <span class="co"># )</span>
+  learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+      <span class="st">"SL.glm"</span>
+    <span class="op">)</span>,
+    <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+      <span class="st">"SL.glm.interaction"</span>
+    <span class="op">)</span>,
+    <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+      <span class="st">"SL.mean"</span>
     <span class="op">)</span>
+    <span class="co"># SLLearner_cfg$new(</span>
+    <span class="co">#   "SL.glmnet",</span>
+    <span class="co">#   list(</span>
+    <span class="co">#     alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75),</span>
+    <span class="co">#     loss = c("deviance")</span>
+    <span class="co">#   )</span>
+    <span class="co"># ),</span>
+    <span class="co"># SLLearner_cfg$new(</span>
+    <span class="co">#   "SL.glmnet.interaction",</span>
+    <span class="co">#   list(</span>
+    <span class="co">#     alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75),</span>
+    <span class="co">#     loss = c("deviance")</span>
+    <span class="co">#   )</span>
+    <span class="co"># ),</span>
+    <span class="co"># SLLearner_cfg$new(</span>
+    <span class="co">#   "SL.ranger",</span>
+    <span class="co">#   list(</span>
+    <span class="co">#     num.trees = c(25, 50, 100, 250),</span>
+    <span class="co">#     splitrule = c("gini")</span>
+    <span class="co">#   )</span>
+    <span class="co"># ),</span>
+    <span class="co"># SLLearner_cfg$new(</span>
+    <span class="co">#   "SL.xgboost",</span>
+    <span class="co">#   list(</span>
+    <span class="co">#     ntrees = c(50, 100, 250, 500),</span>
+    <span class="co">#     max_depth = c(1, 3, 5),</span>
+    <span class="co">#     shrinkage = c(0.1)</span>
+    <span class="co">#   )</span>
+    <span class="co"># )</span>
+  <span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>## Super Learner</code></pre>
 <pre><code>## Version: 2.0-28</code></pre>
@@ -314,26 +311,44 @@ div.main-container {
 <a href="#estimate-models" class="anchor"></a>Estimate Models</h1>
 <p>To actually perform the estimation, the following will be sufficient. Note that the configuration of covariate names at the top of the document makes all of this a little more complex with all the curly-brackets and bangs.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="co"># checkpoint &lt;- function(start_time, end_time=NULL) {</span>
+<span class="co">#   if (is.null(end_time)) end_time &lt;- lubridate::now()</span>
+<span class="co">#   dur &lt;- lubridate::as.duration(lubridate::interval(start_time, end_time))</span>
+<span class="co">#   hrs &lt;- as.integer(floor(as.numeric(dur, "hours")))</span>
+<span class="co">#   mins &lt;- as.integer(floor(as.numeric(dur, "minutes") - hrs * 60))</span>
+<span class="co">#   secs &lt;- round(as.numeric(dur, "seconds") - hrs * 60 * 60 - mins * 60, 4)</span>
+<span class="co">#   print(paste("Code has been running for:", hrs, "h", mins, "m", secs, "s"))</span>
+<span class="co">#   invisible(end_time)</span>
+<span class="co"># }</span>
+
+<span class="co"># start_time &lt;- lubridate::now()</span>
+<span class="va">data</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">cfg</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">userid</span> <span class="op">}</span><span class="op">}</span>, .num_splits <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">userid</span> <span class="op">}</span><span class="op">}</span>, .num_splits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">zz</span>
+<span class="co"># checkpoint(start_time)</span>
+<span class="va">zz</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span>
         <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>
-    <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
+    <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">zz</span>
+<span class="co"># checkpoint(start_time)</span>
+<span class="va">zz</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">zz</span>
+<span class="co"># checkpoint(start_time)</span>
+<span class="va">zz</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span>
+<span class="co"># checkpoint(start_time)</span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 634
+<pre><code>## Rows: 640
 ## Columns: 6
 ## $ estimand  &lt;chr&gt; "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE…
 ## $ term      &lt;chr&gt; "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", …
 ## $ value     &lt;dbl&gt; -1.6365102, -1.5213897, -1.4725538, -1.3974162, -1.3575229, …
 ## $ level     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ estimate  &lt;dbl&gt; 1.843917, 1.786747, 1.762485, 1.724928, 1.704822, 1.686120, …
-## $ std_error &lt;dbl&gt; 0.13194602, 0.11973154, 0.11510308, 0.10860210, 0.10544752, …</code></pre>
+## $ estimate  &lt;dbl&gt; 1.849303, 1.789546, 1.764594, 1.726400, 1.706188, 1.687449, …
+## $ std_error &lt;dbl&gt; 0.13199142, 0.11995347, 0.11541045, 0.10904104, 0.10595311, …</code></pre>
 </div>
 <div id="write-results-to-file" class="section level1">
 <h1 class="hasAnchor">
