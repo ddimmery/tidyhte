@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -102,12 +102,6 @@
     
     
 <style type="text/css">
-body{
-  font-family: Arial;
-}
-/* Headers */
-h1,h2,h3,h4,h5,h6{
-  font-family: "Arial Narrow";
 div.main-container {
   max-width: 1800px;
   margin-left: auto;
@@ -124,8 +118,8 @@ div.main-container {
 <h1 class="hasAnchor">
 <a href="#load-packages-and-setup-environment" class="anchor"></a>Load packages and setup environment</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#library(tidyhte)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/ddimmery/tidyhte">tidyhte</a></span><span class="op">)</span>
+<span class="co"># devtools::load_all()</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="co"># library(alethea)</span>
@@ -141,7 +135,7 @@ div.main-container {
 <p>Note that datatypes can be either continuous or discrete, and that there can be columns in the tibble that are not included in any resulting anayses.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
-<span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">500</span>
+<span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
     uid <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span>
 <span class="op">)</span> <span class="op">%&gt;%</span>
@@ -313,45 +307,27 @@ div.main-container {
 <a href="#estimate-models" class="anchor"></a>Estimate Models</h1>
 <p>To actually perform the estimation, the following will be sufficient. Note that the configuration of covariate names at the top of the document makes all of this a little more complex with all the curly-brackets and bangs.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># checkpoint &lt;- function(start_time, end_time=NULL) {</span>
-<span class="co">#   if (is.null(end_time)) end_time &lt;- lubridate::now()</span>
-<span class="co">#   dur &lt;- lubridate::as.duration(lubridate::interval(start_time, end_time))</span>
-<span class="co">#   hrs &lt;- as.integer(floor(as.numeric(dur, "hours")))</span>
-<span class="co">#   mins &lt;- as.integer(floor(as.numeric(dur, "minutes") - hrs * 60))</span>
-<span class="co">#   secs &lt;- round(as.numeric(dur, "seconds") - hrs * 60 * 60 - mins * 60, 4)</span>
-<span class="co">#   print(paste("Code has been running for:", hrs, "h", mins, "m", secs, "s"))</span>
-<span class="co">#   invisible(end_time)</span>
-<span class="co"># }</span>
-
-<span class="co"># start_time &lt;- lubridate::now()</span>
-<span class="va">data</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">data</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">cfg</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">userid</span> <span class="op">}</span><span class="op">}</span>, .num_splits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">zz</span>
-<span class="co"># checkpoint(start_time)</span>
-<span class="va">zz</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">userid</span> <span class="op">}</span><span class="op">}</span>, .num_splits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span>
         <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>
-        <span class="co"># .weights = {{ weights }}</span>
-    <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">zz</span>
-<span class="co"># checkpoint(start_time)</span>
-<span class="va">zz</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">zz</span>
-<span class="co"># checkpoint(start_time)</span>
-<span class="va">zz</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span>
-<span class="co"># checkpoint(start_time)</span></code></pre></div>
+        <span class="co"># .weights = {{ weights }}  # nprobust does not currently support weights</span>
+    <span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></code></pre></div>
 <pre><code>## Rows: 640
 ## Columns: 6
 ## $ estimand  &lt;chr&gt; "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE…
 ## $ term      &lt;chr&gt; "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", …
-## $ value     &lt;dbl&gt; -1.7966531, -1.7099189, -1.5829550, -1.4650216, -1.4002722, …
+## $ value     &lt;dbl&gt; -1.6365102, -1.5213897, -1.4725538, -1.3974162, -1.3575229, …
 ## $ level     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ estimate  &lt;dbl&gt; 1.7091373, 1.6203943, 1.4975297, 1.3972682, 1.3433803, 1.299…
-## $ std_error &lt;dbl&gt; 0.2185091, 0.2102935, 0.1996988, 0.1907141, 0.1861148, 0.182…</code></pre>
+## $ estimate  &lt;dbl&gt; 1.863751, 1.801789, 1.775724, 1.735539, 1.714149, 1.694293, …
+## $ std_error &lt;dbl&gt; 0.13433600, 0.12174386, 0.11696693, 0.11025107, 0.10698879, …</code></pre>
 </div>
 <div id="write-results-to-file" class="section level1">
 <h1 class="hasAnchor">
@@ -383,8 +359,7 @@ div.main-container {
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">level</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"SuperLearner Ensemble"</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme_alethea</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
 <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span></code></pre></div>
 <p><img src="example_analysis_files/figure-html/sl_coef-1.png" width="700"></p>
@@ -410,8 +385,7 @@ div.main-container {
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">level</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Submodel Risk Estimates"</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme_alethea</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
 <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span></code></pre></div>
 <p><img src="example_analysis_files/figure-html/sl_risk-1.png" width="700"></p>
@@ -429,8 +403,7 @@ div.main-container {
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"Reduction in R² from full model"</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Covariate Importance"</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme_alethea</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
 <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span></code></pre></div>
 <p><img src="example_analysis_files/figure-html/vimp-1.png" width="700"></p>
@@ -452,8 +425,7 @@ div.main-container {
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span><span class="st">"Covariate level"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"CATE"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Marginal effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu">theme_alethea</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
@@ -476,8 +448,7 @@ div.main-container {
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span><span class="st">"Covariate level"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"CATE"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Marginal effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu">theme_alethea</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
@@ -496,8 +467,7 @@ div.main-container {
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span><span class="op">(</span><span class="st">"Covariate level"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"CATE"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Marginal effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu">theme_alethea</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
@@ -516,8 +486,7 @@ div.main-container {
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span><span class="op">(</span><span class="st">"Covariate level"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"CATE"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Marginal effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu">theme_alethea</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
