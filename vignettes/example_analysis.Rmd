@@ -223,7 +223,7 @@ Note that datatypes can be either continuous or discrete, and that there can be 
 
 ```{r sim_data}
 set.seed(100)
-n <- 1000
+n <- 500
 data <- tibble(
     uid = 1:n
 ) %>%
@@ -235,7 +235,8 @@ data <- tibble(
         x3 = factor(sample(1:3, n, prob = c(1 / 5, 1 / 5, 3 / 5), replace = TRUE)),
         x4 = (x1 + rnorm(n)) / 2,
         x5 = rnorm(n),
-        y = a + x1 - 0.5 * a * (x1 - mean(x1)) + as.double(x2) + rnorm(n)
+        y = a + x1 - 0.5 * a * (x1 - mean(x1)) + as.double(x2) + rnorm(n),
+        w = 0.1 + rexp(n, 1 / 0.9)
     )
 ```
 
@@ -246,6 +247,7 @@ The primary things that require user-specification here are the covariate names.
 ```{r define}
 # Define the (unquoted) username column
 userid <- rlang::expr(uid)
+weights <- rlang::expr(w)
 # Define the (quoted) variable name of the propensity score
 propensity_score_variable_name <- "ps"
 # Define the (quoted) names of continuously-valued (i.e. double) covariates
@@ -422,6 +424,7 @@ zz %>%
         {{ outcome_variable }},
         {{ treatment_variable }},
         !!!model_covariates
+        # .weights = {{ weights }}
     ) -> zz
 # checkpoint(start_time)
 zz %>%

@@ -1,3 +1,7 @@
+# tidyhte 0.1.2
+
+* Fix error when using `glmnet` as a model in the VIMP regression by setting the (unused) censoring model to be `SL.mean` (a constant model, which is fast and easy to estimate).
+
 # tidyhte 0.1.1
 
 * Greatly increase speed of calculating VIMP.

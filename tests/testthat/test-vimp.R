@@ -33,7 +33,7 @@ test_that("VIMP ensures even number of splits", {
 
 test_that("VIMP works with weights", {
     d <- make_splits(d, uid, .num_splits = 4)
-    d$w <- rexp(n)
+    d$w <- rexp(n, 1 / 0.9) + 0.1
     attr(d, "HTE_cfg") <- HTE_cfg$new(qoi = QoI_cfg$new(vimp = VIMP_cfg$new(model_cfg = SLEnsemble_cfg$new())))
     expect_error(result <- calculate_vimp(d, w, y, cov1, cov2, cov3, .VIMP_cfg = attr(d, "HTE_cfg")$qoi$vimp), NA)
 

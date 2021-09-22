@@ -35,6 +35,13 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
 
     soft_require("quadprog")
 
+    pb <- progress::progress_bar$new(
+        total = 1 + ncol(data$model_frame),
+        show_after = 0,
+        format = "estimating VIMP [:bar] models: :current / :total"
+    )
+    pb$tick(0)
+
     muffle_warnings(full_fit <- SuperLearner::CV.SuperLearner(
         Y = data$label,
         X = data$model_frame,
@@ -44,6 +51,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
         innerCvControl = list(list(V = as.integer(num_splits_in_data / 2))),
         obsWeights = data$weights
     ), "Only a single innerCvControl is given", "(i.e. given weight 0)")
+    pb$tick()
 
     cross_fitting_folds <- vimp::get_cv_sl_folds(full_fit$folds)
     sample_splitting_folds <- vimp::make_folds(unique(cross_fitting_folds), V = 2)
@@ -53,12 +61,6 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
         full = TRUE
     )
 
-    pb <- progress::progress_bar$new(
-        total = ncol(data$model_frame),
-        show_after = 0,
-        format = "estimating VIMP [:bar] covariates: :current / :total"
-    )
-    pb$tick(0)
     for (covariate in names(data$model_frame)) {
         muffle_warnings(reduced_fit <- SuperLearner::CV.SuperLearner(
             Y = data$label,
@@ -74,22 +76,30 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
             sample_splitting_folds = sample_splitting_folds,
             full = FALSE
         )
+
+        # VIMP estimates a censoring model which cannot be disabled,
+        # so I just set this model to be a simple mean model.
+        vimp_sl_lib <- "SL.mean"
+
         muffle_warnings({
             result <- vimp::cv_vim(
             Y = data$label,
+            X = data$model_frame,
             cross_fitted_f1 = full_preds,
             cross_fitted_f2 = reduced_preds,
             ipc_weights = data$weights,
+            # The estimated quantities based on the use of "Y" (censoring related to the outcome)
+            # is not actually used because all of the coarsening variables (C) are equal to one.
             Z = "Y",
             indx = idx,
-            SL.library = .VIMP_cfg$model_cfg$SL.library,
+            SL.library = vimp_sl_lib,
             env = .VIMP_cfg$model_cfg$SL.env,
             cross_fitting_folds = cross_fitting_folds,
             sample_splitting_folds = sample_splitting_folds,
             run_regression = FALSE,
             V = as.integer(num_splits_in_data / 2)
         )
-        }, "estimate < 0", "rank-deficient fit")
+        }, "estimate < 0", "rank-deficient fit", "(i.e. given weight 0)", "duplicates of previous learners")
         idx <- idx + 1
         result <- dplyr::tibble(
             estimand = "VIMP",
