@@ -285,49 +285,46 @@ Each individual component of the model provides a list of hyperparameters, over 
 To run the full set of models, uncomment the lines below.
 ```{r outcome_def}
 regression.cfg <- SLEnsemble_cfg$new(
-    learner_cfgs = list(
-        SLLearner_cfg$new(
-            "SL.glm"
-        ),
-        SLLearner_cfg$new(
-            "SL.glm.interaction"
-        )
-        # SLLearner_cfg$new(
-        #     "SL.gam",
-        #     list(
-        #         deg.gam = c(2, 3, 4, 5, 7, 9) #13, 17
-        #     )
-        # ),
-        # SLLearner_cfg$new(
-        #     "SL.glmnet",
-        #     list(
-        #         alpha=c(0.05, 0.15, 0.2, 0.25),
-        #         loss=c('mse', 'deviance')
-        #     )
-        # ),
-        # SLLearner_cfg$new(
-        #     "SL.glmnet.interaction",
-        #     list(
-        #         alpha=c(0.05, 0.15, 0.2, 0.25),
-        #         loss=c('mse', 'deviance')
-        #     )
-        # ),
-        # SLLearner_cfg$new(
-        #     "SL.ranger",
-        #     list(
-        #         num.trees = c(25, 50, 100, 250, 500), #750, 1000, 2000
-        #         splitrule=c('gini', 'extratrees', 'hellinger')
-        #     )
-        # ),
-        # SLLearner_cfg$new(
-        #     "SL.xgboost",
-        #     list(
-        #         ntrees = c(50, 100, 250, 500),#1000, 2500
-        #         max_depth = c(1, 3, 5, 7, 9),
-        #         shrinkage = c(0.01, 0.1)
-        #     )
-        # )
+  learner_cfgs = list(
+    SLLearner_cfg$new(
+      "SL.glm"
+    ),
+    SLLearner_cfg$new(
+      "SL.glm.interaction"
+    ),
+    SLLearner_cfg$new(
+      "SL.mean"
     )
+    # SLLearner_cfg$new(
+    #   "SL.glmnet",
+    #   list(
+    #     alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75),
+    #     loss = c("deviance")
+    #   )
+    # ),
+    # SLLearner_cfg$new(
+    #   "SL.glmnet.interaction",
+    #   list(
+    #     alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75),
+    #     loss = c("deviance")
+    #   )
+    # ),
+    # SLLearner_cfg$new(
+    #   "SL.ranger",
+    #   list(
+    #     num.trees = c(25, 50, 100, 250),
+    #     splitrule = c("gini")
+    #   )
+    # ),
+    # SLLearner_cfg$new(
+    #   "SL.xgboost",
+    #   list(
+    #     ntrees = c(50, 100, 250, 500),
+    #     max_depth = c(1, 3, 5),
+    #     shrinkage = c(0.1)
+    #   )
+    # )
+  )
 )
 ```
 
@@ -405,16 +402,34 @@ initialize_config() %>%
 To actually perform the estimation, the following will be sufficient. Note that the configuration of covariate names at the top of the document makes all of this a little more complex with all the curly-brackets and bangs.
 
 ```{r estimate, message=FALSE}
+# checkpoint <- function(start_time, end_time=NULL) {
+#   if (is.null(end_time)) end_time <- lubridate::now()
+#   dur <- lubridate::as.duration(lubridate::interval(start_time, end_time))
+#   hrs <- as.integer(floor(as.numeric(dur, "hours")))
+#   mins <- as.integer(floor(as.numeric(dur, "minutes") - hrs * 60))
+#   secs <- round(as.numeric(dur, "seconds") - hrs * 60 * 60 - mins * 60, 4)
+#   print(paste("Code has been running for:", hrs, "h", mins, "m", secs, "s"))
+#   invisible(end_time)
+# }
+
+# start_time <- lubridate::now()
 data %>%
     attach_config(cfg) %>%
-    make_splits({{ userid }}, .num_splits = 12) %>%
+    make_splits({{ userid }}, .num_splits = 4) -> zz
+# checkpoint(start_time)
+zz %>%
     produce_plugin_estimates(
         {{ outcome_variable }},
         {{ treatment_variable }},
         !!!model_covariates
-    ) %>%
-    construct_pseudo_outcomes({{ outcome_variable }}, {{ treatment_variable }}) %>%
+    ) -> zz
+# checkpoint(start_time)
+zz %>%
+    construct_pseudo_outcomes({{ outcome_variable }}, {{ treatment_variable }}) -> zz
+# checkpoint(start_time)
+zz %>%
     estimate_QoI(!!!moderators) -> results
+# checkpoint(start_time)
 ```
 
 ```{r show_qoi, message=FALSE}

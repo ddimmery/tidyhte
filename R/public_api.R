@@ -219,7 +219,8 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .weights = 
         .data %>% dplyr::select(!dplyr::matches(c(".pi_hat", ".mu1_hat", ".mu0_hat"))),
         ok_data %>% dplyr::select(.data$.row_id, .data$.pi_hat, .data$.mu1_hat, .data$.mu0_hat),
         by = ".row_id"
-    ) %>% dplyr::select(-.data$.row_id)
+    ) %>% 
+    dplyr::select(-.data$.row_id)
 
     attr(.data, "SL_coefs") <- SL_coefs
     attr(.data, "weights") <- rlang::as_name(.weights)

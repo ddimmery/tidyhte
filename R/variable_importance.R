@@ -33,6 +33,26 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
     idx <- 1
     cv_ctl <- data$SL_cv_control()
 
+    soft_require("quadprog")
+
+    muffle_warnings(full_fit <- SuperLearner::CV.SuperLearner(
+        Y = data$label,
+        X = data$model_frame,
+        SL.library = .VIMP_cfg$model_cfg$SL.library,
+        env = .VIMP_cfg$model_cfg$SL.env,
+        cvControl = cv_ctl,
+        innerCvControl = list(list(V = as.integer(num_splits_in_data / 2))),
+        obsWeights = data$weights
+    ), "Only a single innerCvControl is given", "(i.e. given weight 0)")
+
+    cross_fitting_folds <- vimp::get_cv_sl_folds(full_fit$folds)
+    sample_splitting_folds <- vimp::make_folds(unique(cross_fitting_folds), V = 2)
+    full_preds <- vimp::extract_sampled_split_predictions(
+        full_fit,
+        sample_splitting_folds = sample_splitting_folds,
+        full = TRUE
+    )
+
     pb <- progress::progress_bar$new(
         total = ncol(data$model_frame),
         show_after = 0,
@@ -40,19 +60,34 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
     )
     pb$tick(0)
     for (covariate in names(data$model_frame)) {
-        muffle_warnings({
-            result <- vimp::cv_vim(
+        muffle_warnings(reduced_fit <- SuperLearner::CV.SuperLearner(
             Y = data$label,
-            X = data$model_frame,
-            # VIMP breaks when providing weights
-            # ipc_weights = data$weights,
-            indx = idx,
-            run_regression = TRUE,
+            X = data$model_frame[, -idx, drop = FALSE],
             SL.library = .VIMP_cfg$model_cfg$SL.library,
             env = .VIMP_cfg$model_cfg$SL.env,
             cvControl = cv_ctl,
-            V = as.integer(cv_ctl$V / 2),
-            sample_splitting = TRUE
+            innerCvControl = list(list(V = as.integer(num_splits_in_data / 2))),
+            obsWeights = data$weights
+        ), "Only a single innerCvControl is given", "(i.e. given weight 0)")
+        reduced_preds <- vimp::extract_sampled_split_predictions(
+            reduced_fit,
+            sample_splitting_folds = sample_splitting_folds,
+            full = FALSE
+        )
+        muffle_warnings({
+            result <- vimp::cv_vim(
+            Y = data$label,
+            cross_fitted_f1 = full_preds,
+            cross_fitted_f2 = reduced_preds,
+            ipc_weights = data$weights,
+            Z = "Y",
+            indx = idx,
+            SL.library = .VIMP_cfg$model_cfg$SL.library,
+            env = .VIMP_cfg$model_cfg$SL.env,
+            cross_fitting_folds = cross_fitting_folds,
+            sample_splitting_folds = sample_splitting_folds,
+            run_regression = FALSE,
+            V = as.integer(num_splits_in_data / 2)
         )
         }, "estimate < 0", "rank-deficient fit")
         idx <- idx + 1

@@ -39,9 +39,9 @@ regression.cfg <- SLEnsemble_cfg$new(
             "SL.glm"
         ),
         SLLearner_cfg$new(
-            "SL.glmnet",
+            "SL.gam",
             list(
-                alpha = c(0.05, 0.15)
+                degree = c(2, 3, 5)
             )
         )
     )
@@ -113,8 +113,8 @@ test_that("VIMP is valid", {
 n_rows <- (
     1 + # SATE estimate
     2 + # MSE for y(0) & y(1)
-    2 * 3 + # one row per model in the ensemble for each PO + ps for SL risk
-    2 * 3 + # one row per model in the ensemble for each PO + ps for SL coefficient
+    2 * 4 + # one row per model in the ensemble for each PO + ps for SL risk
+    2 * 4 + # one row per model in the ensemble for each PO + ps for SL coefficient
     2 + # one row per moderator for variable importance
     1 * 100 + # 100 rows per continuous moderator for local regression for MCATE and for PCATE
     (2 + 2) # 2 rows per discrete moderator level for MCATE and for PCATE

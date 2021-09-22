@@ -1,3 +1,7 @@
+# tidyhte 0.1.1
+
+* Greatly increase speed of calculating VIMP.
+
 # tidyhte 0.1.0
 
 * Increment to first minor version number. The package is generally feature-complete enough for general usage, although there are still lots of things to do before an initial major version release.
