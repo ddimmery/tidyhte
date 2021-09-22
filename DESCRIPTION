@@ -1,6 +1,6 @@
 Package: tidyhte
 Title: Tidy Estimation of Heterogeneous Treatment Effects
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: 
     person(given = "Drew",
            family = "Dimmery",
@@ -27,7 +27,7 @@ Suggests:
     nprobust,
     glmnet,
     WeightedROC,
-    vimp (>= 2.2.6),
+    vimp,
     mockr,
     estimatr,
     quadprog

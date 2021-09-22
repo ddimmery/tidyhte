@@ -4,6 +4,7 @@
 #' This configuration details the full analysis of HTE that should be performed.
 #' @param .data dataframe
 #' @param .HTE_cfg `HTE_cfg` object representing the full configuration of the HTE analysis.
+#' @export
 attach_config <- function(.data, .HTE_cfg) {
     check_hte_cfg(.HTE_cfg)
 
