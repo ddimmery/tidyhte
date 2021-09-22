@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@ div.main-container {
 <p>Note that datatypes can be either continuous or discrete, and that there can be columns in the tibble that are not included in any resulting anayses.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
-<span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
+<span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">500</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
     uid <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span>
 <span class="op">)</span> <span class="op">%&gt;%</span>
@@ -153,7 +153,8 @@ div.main-container {
         x3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">n</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">3</span> <span class="op">/</span> <span class="fl">5</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
         x4 <span class="op">=</span> <span class="op">(</span><span class="va">x1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,
         x5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
-        y <span class="op">=</span> <span class="va">a</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">a</span> <span class="op">*</span> <span class="op">(</span><span class="va">x1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html">as.double</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>
+        y <span class="op">=</span> <span class="va">a</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">a</span> <span class="op">*</span> <span class="op">(</span><span class="va">x1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html">as.double</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+        w <span class="op">=</span> <span class="fl">0.1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html">rexp</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">0.9</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
 </div>
 <div id="define-variables" class="section level1">
@@ -163,6 +164,7 @@ div.main-container {
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Define the (unquoted) username column</span>
 <span class="va">userid</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">expr</a></span><span class="op">(</span><span class="va">uid</span><span class="op">)</span>
+<span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">expr</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span>
 <span class="co"># Define the (quoted) variable name of the propensity score</span>
 <span class="va">propensity_score_variable_name</span> <span class="op">&lt;-</span> <span class="st">"ps"</span>
 <span class="co"># Define the (quoted) names of continuously-valued (i.e. double) covariates</span>
@@ -331,6 +333,7 @@ div.main-container {
         <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>
+        <span class="co"># .weights = {{ weights }}</span>
     <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">zz</span>
 <span class="co"># checkpoint(start_time)</span>
 <span class="va">zz</span> <span class="op">%&gt;%</span>
@@ -345,10 +348,10 @@ div.main-container {
 ## Columns: 6
 ## $ estimand  &lt;chr&gt; "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE…
 ## $ term      &lt;chr&gt; "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", …
-## $ value     &lt;dbl&gt; -1.6365102, -1.5213897, -1.4725538, -1.3974162, -1.3575229, …
+## $ value     &lt;dbl&gt; -1.7966531, -1.7099189, -1.5829550, -1.4650216, -1.4002722, …
 ## $ level     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ estimate  &lt;dbl&gt; 1.849303, 1.789546, 1.764594, 1.726400, 1.706188, 1.687449, …
-## $ std_error &lt;dbl&gt; 0.13199142, 0.11995347, 0.11541045, 0.10904104, 0.10595311, …</code></pre>
+## $ estimate  &lt;dbl&gt; 1.7091373, 1.6203943, 1.4975297, 1.3972682, 1.3433803, 1.299…
+## $ std_error &lt;dbl&gt; 0.2185091, 0.2102935, 0.1996988, 0.1907141, 0.1861148, 0.182…</code></pre>
 </div>
 <div id="write-results-to-file" class="section level1">
 <h1 class="hasAnchor">
