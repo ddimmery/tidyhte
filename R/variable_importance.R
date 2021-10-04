@@ -50,7 +50,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
         cvControl = cv_ctl,
         innerCvControl = list(list(V = as.integer(num_splits_in_data / 2))),
         obsWeights = data$weights
-    ), "Only a single innerCvControl is given", "(i.e. given weight 0)")
+    ), "Only a single innerCvControl is given", "rank-deficient fit", "(i.e. given weight 0)")
     pb$tick()
 
     cross_fitting_folds <- vimp::get_cv_sl_folds(full_fit$folds)
@@ -70,7 +70,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
             cvControl = cv_ctl,
             innerCvControl = list(list(V = as.integer(num_splits_in_data / 2))),
             obsWeights = data$weights
-        ), "Only a single innerCvControl is given", "(i.e. given weight 0)")
+        ), "Only a single innerCvControl is given", "rank-deficient fit", "(i.e. given weight 0)")
         reduced_preds <- vimp::extract_sampled_split_predictions(
             reduced_fit,
             sample_splitting_folds = sample_splitting_folds,
@@ -84,7 +84,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
         muffle_warnings({
             result <- vimp::cv_vim(
             Y = data$label,
-            X = data$model_frame,
+            type = "r_squared",
             cross_fitted_f1 = full_preds,
             cross_fitted_f2 = reduced_preds,
             ipc_weights = data$weights,

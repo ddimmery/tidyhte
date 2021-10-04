@@ -220,7 +220,7 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .weights = 
         .data %>% dplyr::select(!dplyr::matches(c(".pi_hat", ".mu1_hat", ".mu0_hat"))),
         ok_data %>% dplyr::select(.data$.row_id, .data$.pi_hat, .data$.mu1_hat, .data$.mu0_hat),
         by = ".row_id"
-    ) %>% 
+    ) %>%
     dplyr::select(-.data$.row_id)
 
     attr(.data, "SL_coefs") <- SL_coefs
@@ -282,7 +282,13 @@ estimate_QoI <- function(
 
     if (!is.null(.QoI_cfg$pcate)) {
         covs <- rlang::syms(.QoI_cfg$pcate$model_covariates)
-        fx_mod <- fit_fx_predictor(.data, .data$.pseudo_outcome, !!!covs, .pcate.cfg = .QoI_cfg$pcate)
+        fx_mod <- fit_fx_predictor(
+            .data,
+            {{ weights }},
+            .data$.pseudo_outcome,
+            !!!covs,
+            .pcate.cfg = .QoI_cfg$pcate
+        )
         .data <- fx_mod$data
         result <- calculate_pcate_quantities(
             .data,

@@ -10,18 +10,42 @@
 #' @param outcome Unquoted name of outcome variable.
 #' @param treatment Unquoted name of treatment variable.
 #' @export
-construct_pseudo_outcomes <- function(.data, outcome, treatment) {
-    # check that plugins are in the df
+construct_pseudo_outcomes <- function(.data, outcome, treatment, type = "dr") {
     YA <- unlist(dplyr::select(.data, {{ outcome }}))
     A <- unlist(dplyr::select(.data, {{ treatment }}))
     mu0 <- .data[[".mu0_hat"]]
     mu1 <- .data[[".mu1_hat"]]
     pi <- .data[[".pi_hat"]]
-    muA <- A * mu1 + (1 - A) * mu0
-    .data$.pseudo_outcome <- (A - pi) / (pi * (1 - pi)) * (YA - muA) + mu1 - mu0
+    .data$.pseudo_outcome <- pseudo_outcome_factory(type)(A, YA, pi, mu1, mu0)
     attr(.data, "treatment") <- rlang::as_string(treatment)
     attr(.data, "outcome") <- rlang::as_string(outcome)
     .data
+}
+
+pseudo_outcome_factory <- function(type) {
+    type <- tolower(type)
+    if (type == "dr") {
+        dr_pseudo_outcome
+    } else if (type == "ipw") {
+        ipw_pseudo_outcome
+    } else if (type == "plugin") {
+        plugin_pseudo_outcome
+    } else {
+        stop("Unknown type of pseudo-outcome.")
+    }
+}
+
+dr_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
+    muA <- muA <- A * mu1 + (1 - A) * mu0
+    (A - pi) / (pi * (1 - pi)) * (YA - muA) + mu1 - mu0
+}
+
+ipw_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
+    (A - pi) / (pi * (1 - pi)) * YA
+}
+
+plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
+    mu1 - mu0
 }
 
 #' @importFrom dplyr summarize
