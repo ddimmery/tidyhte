@@ -1,8 +1,10 @@
-# tidyhte (development)
+# tidyhte 0.1.4
 
 * Export `attach_config`.
 
 * Clean up vignette a little.
+
+* Add support for different pseudo-outcomes, for example based on an IPW (only), or direct-estimation (only) in addition to the (default) doubly-robust method.
 
 # tidyhte 0.1.2
 
