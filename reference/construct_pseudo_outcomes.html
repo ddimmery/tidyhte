@@ -85,7 +85,7 @@ treatment effect under exogeneity." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
       </span>
     </div>
 
@@ -148,7 +148,7 @@ a "pseudo-outcome": an unbiased estimator of the conditional average
 treatment effect under exogeneity.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>construct_pseudo_outcomes</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>outcome</span>, <span class='va'>treatment</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>construct_pseudo_outcomes</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>outcome</span>, <span class='va'>treatment</span>, type <span class='op'>=</span> <span class='st'>"dr"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,6 +165,12 @@ and <code>produce_plugin_estimates</code>)</p></td>
     <tr>
       <th>treatment</th>
       <td><p>Unquoted name of treatment variable.</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>String representing how to construct the pseudo-outcome. Valid
+values are "dr" (the default), "ipw" and "plugin". See "Details" for more
+discussion of these options.</p></td>
     </tr>
     </table>
 

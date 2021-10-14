@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@
       <h1 data-toc-skip>Example HTE Analysis</h1>
                         <h4 class="author">Drew Dimmery (<a href="mailto:drew.dimmery@gmail.com" class="email">drew.dimmery@gmail.com</a>)</h4>
             
-            <h4 class="date">22 September, 2021</h4>
+            <h4 class="date">14 October, 2021</h4>
       
       <small class="dont-index">Source: <a href="http://github.com/ddimmery/tidyhte/blob/master/vignettes/example_analysis.Rmd"><code>vignettes/example_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>example_analysis.Rmd</code></div>
@@ -118,8 +118,8 @@ div.main-container {
 <h1 class="hasAnchor">
 <a href="#load-packages-and-setup-environment" class="anchor"></a>Load packages and setup environment</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/ddimmery/tidyhte">tidyhte</a></span><span class="op">)</span>
-<span class="co"># devtools::load_all()</span>
+<code class="sourceCode R"><span class="co"># library(tidyhte)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="co"># library(alethea)</span>
@@ -135,19 +135,24 @@ div.main-container {
 <p>Note that datatypes can be either continuous or discrete, and that there can be columns in the tibble that are not included in any resulting anayses.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
-<span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
+<span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">5000</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
     uid <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span>
 <span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
-        a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>,
-        ps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="va">n</span><span class="op">)</span>,
+        a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.3</span><span class="op">)</span>,
+        ps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="va">n</span><span class="op">)</span>,
         x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
-        x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="va">n</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">2</span> <span class="op">/</span> <span class="fl">5</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
+        x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="va">n</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">100</span>, <span class="fl">39</span> <span class="op">/</span> <span class="fl">100</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">2</span> <span class="op">/</span> <span class="fl">5</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
         x3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">n</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">3</span> <span class="op">/</span> <span class="fl">5</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
-        x4 <span class="op">=</span> <span class="op">(</span><span class="va">x1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,
+        <span class="co"># x4 = (x1 + rnorm(n)) / 2,</span>
+        x4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
         x5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
-        y <span class="op">=</span> <span class="va">a</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">a</span> <span class="op">*</span> <span class="op">(</span><span class="va">x1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html">as.double</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+        y <span class="op">=</span> <span class="op">(</span>
+            <span class="va">a</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">-</span> <span class="va">a</span> <span class="op">*</span> <span class="op">(</span><span class="va">x1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">4</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="va">a</span> <span class="op">*</span> <span class="op">(</span><span class="va">x2</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+            <span class="va">a</span> <span class="op">*</span> <span class="op">(</span><span class="va">x2</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">a</span> <span class="op">*</span> <span class="op">(</span><span class="va">x2</span> <span class="op">==</span> <span class="fl">4</span><span class="op">)</span> <span class="op">+</span>
+            <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>
+        <span class="op">)</span>,
         w <span class="op">=</span> <span class="fl">0.1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html">rexp</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">0.9</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
 </div>
@@ -166,7 +171,7 @@ div.main-container {
 <span class="co"># Define the (quoted) names of discrete-valued (i.e. factor) covariates</span>
 <span class="va">discrete_covariates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x2"</span>, <span class="st">"x3"</span><span class="op">)</span>
 <span class="co"># Define the moderators to measure the MCATE for</span>
-<span class="va">continuous_moderators</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x4</span>, <span class="va">x5</span><span class="op">)</span>
+<span class="va">continuous_moderators</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># x1, x4, x5)</span>
 <span class="va">discrete_moderators</span> <span class="op">&lt;-</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span><span class="va">x2</span>, <span class="va">x3</span><span class="op">)</span>
 <span class="va">moderators</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">continuous_moderators</span>, <span class="va">discrete_moderators</span><span class="op">)</span>
 <span class="co"># Uncomment the following to just use the union of all covariates above</span>
@@ -204,21 +209,21 @@ div.main-container {
     <span class="op">)</span>,
     <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
       <span class="st">"SL.mean"</span>
+    <span class="op">)</span>,
+    <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+      <span class="st">"SL.glmnet"</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+        alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span><span class="op">)</span>,
+        loss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"deviance"</span><span class="op">)</span>
+      <span class="op">)</span>
+    <span class="op">)</span>,
+    <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+      <span class="st">"SL.glmnet.interaction"</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+        alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span><span class="op">)</span>,
+        loss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"deviance"</span><span class="op">)</span>
+      <span class="op">)</span>
     <span class="op">)</span>
-    <span class="co"># SLLearner_cfg$new(</span>
-    <span class="co">#   "SL.glmnet",</span>
-    <span class="co">#   list(</span>
-    <span class="co">#     alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75),</span>
-    <span class="co">#     loss = c("deviance")</span>
-    <span class="co">#   )</span>
-    <span class="co"># ),</span>
-    <span class="co"># SLLearner_cfg$new(</span>
-    <span class="co">#   "SL.glmnet.interaction",</span>
-    <span class="co">#   list(</span>
-    <span class="co">#     alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75),</span>
-    <span class="co">#     loss = c("deviance")</span>
-    <span class="co">#   )</span>
-    <span class="co"># ),</span>
     <span class="co"># SLLearner_cfg$new(</span>
     <span class="co">#   "SL.ranger",</span>
     <span class="co">#   list(</span>
@@ -268,8 +273,8 @@ div.main-container {
     <span class="op">)</span>,
     vimp <span class="op">=</span> <span class="va"><a href="../reference/VIMP_cfg.html">VIMP_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>model_cfg <span class="op">=</span> <span class="va">regression.cfg</span><span class="op">)</span>,
     diag <span class="op">=</span> <span class="va"><a href="../reference/Diagnostics_cfg.html">Diagnostics_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-        outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span>, <span class="st">"MSE"</span><span class="op">)</span>,
-        effect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span><span class="op">)</span>
+        outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span>, <span class="st">"MSE"</span><span class="op">)</span>
+        <span class="co">#effect = c("SL_risk", "SL_coefs")</span>
     <span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <div id="combine-all-configs" class="section level2">
@@ -313,27 +318,74 @@ div.main-container {
     <span class="fu"><a href="../reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span>
         <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>,
         <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span>,
-        <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>
-        <span class="co"># .weights = {{ weights }}  # nprobust does not currently support weights</span>
-    <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
+        <span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">model_covariates</span>,
+        .weights <span class="op">=</span> <span class="op">{</span><span class="op">{</span> <span class="va">weights</span> <span class="op">}</span><span class="op">}</span>  <span class="co"># nprobust does not currently support weights</span>
+    <span class="op">)</span> <span class="op">-&gt;</span> <span class="va">prepped_data</span>
+
+<span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">prepped_data</span>, <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="op">!</span><span class="op">!</span><span class="op">!</span><span class="va">moderators</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 640
-## Columns: 6
-## $ estimand  &lt;chr&gt; "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE", "MCATE…
-## $ term      &lt;chr&gt; "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", "x1", …
-## $ value     &lt;dbl&gt; -1.6365102, -1.5213897, -1.4725538, -1.3974162, -1.3575229, …
-## $ level     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-## $ estimate  &lt;dbl&gt; 1.863751, 1.801789, 1.775724, 1.735539, 1.714149, 1.694293, …
-## $ std_error &lt;dbl&gt; 0.13433600, 0.12174386, 0.11696693, 0.11025107, 0.10698879, …</code></pre>
+<code class="sourceCode R"><span class="va">results</span></code></pre></div>
+<pre><code>## # A tibble: 80 × 6
+##    estimand term  value level estimate std_error
+##    &lt;chr&gt;    &lt;chr&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1 MCATE    x2       NA 3        1.92     0.0950
+##  2 MCATE    x2       NA 2        2.09     0.129 
+##  3 MCATE    x2       NA 4        1.56     0.0680
+##  4 MCATE    x2       NA 1        0.730    0.575 
+##  5 MCATE    x3       NA 1        1.79     0.157 
+##  6 MCATE    x3       NA 3        1.90     0.0764
+##  7 MCATE    x3       NA 2        1.68     0.126 
+##  8 PCATE    x2        3 3        2.20     1.04  
+##  9 PCATE    x2        2 2        2.19     1.04  
+## 10 PCATE    x2        4 4        1.10     1.07  
+## # … with 70 more rows</code></pre>
+</div>
+<div id="ates" class="section level1">
+<h1 class="hasAnchor">
+<a href="#ates" class="anchor"></a>ATEs</h1>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"SATE|PATE"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 6
+##   estimand term  value level estimate std_error
+##   &lt;chr&gt;    &lt;chr&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 SATE     &lt;NA&gt;     NA &lt;NA&gt;      1.83    0.0471
+## 2 PATE     &lt;NA&gt;     NA &lt;NA&gt;      1.84    0.0608</code></pre>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">".pseudo_outcome~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_chr</a></span><span class="op">(</span><span class="va">moderators</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="va"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"+"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">df_jm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">prepped_data</span>, <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span>
+<span class="va">simple_joint_model</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html">as.formula</a></span><span class="op">(</span><span class="va">fm</span><span class="op">)</span>, <span class="va">df_jm</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">simple_joint_model</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## stats::lm(formula = as.formula(fm), data = df_jm)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -17.7830  -1.5426   0.0184   1.5559  17.1938 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)  0.71569    0.47559   1.505  0.13242   
+## x22          1.34412    0.47075   2.855  0.00432 **
+## x23          1.17683    0.47630   2.471  0.01352 * 
+## x24          0.81222    0.47079   1.725  0.08455 . 
+## x32         -0.13772    0.15145  -0.909  0.36321   
+## x33          0.09241    0.12319   0.750  0.45319   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.318 on 4994 degrees of freedom
+## Multiple R-squared:  0.006957,   Adjusted R-squared:  0.005963 
+## F-statistic: 6.997 on 5 and 4994 DF,  p-value: 1.594e-06</code></pre>
 </div>
 <div id="write-results-to-file" class="section level1">
 <h1 class="hasAnchor">
 <a href="#write-results-to-file" class="anchor"></a>Write results to file</h1>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">readr</span><span class="fu">::</span><span class="fu">write_csv</span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">OUTPUT_FOLDER</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"results_"</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">outcome_variable</span><span class="op">)</span>, <span class="st">".csv.gz"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">readr</span><span class="fu">::</span><span class="fu">write_csv</span><span class="op">(</span><span class="va">results_dr</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">OUTPUT_FOLDER</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"results_"</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">outcome_variable</span><span class="op">)</span>, <span class="st">".csv.gz"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="plots" class="section level1">
 <h1 class="hasAnchor">
@@ -341,7 +393,7 @@ div.main-container {
 <div id="plot-ensemble-coefficients" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-ensemble-coefficients" class="anchor"></a>Plot Ensemble Coefficients</h2>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"SL coefficient"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">level</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Control Response"</span>, <span class="st">"Treatment Response"</span>, <span class="st">"Effect Surface"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -367,7 +419,7 @@ div.main-container {
 <div id="plot-risk-for-each-submodel" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-risk-for-each-submodel" class="anchor"></a>Plot risk for each submodel</h2>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"SL risk"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">level</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Control Response"</span>, <span class="st">"Treatment Response"</span>, <span class="st">"Effect Surface"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -393,7 +445,7 @@ div.main-container {
 <div id="plot-vimp" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-vimp" class="anchor"></a>Plot VIMP</h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"VIMP"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_pointrange</a></span><span class="op">(</span>
@@ -411,7 +463,7 @@ div.main-container {
 <div id="plot-continuous-covariates-mcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-continuous-covariates-mcate" class="anchor"></a>Plot Continuous Covariates’ MCATE</h2>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">continuous_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -429,12 +481,11 @@ div.main-container {
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p><img src="example_analysis_files/figure-html/cts_mcate_plot-1.png" width="700"><img src="example_analysis_files/figure-html/cts_mcate_plot-2.png" width="700"><img src="example_analysis_files/figure-html/cts_mcate_plot-3.png" width="700"></p>
 </div>
 <div id="plot-continuous-covariates-pcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-continuous-covariates-pcate" class="anchor"></a>Plot Continuous Covariates’ PCATE</h2>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">continuous_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"PCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -447,17 +498,16 @@ div.main-container {
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span><span class="st">"Covariate level"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"CATE"</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Marginal effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Partial effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p><img src="example_analysis_files/figure-html/cts_pcate_plot-1.png" width="700"><img src="example_analysis_files/figure-html/cts_pcate_plot-2.png" width="700"><img src="example_analysis_files/figure-html/cts_pcate_plot-3.png" width="700"></p>
 </div>
 <div id="plot-discrete-covariates-mcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-discrete-covariates-mcate" class="anchor"></a>Plot Discrete Covariates’ MCATE</h2>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">discrete_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -476,7 +526,7 @@ div.main-container {
 <div id="plot-discrete-covariates-pcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-discrete-covariates-pcate" class="anchor"></a>Plot Discrete Covariates’ PCATE</h2>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">discrete_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"PCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -485,13 +535,13 @@ div.main-container {
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expand_limits.html">expand_limits</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span><span class="op">(</span><span class="st">"Covariate level"</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"CATE"</span><span class="op">)</span> <span class="op">+</span>
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Marginal effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Partial effects across"</span>, <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">gp</span>
     <span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">plot_list</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p><img src="example_analysis_files/figure-html/discrete_pcate_plot-1.png" width="700"><img src="example_analysis_files/figure-html/discrete_pcate_plot-2.png" width="700"></p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Might need to embed fonts depending on the theme.</span>
 <span class="va">plot_filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">OUTPUT_FOLDER</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"plots_"</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">outcome_variable</span><span class="op">)</span>, <span class="st">".pdf"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html">pdf</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">plot_filename</span>, height <span class="op">=</span> <span class="fl">7</span>, width <span class="op">=</span> <span class="fl">7</span>, fonts <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span>
@@ -499,6 +549,52 @@ div.main-container {
 <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu">embed_fonts</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/normalizePath.html">normalizePath</a></span><span class="op">(</span><span class="va">plot_filename</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
+</div>
+<div id="session-info" class="section level1">
+<h1 class="hasAnchor">
+<a href="#session-info" class="anchor"></a>Session Info</h1>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## R version 4.1.1 (2021-08-10)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Catalina 10.15.7
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] quadprog_1.5-8      nnls_1.4            SuperLearner_2.0-28
+## [4] dplyr_1.0.7         ggplot2_3.3.5       tidyhte_0.1.5      
+## [7] testthat_3.1.0     
+## 
+## loaded via a namespace (and not attached):
+##  [1] pkgload_1.2.3     splines_4.1.1     foreach_1.5.1     gam_1.20         
+##  [5] highr_0.9         yaml_2.2.1        remotes_2.4.1     progress_1.2.2   
+##  [9] sessioninfo_1.1.1 pillar_1.6.3      backports_1.2.1   lattice_0.20-44  
+## [13] glue_1.4.2        digest_0.6.28     checkmate_2.0.0   colorspace_2.0-2 
+## [17] htmltools_0.5.2   Matrix_1.3-4      pkgconfig_2.0.3   devtools_2.4.2   
+## [21] purrr_0.3.4       scales_1.1.1      processx_3.5.2    tibble_3.1.5     
+## [25] generics_0.1.0    farver_2.1.0      usethis_2.0.1     ellipsis_0.3.2   
+## [29] cachem_1.0.6      withr_2.4.2       cli_3.0.1         survival_3.2-11  
+## [33] magrittr_2.0.1    crayon_1.4.1      memoise_2.0.0     evaluate_0.14    
+## [37] ps_1.6.0          fs_1.5.0          fansi_0.5.0       MASS_7.3-54      
+## [41] pkgbuild_1.2.0    distances_0.1.8   textshaping_0.3.5 tools_4.1.1      
+## [45] data.table_1.14.2 prettyunits_1.1.1 hms_1.1.1         lifecycle_1.0.1  
+## [49] stringr_1.4.0     munsell_0.5.0     glmnet_4.1-2      callr_3.7.0      
+## [53] compiler_4.1.1    pkgdown_1.6.1     jquerylib_0.1.4   systemfonts_1.0.2
+## [57] rlang_0.4.11      grid_4.1.1        iterators_1.0.13  vimp_2.2.5       
+## [61] rstudioapi_0.13   quickblock_0.2.0  labeling_0.4.2    rmarkdown_2.11   
+## [65] gtable_0.3.0      codetools_0.2-18  R6_2.5.1          knitr_1.36       
+## [69] fastmap_1.1.0     utf8_1.2.2        rprojroot_2.0.2   ragg_1.1.3       
+## [73] shape_1.4.6       desc_1.4.0        stringi_1.7.5     vctrs_0.3.8      
+## [77] tidyselect_1.1.1  xfun_0.26</code></pre>
 </div>
   </div>
 
