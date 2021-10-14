@@ -27,7 +27,6 @@ discrete_covariates <- c("x2", "x3")
 
 continuous_moderators <- rlang::exprs(x1)
 discrete_moderators <- rlang::exprs(x2, x3)
-moderators <- c(discrete_moderators)
 
 model_covariate_names <- c(continuous_covariates, discrete_covariates)
 model_covariates <- rlang::syms(model_covariate_names)
@@ -102,8 +101,12 @@ test_that("Construct Pseudo-outcomes", {
     checkmate::expect_data_frame(data4)
 })
 
-test_that("Estimate QoIs", {
-    results <<- estimate_QoI(data4, !!!moderators)
+test_that("Estimate QoIs (continuous)", {
+    expect_error(estimate_QoI(data4, !!!continuous_moderators), "`nprobust` does not support the use of weights.")
+})
+
+test_that("Estimate QoIs (discrete)", {
+    results <<- estimate_QoI(data4, !!!discrete_moderators)
     checkmate::expect_data_frame(results)
 })
 
@@ -136,7 +139,7 @@ test_that("Check results data", {
         results,
         all.missing = FALSE,
         nrows = n_rows,
-        ncols = 6,
+        ncols = 5, # only 5 columns because no continuous moderators
         types = c(
             estimand = "character",
             term = "character",

@@ -1,3 +1,9 @@
+# tidyhte 0.1.5
+
+* Fixes to VIMP. Arguments to `cv_vim` were previously constructed incorrectly.
+
+* Allows users to specify whether VIMP uses sample splitting (and is therefore has inference robust to zero variable importance) or not (lower variance of estimates). The default is to use sample splitting.
+
 # tidyhte 0.1.4
 
 * Export `attach_config`.

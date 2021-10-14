@@ -106,16 +106,23 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
         model_cfg = list(),
         #' @field estimand String indicating the estimand to target.
         estimand = "VIMP",
+        #' @field sample_splitting Logical indicating whether to use sample splitting in the calculation
+        #' of variable importance.
+        sample_splitting = TRUE,
         #' @description
         #' Create a new `VIMP_cfg` object with specified model configuration.
         #' @param model_cfg A `Model_cfg` object indicating how to fit the second level effect
         #' regression (joint across all moderators).
+        #' @param sample_splitting Logical indicating whether to use sample splitting in the calculation
+        #' of variable importance. Choosing not to use sample splitting means that inference will only be
+        #' valid for moderators with non-null importance.
         #' @return A new `VIMP_cfg` object.
         #' @examples
         #' VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
-        initialize = function(model_cfg) {
+        initialize = function(model_cfg, sample_splitting = TRUE) {
             soft_require("vimp")
             self$model_cfg <- model_cfg
+            self$sample_splitting <- sample_splitting
         }
     )
 )

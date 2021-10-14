@@ -50,6 +50,7 @@ Model_data <- R6::R6Class("Model_data", list(
             self$weights <- rep(1, length(self$label))
         } else {
             self$weights <- unlist(dplyr::select(.data, {{ .weight_col }}))
+            self$weights <- self$weights / sum(self$weights) * length(self$weights)
         }
         self$model_frame <- model.frame(~. + 0, data = dplyr::select(.data, !!!dots))
         self$cluster <- .data[[attr(.data, "identifier")]]
@@ -59,7 +60,7 @@ Model_data <- R6::R6Class("Model_data", list(
         }
     },
     SL_cv_control = function() {
-        validRows <- purrr::map(unique(self$split_id), ~which(.x == self$split_id))
+        validRows <- purrr::map(sort(unique(self$split_id)), ~which(.x == self$split_id))
         SuperLearner::SuperLearner.CV.control(V = length(validRows), validRows = validRows)
     }
 ))

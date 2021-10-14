@@ -20,18 +20,26 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
 
     check_splits(.data)
 
-    num_splits_in_data <- length(unique(.data[[".split_id"]]))
+    split_ids <- .data[[".split_id"]]
+    unq_splits <- unique(split_ids)
+    num_splits_in_data <- length(unq_splits)
     num_splits_in_attr <- attr(.data, "num_splits")
     if (num_splits_in_data != num_splits_in_attr) stop("Number of splits is inconsistent.")
     if (ceiling(num_splits_in_data / 2) != floor(num_splits_in_data / 2)) {
         stop("Number of splits must be even to calculate VIMP.")
     }
 
+    sample_splitting <- .VIMP_cfg$sample_splitting
+
     data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots, .weight_col = {{ weight_col }})
 
     result_list <- list()
-    idx <- 1
     cv_ctl <- data$SL_cv_control()
+    if (sample_splitting) {
+        inner_cv_ctl <- list(list(V = as.integer(num_splits_in_data / 2)))
+    } else {
+        inner_cv_ctl <- list()
+    }
 
     soft_require("quadprog")
 
@@ -48,34 +56,44 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
         SL.library = .VIMP_cfg$model_cfg$SL.library,
         env = .VIMP_cfg$model_cfg$SL.env,
         cvControl = cv_ctl,
-        innerCvControl = list(list(V = as.integer(num_splits_in_data / 2))),
+        innerCvControl = inner_cv_ctl,
         obsWeights = data$weights
     ), "Only a single innerCvControl is given", "rank-deficient fit", "(i.e. given weight 0)")
-    pb$tick()
 
-    cross_fitting_folds <- vimp::get_cv_sl_folds(full_fit$folds)
-    sample_splitting_folds <- vimp::make_folds(unique(cross_fitting_folds), V = 2)
-    full_preds <- vimp::extract_sampled_split_predictions(
-        full_fit,
-        sample_splitting_folds = sample_splitting_folds,
-        full = TRUE
+    if (sample_splitting) {
+        ss_folds <- vimp::make_folds(unq_splits, V = 2)
+    } else {
+        ss_folds <- rep(1, length(unq_splits))
+    }
+    cv_preds_full <- vimp::extract_sampled_split_predictions(
+        cvsl_obj = full_fit, sample_splitting = TRUE,
+        sample_splitting_folds = ss_folds, full = TRUE
     )
 
+    pb$tick()
+
     for (covariate in names(data$model_frame)) {
+        idx <- which(names(data$model_frame) == covariate)
         muffle_warnings(reduced_fit <- SuperLearner::CV.SuperLearner(
             Y = data$label,
             X = data$model_frame[, -idx, drop = FALSE],
             SL.library = .VIMP_cfg$model_cfg$SL.library,
             env = .VIMP_cfg$model_cfg$SL.env,
             cvControl = cv_ctl,
-            innerCvControl = list(list(V = as.integer(num_splits_in_data / 2))),
+            innerCvControl = inner_cv_ctl,
             obsWeights = data$weights
         ), "Only a single innerCvControl is given", "rank-deficient fit", "(i.e. given weight 0)")
-        reduced_preds <- vimp::extract_sampled_split_predictions(
-            reduced_fit,
-            sample_splitting_folds = sample_splitting_folds,
-            full = FALSE
+
+        if (!sample_splitting) {
+            ss_folds <- rep(2, length(unq_splits))
+        }
+        cv_preds_reduced <- vimp::extract_sampled_split_predictions(
+            cvsl_obj = reduced_fit, sample_splitting = sample_splitting,
+            sample_splitting_folds = ss_folds, full = FALSE
         )
+        if (!sample_splitting) {
+            ss_folds <- NULL
+        }
 
         # VIMP estimates a censoring model which cannot be disabled,
         # so I just set this model to be a simple mean model.
@@ -85,22 +103,22 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
             result <- vimp::cv_vim(
             Y = data$label,
             type = "r_squared",
-            cross_fitted_f1 = full_preds,
-            cross_fitted_f2 = reduced_preds,
+            cross_fitted_f1 = cv_preds_full,
+            cross_fitted_f2 = cv_preds_reduced,
             ipc_weights = data$weights,
             # The estimated quantities based on the use of "Y" (censoring related to the outcome)
             # is not actually used because all of the coarsening variables (C) are equal to one.
             Z = "Y",
-            indx = idx,
             SL.library = vimp_sl_lib,
             env = .VIMP_cfg$model_cfg$SL.env,
-            cross_fitting_folds = cross_fitting_folds,
-            sample_splitting_folds = sample_splitting_folds,
+            cross_fitting_folds = split_ids,
+            sample_splitting_folds = ss_folds,
             run_regression = FALSE,
-            V = as.integer(num_splits_in_data / 2)
+            V = ifelse(sample_splitting, as.integer(num_splits_in_data / 2), num_splits_in_data),
+            scale_est = TRUE,
+            sample_splitting = sample_splitting
         )
         }, "estimate < 0", "rank-deficient fit", "(i.e. given weight 0)", "duplicates of previous learners")
-        idx <- idx + 1
         result <- dplyr::tibble(
             estimand = "VIMP",
             term = covariate,

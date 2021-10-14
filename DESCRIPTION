@@ -1,6 +1,6 @@
 Package: tidyhte
 Title: Tidy Estimation of Heterogeneous Treatment Effects
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: 
     person(given = "Drew",
            family = "Dimmery",

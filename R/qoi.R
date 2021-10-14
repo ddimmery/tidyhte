@@ -9,6 +9,9 @@
 #' and `produce_plugin_estimates`)
 #' @param outcome Unquoted name of outcome variable.
 #' @param treatment Unquoted name of treatment variable.
+#' @param type String representing how to construct the pseudo-outcome. Valid
+#' values are "dr" (the default), "ipw" and "plugin". See "Details" for more
+#' discussion of these options.
 #' @export
 construct_pseudo_outcomes <- function(.data, outcome, treatment, type = "dr") {
     YA <- unlist(dplyr::select(.data, {{ outcome }}))
@@ -108,16 +111,15 @@ calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cf
                 result, .data$term, .data$x, .data$estimate
             )
         }
-        if (is.double(result$x) || is.integer(result$x)) {
+        if (is.double(result$x) || is.integer(result$x) || is.character(result$x)) {
             names(result)[names(result) == "x"] <- "value"
         } else {
             names(result)[names(result) == "x"] <- "level"
-            result$value <- as.integer(result$level)
+            result$level <- as.character(result$level)
         }
         result_list <- c(result_list, list(result))
         pb$tick()
     }
-
     dplyr::bind_rows(!!!result_list)
 }
 

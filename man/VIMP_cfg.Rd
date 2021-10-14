@@ -22,6 +22,9 @@ VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
 regression (joint across all moderators).}
 
 \item{\code{estimand}}{String indicating the estimand to target.}
+
+\item{\code{sample_splitting}}{Logical indicating whether to use sample splitting in the calculation
+of variable importance.}
 }
 \if{html}{\out{</div>}}
 }
@@ -38,7 +41,7 @@ regression (joint across all moderators).}
 \subsection{Method \code{new()}}{
 Create a new \code{VIMP_cfg} object with specified model configuration.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VIMP_cfg$new(model_cfg)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VIMP_cfg$new(model_cfg, sample_splitting = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -46,6 +49,10 @@ Create a new \code{VIMP_cfg} object with specified model configuration.
 \describe{
 \item{\code{model_cfg}}{A \code{Model_cfg} object indicating how to fit the second level effect
 regression (joint across all moderators).}
+
+\item{\code{sample_splitting}}{Logical indicating whether to use sample splitting in the calculation
+of variable importance. Choosing not to use sample splitting means that inference will only be
+valid for moderators with non-null importance.}
 }
 \if{html}{\out{</div>}}
 }

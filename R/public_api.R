@@ -260,7 +260,7 @@ estimate_QoI <- function(
     outcome <- attr(.data, "outcome")
     outcome <- rlang::sym(outcome)
     treatment <- attr(.data, "treatment")
-    treatment <- rlang::sym(outcome)
+    treatment <- rlang::sym(treatment)
     weights <- attr(.data, "weights")
     weights <- rlang::sym(weights)
 

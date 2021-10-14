@@ -197,8 +197,8 @@ qoi.cfg <- QoI_cfg$new(
     ),
     vimp = VIMP_cfg$new(model_cfg = regression.cfg),
     diag = Diagnostics_cfg$new(
-        outcome = c("SL_risk", "SL_coefs", "MSE"),
-        effect = c("SL_risk", "SL_coefs")
+        outcome = c("SL_risk", "SL_coefs", "MSE")
+        #effect = c("SL_risk", "SL_coefs")
     )
 )
 ```
@@ -240,7 +240,7 @@ To actually perform the estimation, the following will be sufficient. Note that 
 ```{r estimate, message=FALSE}
 data %>%
     attach_config(cfg) %>%
-    make_splits({{ userid }}, .num_splits = 6) %>%
+    make_splits({{ userid }}, .num_splits = 4) %>%
     produce_plugin_estimates(
         {{ outcome_variable }},
         {{ treatment_variable }},
@@ -248,40 +248,28 @@ data %>%
         .weights = {{ weights }}  # nprobust does not currently support weights
     ) -> prepped_data
 
-construct_pseudo_outcomes(prepped_data, {{ outcome_variable }}, {{ treatment_variable }}, type = "dr") %>%
-    estimate_QoI(!!!moderators) -> results_dr
+construct_pseudo_outcomes(prepped_data, {{ outcome_variable }}, {{ treatment_variable }}) %>%
+    estimate_QoI(!!!moderators) -> results
 ```
 
-```{r ipw}
-construct_pseudo_outcomes(prepped_data, {{ outcome_variable }}, {{ treatment_variable }}, type = "ipw") %>%
-    estimate_QoI(!!!moderators) -> results_ipw
-```
-
-```{r plugin}
-construct_pseudo_outcomes(prepped_data, {{ outcome_variable }}, {{ treatment_variable }}, type = "plugin") %>%
-    estimate_QoI(!!!moderators) -> results_plugin
-```
-
-```{r show_prep}
-result_list <- list(dr=results_dr, ipw=results_ipw, plugin=results_plugin)
-glimpse(prepped_data)
-```
-
-```{r skim_prep}
-skimr::skim(prepped_data)
-```
 
 ```{r show_qoi, message=FALSE}
-glimpse(results_dr)
+results
 ```
 
 
 # ATEs 
 ```{r ates}
-for (nm in names(result_list)) {
-    print(nm)
-    filter(result_list[[nm]], grepl("SATE|PATE", estimand))
-}
+filter(results, grepl("SATE|PATE", estimand))
+```
+
+```{r joint}
+fm <- paste0(".pseudo_outcome~", paste(purrr::map_chr(moderators, rlang::as_string), collapse = "+"))
+
+df_jm <- construct_pseudo_outcomes(prepped_data, {{ outcome_variable }}, {{ treatment_variable }})
+simple_joint_model <- stats::lm(as.formula(fm), df_jm)
+
+print(summary(simple_joint_model))
 ```
 
 
@@ -296,7 +284,7 @@ readr::write_csv(results_dr, file.path(OUTPUT_FOLDER, paste0("results_", rlang::
 
 ```{r sl_coef}
 plot_list <- list()
-filter(results_dr, grepl("SL coefficient", estimand)) %>%
+filter(results, grepl("SL coefficient", estimand)) %>%
 mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
 ggplot(aes(
             x = reorder(term, estimate),
@@ -319,7 +307,7 @@ print(gp)
 
 ## Plot risk for each submodel
 ```{r sl_risk}
-filter(results_dr, grepl("SL risk", estimand)) %>%
+filter(results, grepl("SL risk", estimand)) %>%
 mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
 ggplot() +
     geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
@@ -344,8 +332,7 @@ print(gp)
 ## Plot VIMP
 
 ```{r vimp}
-for (nm in names(result_list)) {
-ggplot(filter(result_list[[nm]], estimand == "VIMP")) +
+ggplot(filter(results, estimand == "VIMP")) +
     geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
     geom_pointrange(
         aes(x = term, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
@@ -353,18 +340,16 @@ ggplot(filter(result_list[[nm]], estimand == "VIMP")) +
     scale_x_discrete("Covariate") +
     scale_y_continuous("Reduction in R² from full model") +
     coord_flip() +
-    ggtitle("Covariate Importance", subtitle = nm) +
+    ggtitle("Covariate Importance") +
     theme_minimal() -> gp
 plot_list <- c(plot_list, list(gp))
 print(gp)
-}
 ```
 
 ## Plot Continuous Covariates' MCATE
 ```{r cts_mcate_plot, message=FALSE}
-for (nm in names(result_list)) {
 for (cov in continuous_moderators) {
-    ggplot(filter(result_list[[nm]], estimand == "MCATE", term == cov)) +
+    ggplot(filter(results, estimand == "MCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_ribbon(
             aes(x = value, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.75
@@ -375,18 +360,17 @@ for (cov in continuous_moderators) {
         expand_limits(y = 0) +
         scale_x_continuous("Covariate level") +
         scale_y_continuous("CATE") +
-        ggtitle(paste("Marginal effects across", cov), subtitle = nm) +
+        ggtitle(paste("Marginal effects across", cov)) +
         theme_minimal() -> gp
     plot_list <- c(plot_list, list(gp))
     print(gp)
-}}
+}
 ```
 
 ## Plot Continuous Covariates' PCATE
 ```{r cts_pcate_plot, message=FALSE}
-for (nm in names(result_list)) {
 for (cov in continuous_moderators) {
-    ggplot(filter(result_list[[nm]], estimand == "PCATE", term == cov)) +
+    ggplot(filter(results, estimand == "PCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_ribbon(
             aes(x = value, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.75
@@ -397,48 +381,44 @@ for (cov in continuous_moderators) {
         expand_limits(y = 0) +
         scale_x_continuous("Covariate level") +
         scale_y_continuous("CATE") +
-        ggtitle(paste("Partial effects across", cov), subtitle = nm) +
+        ggtitle(paste("Partial effects across", cov)) +
         theme_minimal() -> gp
     plot_list <- c(plot_list, list(gp))
     print(gp)
-}}
+}
 ```
 
 ## Plot Discrete Covariates' MCATE
 ```{r discrete_mcate_plot}
-for (nm in names(result_list)) {
 for (cov in discrete_moderators) {
-    ggplot(filter(result_list[[nm]], estimand == "MCATE", term == cov)) +
+    ggplot(filter(results, estimand == "MCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_pointrange(
             aes(x = level, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
         expand_limits(y = 0) +
         scale_x_discrete("Covariate level") +
         scale_y_continuous("CATE") +
-        ggtitle(paste("Marginal effects across", cov), subtitle = nm) +
+        ggtitle(paste("Marginal effects across", cov)) +
         theme_minimal() -> gp
     plot_list <- c(plot_list, list(gp))
     print(gp)
-}
 }
 ```
 
 ## Plot Discrete Covariates' PCATE
 ```{r discrete_pcate_plot}
-for (nm in names(result_list)) {
 for (cov in discrete_moderators) {
-    ggplot(filter(result_list[[nm]], estimand == "PCATE", term == cov)) +
+    ggplot(filter(results, estimand == "PCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_pointrange(
             aes(x = level, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
         expand_limits(y = 0) +
         scale_x_discrete("Covariate level") +
         scale_y_continuous("CATE") +
-        ggtitle(paste("Partial effects across", cov), subtitle = nm) +
+        ggtitle(paste("Partial effects across", cov)) +
         theme_minimal() -> gp
     plot_list <- c(plot_list, list(gp))
     print(gp)
-}
 }
 ```
 
