@@ -28,6 +28,11 @@ MCATE_cfg <- R6::R6Class("MCATE_cfg",
         initialize = function(cfgs, std_errors=TRUE) {
             self$cfgs <- cfgs
             self$std_errors <- std_errors
+            invisible(self)
+        },
+        add_moderator = function(var_name, cfg) {
+            self$cfgs[[var_name]] <- cfg
+            invisible(self)
         }
     )
 )
@@ -89,6 +94,20 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
             } else {
                 stop("Unknown type of num_mc_samples")
             }
+            invisible(self)
+        },
+        #' @description
+        #' Add a moderator to the `PCATE_cfg` object. This entails adding it to the joint
+        #' model of effects and defines a configuration for displaying the effect surface
+        #' for that moderator.
+        #' @param var_name The name of the moderator to add (and the name of the column in
+        #' the dataset).
+        #' @param A `Model_cfg` defining how to display the selected moderator's effect
+        #' surface.
+        add_moderator = function(var_name, cfg) {
+            self$cfgs[[var_name]] <- cfg
+            self$model_covariates <- unique(c(self$model_covariates, var_name))
+            invisible(self)
         }
     )
 )
@@ -123,6 +142,7 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
             soft_require("vimp")
             self$model_cfg <- model_cfg
             self$sample_splitting <- sample_splitting
+            invisible(self)
         }
     )
 )
@@ -157,6 +177,18 @@ Diagnostics_cfg <- R6::R6Class("Diagnostics_cfg",
             if (!is.null(ps)) self$ps <- ps
             if (!is.null(outcome)) self$outcome <- outcome
             if (!is.null(effect)) self$effect <- effect
+            invisible(self)
+        },
+        #' @description
+        #' Add diagnostics to the `Diagnostics_cfg` object.
+        #' @param ps Model diagnostics for the propensity score model.
+        #' @param outcome Model diagnostics for the outcome models.
+        #' @param effect Model diagnostics for the joint effect model.
+        add = function(ps = NULL, outcome = NULL, effect = NULL) {
+            if (!is.null(ps)) self$ps <- unique(tolower(c(self$ps, ps)))
+            if (!is.null(outcome)) self$outcome <- unique(tolower(c(self$outcome, outcome)))
+            if (!is.null(effect)) self$effect <- unique(tolower(c(self$effect, effect)))
+            invisible(self)
         }
     )
 )
@@ -218,6 +250,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
             if (!is.null(vimp)) self$vimp <- vimp
             if (!is.null(diag)) self$diag <- diag
             self$ate <- ate
+            invisible(self)
         }
     )
 )
@@ -286,6 +319,7 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
             self$treatment <- treatment
             self$qoi <- qoi
             self$verbose <- verbose
+            invisible(self)
         }
     )
 )

@@ -39,6 +39,7 @@ which inherit from \code{Model_cfg}.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SLEnsemble_cfg$new()}}
+\item \href{#method-add_sublearner}{\code{SLEnsemble_cfg$add_sublearner()}}
 \item \href{#method-clone}{\code{SLEnsemble_cfg$clone()}}
 }
 }
@@ -82,6 +83,15 @@ A new \code{SLEnsemble_cfg} object.
 }
 \if{html}{\out{</div>}}
 
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_sublearner"></a>}}
+\if{latex}{\out{\hypertarget{method-add_sublearner}{}}}
+\subsection{Method \code{add_sublearner()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SLEnsemble_cfg$add_sublearner(learner_name, hps = NULL)}\if{html}{\out{</div>}}
 }
 
 }

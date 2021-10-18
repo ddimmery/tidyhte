@@ -1,3 +1,7 @@
+# tidyhte (dev)
+
+* Add methods to configs which allow the addition of models and moderators after the initial instantiation. This is a first step towards the eventual recipe API.
+
 # tidyhte 0.1.5
 
 * Fixes to VIMP. Arguments to `cv_vim` were previously constructed incorrectly.

@@ -45,6 +45,7 @@ calculate the double integral (See Details).}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{PCATE_cfg$new()}}
+\item \href{#method-add_moderator}{\code{PCATE_cfg$add_moderator()}}
 \item \href{#method-clone}{\code{PCATE_cfg$clone()}}
 }
 }
@@ -91,6 +92,29 @@ A new \code{PCATE_cfg} object.
 
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_moderator"></a>}}
+\if{latex}{\out{\hypertarget{method-add_moderator}{}}}
+\subsection{Method \code{add_moderator()}}{
+Add a moderator to the \code{PCATE_cfg} object. This entails adding it to the joint
+model of effects and defines a configuration for displaying the effect surface
+for that moderator.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{PCATE_cfg$add_moderator(var_name, cfg)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{var_name}}{The name of the moderator to add (and the name of the column in
+the dataset).}
+
+\item{\code{A}}{\code{Model_cfg} defining how to display the selected moderator's effect
+surface.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

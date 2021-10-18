@@ -20,9 +20,6 @@ test_that("Configs can be constructed successfully.", {
                 "SL.glm"
             ),
             SLLearner_cfg$new(
-                "SL.glm.interaction"
-            ),
-            SLLearner_cfg$new(
                 "SL.gam",
                 list(
                     deg.gam = c(2, 3, 4, 5, 7, 9)
@@ -60,6 +57,8 @@ test_that("Configs can be constructed successfully.", {
         )
     )
 
+    regression.cfg <<- regression.cfg$add_sublearner("SL.glm.interaction")
+
     qoi.list <<- list()
     for (cov in continuous_covariates) {
         qoi.list[[cov]] <- KernelSmooth_cfg$new(neval = 100)
@@ -73,18 +72,26 @@ test_that("Configs can be constructed successfully.", {
         effect = c("SL_risk", "SL_coefs")
     )
 
+    diag.cfg$add(effect = "MSE")
+    diag.cfg$add(ps = "MSE")
+    diag.cfg$add(outcome = "MSE")
+
     Diagnostics_cfg$new(
         ps = "MSE"
     )
 
     mcate.cfg <<- MCATE_cfg$new(cfgs = qoi.list)
 
-    PCATE_cfg$new(
+    mcate.cfg$add_moderator("new_x", Stratified_cfg$new("new_x"))
+
+    pcate.cfg <- PCATE_cfg$new(
         cfgs = qoi.list,
         effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = 10
     )
+
+    pcate.cfg$add_moderator("new_x", Stratified_cfg$new("new_x"))
 
     expect_error(PCATE_cfg$new(
         cfgs = qoi.list,

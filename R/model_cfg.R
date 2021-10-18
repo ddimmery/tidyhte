@@ -30,6 +30,7 @@ SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
         initialize = function(model_name, hp=NULL) {
             self$model_name <- model_name
             self$hyperparameters <- hp
+            invisible(self)
         }
     )
 )
@@ -50,6 +51,7 @@ Model_cfg <- R6::R6Class("Model_cfg",
         #' Create a new `Model_cfg` object with any necessary parameters.
         #' @return A new `Model_cfg` object.
         initialize = function() {
+            invisible(self)
         }
     )
 )
@@ -81,6 +83,7 @@ Known_cfg <- R6::R6Class("Known_cfg",
         #' Known_cfg$new("propensity_score")
         initialize = function(covariate_name) {
             self$covariate_name <- covariate_name
+            invisible(self)
         }
     )
 )
@@ -104,6 +107,7 @@ Constant_cfg <- R6::R6Class("Constant_cfg",
         #' @examples
         #' Constant_cfg$new()
         initialize = function() {
+            invisible(self)
         }
     )
 )
@@ -147,6 +151,7 @@ KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
             eval_min_quantile <- pmin(eval_min_quantile, 1 - eval_min_quantile)
             checkmate::check_double(eval_min_quantile, lower = 0.0, upper = 0.5)
             self$eval_min_quantile <- eval_min_quantile
+            invisible(self)
         }
     )
 )
@@ -177,6 +182,7 @@ Stratified_cfg <- R6::R6Class("Stratified_cfg",
         #' Stratified_cfg$new(covariate = "test_covariate")
         initialize = function(covariate) {
             self$covariate <- covariate
+            invisible(self)
         }
     )
 )
@@ -223,31 +229,34 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
             if (is.null(learner_cfgs)) {
                 learner_cfgs <- list(SLLearner_cfg$new("SL.glm"))
             }
-            sl_lib <- character()
             self$SL.env <- new.env()
+            self$SL.library <- character()
             sl_ns <- as.list(getNamespace("SuperLearner"), all.names = TRUE)
-            # for (name in names(sl_ns)) {
-            #     assign(name, sl_ns[[name]], envir = self$SL.env)
-            # }
-            for (lrnr in learner_cfgs) {
-                learner_name <- lrnr$model_name
-                hyperparameters <- lrnr$hyperparameters
-                if (is.null(hyperparameters)) {
-                    lrnrs <- learner_name
-                    self$SL.env[[learner_name]] <- sl_ns[[learner_name]]
-                } else {
-                    learners <- create.Learner(
-                        learner_name,
-                        tune = hyperparameters,
-                        detailed_names = TRUE,
-                        name_prefix = paste0("custom_", learner_name),
-                        env = self$SL.env
-                    )
-                    lrnrs <- learners$names
-                }
-                sl_lib <- c(sl_lib, lrnrs)
+            for (name in names(sl_ns)) {
+                assign(name, sl_ns[[name]], envir = self$SL.env)
             }
-            self$SL.library <- unique(sl_lib)
+            for (lrnr in learner_cfgs) {
+                self$add_sublearner(lrnr$model_name, lrnr$hyperparameters)
+            }
+            invisible(self)
+        },
+        add_sublearner = function(learner_name, hps = NULL) {
+            sl_lib <- character()
+            if (is.null(hps)) {
+                lrnrs <- learner_name
+            } else {
+                learners <- create.Learner(
+                    learner_name,
+                    tune = hps,
+                    detailed_names = TRUE,
+                    name_prefix = paste0("custom_", learner_name),
+                    env = self$SL.env
+                )
+                lrnrs <- learners$names
+            }
+            sl_lib <- c(sl_lib, lrnrs)
+            self$SL.library <- unique(c(self$SL.library, sl_lib))
+            invisible(self)
         }
     )
 )

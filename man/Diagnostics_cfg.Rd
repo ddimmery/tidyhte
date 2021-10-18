@@ -33,6 +33,7 @@ Diagnostics_cfg$new(
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Diagnostics_cfg$new()}}
+\item \href{#method-add}{\code{Diagnostics_cfg$add()}}
 \item \href{#method-clone}{\code{Diagnostics_cfg$clone()}}
 }
 }
@@ -70,6 +71,27 @@ A new \code{Diagnostics_cfg} object.
 
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add"></a>}}
+\if{latex}{\out{\hypertarget{method-add}{}}}
+\subsection{Method \code{add()}}{
+Add diagnostics to the \code{Diagnostics_cfg} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Diagnostics_cfg$add(ps = NULL, outcome = NULL, effect = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ps}}{Model diagnostics for the propensity score model.}
+
+\item{\code{outcome}}{Model diagnostics for the outcome models.}
+
+\item{\code{effect}}{Model diagnostics for the joint effect model.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

@@ -33,6 +33,7 @@ errors or not.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{MCATE_cfg$new()}}
+\item \href{#method-add_moderator}{\code{MCATE_cfg$add_moderator()}}
 \item \href{#method-clone}{\code{MCATE_cfg$clone()}}
 }
 }
@@ -65,6 +66,15 @@ A new \code{MCATE_cfg} object.
 }
 \if{html}{\out{</div>}}
 
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_moderator"></a>}}
+\if{latex}{\out{\hypertarget{method-add_moderator}{}}}
+\subsection{Method \code{add_moderator()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MCATE_cfg$add_moderator(var_name, cfg)}\if{html}{\out{</div>}}
 }
 
 }
