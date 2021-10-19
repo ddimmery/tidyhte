@@ -30,6 +30,13 @@ MCATE_cfg <- R6::R6Class("MCATE_cfg",
             self$std_errors <- std_errors
             invisible(self)
         },
+        #' @description
+        #' Add a moderator to the `MCATE_cfg` object. This entails defining a configuration
+        #' for displaying the effect surface for that moderator.
+        #' @param var_name The name of the moderator to add (and the name of the column in
+        #' the dataset).
+        #' @param cfg A `Model_cfg` defining how to display the selected moderator's effect
+        #' surface.
         add_moderator = function(var_name, cfg) {
             self$cfgs[[var_name]] <- cfg
             invisible(self)
@@ -102,7 +109,7 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
         #' for that moderator.
         #' @param var_name The name of the moderator to add (and the name of the column in
         #' the dataset).
-        #' @param A `Model_cfg` defining how to display the selected moderator's effect
+        #' @param cfg A `Model_cfg` defining how to display the selected moderator's effect
         #' surface.
         add_moderator = function(var_name, cfg) {
             self$cfgs[[var_name]] <- cfg

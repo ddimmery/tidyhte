@@ -110,7 +110,7 @@ for that moderator.
 \item{\code{var_name}}{The name of the moderator to add (and the name of the column in
 the dataset).}
 
-\item{\code{A}}{\code{Model_cfg} defining how to display the selected moderator's effect
+\item{\code{cfg}}{A \code{Model_cfg} defining how to display the selected moderator's effect
 surface.}
 }
 \if{html}{\out{</div>}}

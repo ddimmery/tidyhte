@@ -90,10 +90,27 @@ A new \code{SLEnsemble_cfg} object.
 \if{html}{\out{<a id="method-add_sublearner"></a>}}
 \if{latex}{\out{\hypertarget{method-add_sublearner}{}}}
 \subsection{Method \code{add_sublearner()}}{
+Adds a model (or class of models) to the SuperLearner ensemble.
+If hyperparameter values are specified, this method will
+add a learner for every element in the cross-product of provided
+hyperparameter values.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SLEnsemble_cfg$add_sublearner(learner_name, hps = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{learner_name}}{Possible values
+use \code{SuperLearner} naming conventions. A full list is available
+with \code{SuperLearner::listWrappers("SL")}}
+
+\item{\code{hps}}{A named list of hyper-parameters. Every element of the
+cross-product of these hyper-parameters will be included in the
+ensemble.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

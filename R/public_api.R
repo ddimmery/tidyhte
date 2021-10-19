@@ -251,6 +251,12 @@ estimate_QoI <- function(
     check_nuisance_models(.data)
     check_weights(.data, attr(.data, "weights"))
 
+    if (length(dots) == 0) {
+        message("No moderators specified, so pulling list from definitions in QoI.")
+        mod_names <- names(.HTE_cfg$qoi$mcate$cfgs)
+        dots <- rlang::syms(mod_names)
+    }
+
     nuisance_models <- rlang::syms(c(
         ".pseudo_outcome",
         ".pi_hat",
@@ -302,6 +308,11 @@ estimate_QoI <- function(
     }
 
     if (!is.null(.QoI_cfg$vimp)) {
+        if (is.null(.QoI_cfg$vimp$model_cfg)) {
+            message("No model config provided for VIMP. Using config from outcome model.")
+            attr(.data, "HTE_cfg")$qoi$vimp$model_cfg <- .HTE_cfg$outcome
+            .QoI_cfg <- attr(.data, "HTE_cfg")$qoi
+        }
         result <- calculate_vimp(.data, {{ weights }}, .data$.pseudo_outcome, !!!dots, .VIMP_cfg = .QoI_cfg$vimp)
         result_list <- c(result_list, list(result))
     }

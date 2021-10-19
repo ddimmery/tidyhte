@@ -117,7 +117,7 @@ test_that("Construct Pseudo-outcomes", {
 })
 
 test_that("Estimate QoIs", {
-    results <<- estimate_QoI(data4, !!!moderators)
+    expect_message(results <<- estimate_QoI(data4), "No moderators specified, so pulling list from definitions in QoI.")
     checkmate::expect_data_frame(results)
 })
 

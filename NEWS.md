@@ -2,6 +2,10 @@
 
 * Add methods to configs which allow the addition of models and moderators after the initial instantiation. This is a first step towards the eventual recipe API.
 
+* If no moderators are specified in call to `estimate_QoI`, then all moderators listed in the MCATE definition are used.
+
+* First version of the recipe API is available for use!
+
 # tidyhte 0.1.5
 
 * Fixes to VIMP. Arguments to `cv_vim` were previously constructed incorrectly.

@@ -240,6 +240,17 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
             }
             invisible(self)
         },
+        #' @description
+        #' Adds a model (or class of models) to the SuperLearner ensemble.
+        #' If hyperparameter values are specified, this method will
+        #' add a learner for every element in the cross-product of provided
+        #' hyperparameter values.
+        #' @param learner_name Possible values
+        #' use `SuperLearner` naming conventions. A full list is available
+        #' with `SuperLearner::listWrappers("SL")`
+        #' @param hps A named list of hyper-parameters. Every element of the
+        #' cross-product of these hyper-parameters will be included in the
+        #' ensemble.
         add_sublearner = function(learner_name, hps = NULL) {
             sl_lib <- character()
             if (is.null(hps)) {
