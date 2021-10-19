@@ -144,7 +144,7 @@ from a model containing all moderators." />
 from a model containing all moderators.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calculate_vimp</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>weight_col</span>, <span class='va'>pseudo_outcome</span>, <span class='va'>...</span>, <span class='va'>.VIMP_cfg</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>calculate_vimp</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>weight_col</span>, <span class='va'>pseudo_outcome</span>, <span class='va'>...</span>, <span class='va'>.VIMP_cfg</span>, <span class='va'>.Model_cfg</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,7 +168,11 @@ will be calculated for each of these covariates.</p></td>
     </tr>
     <tr>
       <th>.VIMP_cfg</th>
-      <td><p>A <code>VIMP_cfg</code> object defining how the joint effect model should be estimated.</p></td>
+      <td><p>A <code>VIMP_cfg</code> object defining how VIMP should be estimated.</p></td>
+    </tr>
+    <tr>
+      <th>.Model_cfg</th>
+      <td><p>A <code>Model_cfg</code> object defining how the joint effect model should be estimated.</p></td>
     </tr>
     </table>
 

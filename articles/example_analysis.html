@@ -265,13 +265,12 @@ div.main-container {
     <span class="co"># Don't use! The PCATE is still broken.</span>
     pcate <span class="op">=</span> <span class="va"><a href="../reference/PCATE_cfg.html">PCATE_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
         cfgs <span class="op">=</span> <span class="va">qoi.list</span>,
-        effect_cfg <span class="op">=</span> <span class="va">regression.cfg</span>,
         model_covariates <span class="op">=</span> <span class="va">model_covariate_names</span>,
         <span class="co"># In a real analysis, this should be higher so as to reduce Monte Carlo error.</span>
         <span class="co"># num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)</span>
         num_mc_samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fl">5</span>, x2 <span class="op">=</span> <span class="fl">10</span>, x3 <span class="op">=</span> <span class="fl">10</span>, x4 <span class="op">=</span> <span class="fl">5</span>, x5 <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
     <span class="op">)</span>,
-    vimp <span class="op">=</span> <span class="va"><a href="../reference/VIMP_cfg.html">VIMP_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>model_cfg <span class="op">=</span> <span class="va">regression.cfg</span><span class="op">)</span>,
+    vimp <span class="op">=</span> <span class="va"><a href="../reference/VIMP_cfg.html">VIMP_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>,
     diag <span class="op">=</span> <span class="va"><a href="../reference/Diagnostics_cfg.html">Diagnostics_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
         outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span>, <span class="st">"MSE"</span><span class="op">)</span>
         <span class="co">#effect = c("SL_risk", "SL_coefs")</span>
@@ -284,6 +283,7 @@ div.main-container {
 <code class="sourceCode R"><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/HTE_cfg.html">HTE_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
     treatment <span class="op">=</span> <span class="va">trt.cfg</span>,
     outcome <span class="op">=</span> <span class="va">regression.cfg</span>,
+    effect <span class="op">=</span> <span class="va">regression.cfg</span>,
     qoi <span class="op">=</span> <span class="va">qoi.cfg</span>
 <span class="op">)</span></code></pre></div>
 </div>
@@ -351,40 +351,11 @@ div.main-container {
 ##   &lt;chr&gt;    &lt;chr&gt; &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 SATE     &lt;NA&gt;     NA &lt;NA&gt;      1.83    0.0471
 ## 2 PATE     &lt;NA&gt;     NA &lt;NA&gt;      1.84    0.0608</code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">".pseudo_outcome~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_chr</a></span><span class="op">(</span><span class="va">moderators</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="va"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">"+"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">df_jm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">prepped_data</span>, <span class="op">{</span><span class="op">{</span> <span class="va">outcome_variable</span> <span class="op">}</span><span class="op">}</span>, <span class="op">{</span><span class="op">{</span> <span class="va">treatment_variable</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span>
-<span class="va">simple_joint_model</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html">as.formula</a></span><span class="op">(</span><span class="va">fm</span><span class="op">)</span>, <span class="va">df_jm</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">simple_joint_model</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## 
-## Call:
-## stats::lm(formula = as.formula(fm), data = df_jm)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -17.7830  -1.5426   0.0184   1.5559  17.1938 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)  0.71569    0.47559   1.505  0.13242   
-## x22          1.34412    0.47075   2.855  0.00432 **
-## x23          1.17683    0.47630   2.471  0.01352 * 
-## x24          0.81222    0.47079   1.725  0.08455 . 
-## x32         -0.13772    0.15145  -0.909  0.36321   
-## x33          0.09241    0.12319   0.750  0.45319   
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 3.318 on 4994 degrees of freedom
-## Multiple R-squared:  0.006957,   Adjusted R-squared:  0.005963 
-## F-statistic: 6.997 on 5 and 4994 DF,  p-value: 1.594e-06</code></pre>
 </div>
 <div id="write-results-to-file" class="section level1">
 <h1 class="hasAnchor">
 <a href="#write-results-to-file" class="anchor"></a>Write results to file</h1>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">readr</span><span class="fu">::</span><span class="fu">write_csv</span><span class="op">(</span><span class="va">results_dr</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">OUTPUT_FOLDER</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"results_"</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">outcome_variable</span><span class="op">)</span>, <span class="st">".csv.gz"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="plots" class="section level1">
@@ -393,7 +364,7 @@ div.main-container {
 <div id="plot-ensemble-coefficients" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-ensemble-coefficients" class="anchor"></a>Plot Ensemble Coefficients</h2>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"SL coefficient"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">level</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Control Response"</span>, <span class="st">"Treatment Response"</span>, <span class="st">"Effect Surface"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -419,7 +390,7 @@ div.main-container {
 <div id="plot-risk-for-each-submodel" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-risk-for-each-submodel" class="anchor"></a>Plot risk for each submodel</h2>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"SL risk"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">level</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Control Response"</span>, <span class="st">"Treatment Response"</span>, <span class="st">"Effect Surface"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -445,7 +416,7 @@ div.main-container {
 <div id="plot-vimp" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-vimp" class="anchor"></a>Plot VIMP</h2>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"VIMP"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_pointrange</a></span><span class="op">(</span>
@@ -463,7 +434,7 @@ div.main-container {
 <div id="plot-continuous-covariates-mcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-continuous-covariates-mcate" class="anchor"></a>Plot Continuous Covariates’ MCATE</h2>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">continuous_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -485,7 +456,7 @@ div.main-container {
 <div id="plot-continuous-covariates-pcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-continuous-covariates-pcate" class="anchor"></a>Plot Continuous Covariates’ PCATE</h2>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">continuous_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"PCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -507,7 +478,7 @@ div.main-container {
 <div id="plot-discrete-covariates-mcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-discrete-covariates-mcate" class="anchor"></a>Plot Discrete Covariates’ MCATE</h2>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">discrete_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -526,7 +497,7 @@ div.main-container {
 <div id="plot-discrete-covariates-pcate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-discrete-covariates-pcate" class="anchor"></a>Plot Discrete Covariates’ PCATE</h2>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="va">discrete_moderators</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"PCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
         <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span>
@@ -541,7 +512,7 @@ div.main-container {
     <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">gp</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p><img src="example_analysis_files/figure-html/discrete_pcate_plot-1.png" width="700"><img src="example_analysis_files/figure-html/discrete_pcate_plot-2.png" width="700"></p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Might need to embed fonts depending on the theme.</span>
 <span class="va">plot_filename</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">OUTPUT_FOLDER</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"plots_"</span>, <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html">as_string</a></span><span class="op">(</span><span class="va">outcome_variable</span><span class="op">)</span>, <span class="st">".pdf"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html">pdf</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">plot_filename</span>, height <span class="op">=</span> <span class="fl">7</span>, width <span class="op">=</span> <span class="fl">7</span>, fonts <span class="op">=</span> <span class="st">"Arial Narrow"</span><span class="op">)</span>
@@ -553,11 +524,11 @@ div.main-container {
 <div id="session-info" class="section level1">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## R version 4.1.1 (2021-08-10)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Big Sur 10.16
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib

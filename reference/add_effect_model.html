@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Adds variable importance information — add_vimp • tidyhte</title>
+<title>Add an additional model to the joint effect ensemble — add_effect_model • tidyhte</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Adds variable importance information — add_vimp" />
-<meta property="og:description" content="This adds a variable importance quantity of interest to the outputs." />
+<meta property="og:title" content="Add an additional model to the joint effect ensemble — add_effect_model" />
+<meta property="og:description" content="This adds a learner to the ensemble used for estimating a model
+of the conditional expectation of the pseudo-outcome." />
 
 <meta name="robots" content="noindex" />
 
@@ -133,16 +134,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Adds variable importance information</h1>
+    <h1>Add an additional model to the joint effect ensemble</h1>
     <small class="dont-index">Source: <a href='http://github.com/ddimmery/tidyhte/blob/master/R/recipe-api.R'><code>R/recipe-api.R</code></a></small>
-    <div class="hidden name"><code>add_vimp.Rd</code></div>
+    <div class="hidden name"><code>add_effect_model.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This adds a variable importance quantity of interest to the outputs.</p>
+    <p>This adds a learner to the ensemble used for estimating a model
+of the conditional expectation of the pseudo-outcome.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_vimp</span><span class='op'>(</span><span class='va'>hte_cfg</span>, sample_splitting <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>add_effect_model</span><span class='op'>(</span><span class='va'>hte_cfg</span>, <span class='va'>model_name</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,10 +154,15 @@
       <td><p><code>HTE_cfg</code> object to update.</p></td>
     </tr>
     <tr>
-      <th>sample_splitting</th>
-      <td><p>Logical indicating whether to use sample splitting or not.
-Choosing not to use sample splitting means that inference will only be valid for
-moderators with non-null importance.</p></td>
+      <th>model_name</th>
+      <td><p>Character indicating the name of the model to
+incorporate into the joint effect ensemble. Possible values
+use <code>SuperLearner</code> naming conventions. A full list is available
+with <code><a href='https://rdrr.io/pkg/SuperLearner/man/listWrappers.html'>SuperLearner::listWrappers("SL")</a></code></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Parameters over which to grid-search for this model class.</p></td>
     </tr>
     </table>
 
