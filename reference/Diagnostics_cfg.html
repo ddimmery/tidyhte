@@ -163,6 +163,7 @@ trained in the course of HTE estimation.</p>
 
 <ul>
 <li><p><a href='#method-new'><code>Diagnostics_cfg$new()</code></a></p></li>
+<li><p><a href='#method-add'><code>Diagnostics_cfg$add()</code></a></p></li>
 <li><p><a href='#method-clone'><code>Diagnostics_cfg$clone()</code></a></p></li>
 </ul>
 <p><hr>
@@ -189,6 +190,20 @@ trained in the course of HTE estimation.</p>
 </pre><p></div></p>
 
 <p><hr>
+<a id="method-add"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>add()</code></h3>
+<p>Add diagnostics to the <code>Diagnostics_cfg</code> object.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>add</span><span class='op'>(</span>ps <span class='op'>=</span> <span class='cn'>NULL</span>, outcome <span class='op'>=</span> <span class='cn'>NULL</span>, effect <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>ps</code></dt><dd><p>Model diagnostics for the propensity score model.</p></dd>
+
+<dt><code>outcome</code></dt><dd><p>Model diagnostics for the outcome models.</p></dd>
+
+<dt><code>effect</code></dt><dd><p>Model diagnostics for the joint effect model.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
@@ -213,6 +228,7 @@ trained in the course of HTE estimation.</p>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; &lt;Diagnostics_cfg&gt;
 #&gt;   Public:
+#&gt;     add: function (ps = NULL, outcome = NULL, effect = NULL) 
 #&gt;     clone: function (deep = FALSE) 
 #&gt;     effect: 
 #&gt;     initialize: function (ps = NULL, outcome = NULL, effect = NULL) 

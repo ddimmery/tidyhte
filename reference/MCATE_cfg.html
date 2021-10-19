@@ -167,6 +167,7 @@ errors or not.</p></dd>
 
 <ul>
 <li><p><a href='#method-new'><code>MCATE_cfg$new()</code></a></p></li>
+<li><p><a href='#method-add_moderator'><code>MCATE_cfg$add_moderator()</code></a></p></li>
 <li><p><a href='#method-clone'><code>MCATE_cfg$clone()</code></a></p></li>
 </ul>
 <p><hr>
@@ -190,6 +191,21 @@ errors or not.</p></dd>
 </pre><p></div></p>
 
 <p><hr>
+<a id="method-add_moderator"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='add_moderator.html'>add_moderator()</a></code></h3>
+<p>Add a moderator to the <code>MCATE_cfg</code> object. This entails defining a configuration
+for displaying the effect surface for that moderator.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>MCATE_cfg</span><span class='op'>$</span><span class='fu'>add_moderator</span><span class='op'>(</span><span class='va'>var_name</span>, <span class='va'>cfg</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>var_name</code></dt><dd><p>The name of the moderator to add (and the name of the column in
+the dataset).</p></dd>
+
+<dt><code>cfg</code></dt><dd><p>A <code>Model_cfg</code> defining how to display the selected moderator's effect
+surface.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>MCATE_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
@@ -211,6 +227,7 @@ errors or not.</p></dd>
 <span class='va'>MCATE_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>cfgs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='va'><a href='KernelSmooth_cfg.html'>KernelSmooth_cfg</a></span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>neval <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; &lt;MCATE_cfg&gt;
 #&gt;   Public:
+#&gt;     add_moderator: function (var_name, cfg) 
 #&gt;     cfgs: list
 #&gt;     clone: function (deep = FALSE) 
 #&gt;     estimand: MCATE

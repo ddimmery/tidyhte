@@ -172,6 +172,7 @@ which inherit from <code>Model_cfg</code>.</p></dd>
 
 <ul>
 <li><p><a href='#method-new'><code>SLEnsemble_cfg$new()</code></a></p></li>
+<li><p><a href='#method-add_sublearner'><code>SLEnsemble_cfg$add_sublearner()</code></a></p></li>
 <li><p><a href='#method-clone'><code>SLEnsemble_cfg$clone()</code></a></p></li>
 </ul>
 <p><details open ><summary>Inherited methods</summary>
@@ -205,6 +206,25 @@ For more details, see <code><a href='https://rdrr.io/pkg/SuperLearner/man/SuperL
 </pre><p></div></p>
 
 <p><hr>
+<a id="method-add_sublearner"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>add_sublearner()</code></h3>
+<p>Adds a model (or class of models) to the SuperLearner ensemble.
+If hyperparameter values are specified, this method will
+add a learner for every element in the cross-product of provided
+hyperparameter values.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='va'>SLEnsemble_cfg</span><span class='op'>$</span><span class='fu'>add_sublearner</span><span class='op'>(</span><span class='va'>learner_name</span>, hps <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>learner_name</code></dt><dd><p>Possible values
+use <code>SuperLearner</code> naming conventions. A full list is available
+with <code><a href='https://rdrr.io/pkg/SuperLearner/man/listWrappers.html'>SuperLearner::listWrappers("SL")</a></code></p></dd>
+
+<dt><code>hps</code></dt><dd><p>A named list of hyper-parameters. Every element of the
+cross-product of these hyper-parameters will be included in the
+ensemble.</p></dd>
+
+</dl><p></div></p>
+<p><hr>
 <a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
 <p><div class="r"></p><pre><span class='va'>SLEnsemble_cfg</span><span class='op'>$</span><span class='fu'>clone</span><span class='op'>(</span>deep <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre><p></div></p>
@@ -227,6 +247,7 @@ For more details, see <code><a href='https://rdrr.io/pkg/SuperLearner/man/SuperL
 </div><div class='output co'>#&gt; &lt;SLEnsemble_cfg&gt;
 #&gt;   Inherits from: &lt;Model_cfg&gt;
 #&gt;   Public:
+#&gt;     add_sublearner: function (learner_name, hps = NULL) 
 #&gt;     clone: function (deep = FALSE) 
 #&gt;     cvControl: list
 #&gt;     family: family
