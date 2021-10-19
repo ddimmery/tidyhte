@@ -16,6 +16,8 @@ test_that("recipe manipulations on outcome", {
 })
 
 test_that("recipe manipulations on effect", {
+    checkmate::expect_r6(add_effect_model(cfg, "SL.glmnet"), "HTE_cfg")
+
     checkmate::expect_r6(add_effect_diagnostic(cfg, "MSE"), "HTE_cfg")
 })
 

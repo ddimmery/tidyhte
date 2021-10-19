@@ -61,7 +61,6 @@ qoi.cfg <- QoI_cfg$new(
     mcate = MCATE_cfg$new(cfgs = qoi.list),
     pcate = PCATE_cfg$new(
         cfgs = qoi.list,
-        effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     ),
@@ -75,7 +74,6 @@ qoi.cfg2 <- QoI_cfg$new(
     mcate = MCATE_cfg$new(cfgs = qoi.list, std_errors = FALSE),
     pcate = PCATE_cfg$new(
         cfgs = qoi.list,
-        effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     ),
@@ -88,12 +86,14 @@ qoi.cfg2 <- QoI_cfg$new(
 cfg <- HTE_cfg$new(
     treatment = trt.cfg,
     outcome = regression.cfg,
+    effect = regression.cfg,
     qoi = qoi.cfg
 )
 
 cfg2 <- HTE_cfg$new(
     treatment = trt.cfg,
     outcome = regression.cfg,
+    effect = regression.cfg,
     qoi = qoi.cfg2
 )
 

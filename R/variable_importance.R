@@ -7,13 +7,14 @@
 #' @param pseudo_outcome Unquoted name of the pseudo-outcome.
 #' @param ... Unquoted names of covariates to include in the joint effect model. The variable importance
 #' will be calculated for each of these covariates.
-#' @param .VIMP_cfg A `VIMP_cfg` object defining how the joint effect model should be estimated.
+#' @param .VIMP_cfg A `VIMP_cfg` object defining how VIMP should be estimated.
+#' @param .Model_cfg A `Model_cfg` object defining how the joint effect model should be estimated.
 #' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
 #' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
 #' \doi{10.1111/biom.13392}
 #' @importFrom progress progress_bar
 #' @import SuperLearner
-calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
+calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
     dots <- rlang::enexprs(...)
     weight_col <- rlang::enexpr(weight_col)
     pseudo_outcome <- rlang::enexpr(pseudo_outcome)
@@ -53,8 +54,8 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
     muffle_warnings(full_fit <- SuperLearner::CV.SuperLearner(
         Y = data$label,
         X = data$model_frame,
-        SL.library = .VIMP_cfg$model_cfg$SL.library,
-        env = .VIMP_cfg$model_cfg$SL.env,
+        SL.library = .Model_cfg$SL.library,
+        env = .Model_cfg$SL.env,
         cvControl = cv_ctl,
         innerCvControl = inner_cv_ctl,
         obsWeights = data$weights
@@ -77,8 +78,8 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
         muffle_warnings(reduced_fit <- SuperLearner::CV.SuperLearner(
             Y = data$label,
             X = data$model_frame[, -idx, drop = FALSE],
-            SL.library = .VIMP_cfg$model_cfg$SL.library,
-            env = .VIMP_cfg$model_cfg$SL.env,
+            SL.library = .Model_cfg$SL.library,
+            env = .Model_cfg$SL.env,
             cvControl = cv_ctl,
             innerCvControl = inner_cv_ctl,
             obsWeights = data$weights
@@ -110,7 +111,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg) {
             # is not actually used because all of the coarsening variables (C) are equal to one.
             Z = "Y",
             SL.library = vimp_sl_lib,
-            env = .VIMP_cfg$model_cfg$SL.env,
+            env = .Model_cfg$SL.env,
             cross_fitting_folds = split_ids,
             sample_splitting_folds = ss_folds,
             run_regression = FALSE,

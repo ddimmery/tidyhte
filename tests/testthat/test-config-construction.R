@@ -86,7 +86,6 @@ test_that("Configs can be constructed successfully.", {
 
     pcate.cfg <- PCATE_cfg$new(
         cfgs = qoi.list,
-        effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = 10
     )
@@ -95,19 +94,17 @@ test_that("Configs can be constructed successfully.", {
 
     expect_error(PCATE_cfg$new(
         cfgs = qoi.list,
-        effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = "not a number"
     ), "Unknown type of num_mc_samples")
 
     pcate.cfg <<- PCATE_cfg$new(
         cfgs = qoi.list,
-        effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     )
 
-    vimp.cfg <<- VIMP_cfg$new(model_cfg = regression.cfg)
+    vimp.cfg <<- VIMP_cfg$new()
 
     qoi.cfg <<- QoI_cfg$new(
         mcate = mcate.cfg,
@@ -121,6 +118,7 @@ test_that("Configs can be constructed successfully.", {
     cfg <<- HTE_cfg$new(
         treatment = trt.cfg,
         outcome = regression.cfg,
+        effect = regression.cfg,
         qoi = qoi.cfg
     )
 

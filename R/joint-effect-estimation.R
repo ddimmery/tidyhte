@@ -44,7 +44,7 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
 
 
 fit_fx_predictor <- function(.data, weights, psi_col, ...,
-    .pcate.cfg=NULL
+    .pcate.cfg, .Model_cfg
 ) {
     dots <- rlang::enexprs(...)
 
@@ -66,13 +66,13 @@ fit_fx_predictor <- function(.data, weights, psi_col, ...,
         folds <- split_data(.data, split_id)
         fx_model <- fit_effect(
             folds$train, {{ weights }}, {{ psi_col }}, !!!dots,
-            .Model_cfg = .pcate.cfg$effect_cfg
+            .Model_cfg = .Model_cfg
         )
         fx_models[[split_id]] <- fx_model$fx
         pred_data <- Model_data$new(folds$holdout, NULL, !!!dots)
         fx_hat[folds$in_holdout] <- fx_model$fx$predict(pred_data)$estimate
 
-        if (.pcate.cfg$effect_cfg$model_class == "SL") {
+        if (.Model_cfg$model_class == "SL") {
             SL_coef <- dplyr::tibble(
                 split_id = rep(split_id, length(fx_model$fx$model$libraryNames)),
                 model_name = fx_model$fx$model$libraryNames,
@@ -91,10 +91,10 @@ fit_fx_predictor <- function(.data, weights, psi_col, ...,
         num_splits = num_splits,
         num_mc_samples = .pcate.cfg$num_mc_samples,
         covariates = dots,
-        model_class = .pcate.cfg$effect_cfg$model_class
+        model_class = .Model_cfg$model_class
     )
 
-    if (.pcate.cfg$effect_cfg$model_class == "SL") {
+    if (.Model_cfg$model_class == "SL") {
         attr(.data, "SL_coefs")[["fx"]] <- SL_coefs[["fx"]]
     }
 

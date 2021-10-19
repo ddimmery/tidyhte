@@ -17,10 +17,9 @@ mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
 pcate_cfg <- PCATE_cfg$new(
    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
    model_covariates = c("x1", "x2", "x3"),
-   effect_cfg = SLLearner_cfg$new("SL.glm"),
    num_mc_samples = list(x1 = 100)
 )
-vimp_cfg <- VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
+vimp_cfg <- VIMP_cfg$new()
 diag_cfg <- Diagnostics_cfg$new(
    outcome = c("SL_risk", "SL_coefs", "MSE"),
    ps = c("SL_risk", "SL_coefs", "AUC")
@@ -87,10 +86,9 @@ A new \code{Diagnostics_cfg} object.
 pcate_cfg <- PCATE_cfg$new(
    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
    model_covariates = c("x1", "x2", "x3"),
-   effect_cfg = SLLearner_cfg$new("SL.glm"),
    num_mc_samples = list(x1 = 100)
 )
-vimp_cfg <- VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
+vimp_cfg <- VIMP_cfg$new()
 diag_cfg <- Diagnostics_cfg$new(
    outcome = c("SL_risk", "SL_coefs", "MSE"),
    ps = c("SL_risk", "SL_coefs", "AUC")

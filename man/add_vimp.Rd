@@ -4,7 +4,7 @@
 \alias{add_vimp}
 \title{Adds variable importance information}
 \usage{
-add_vimp(hte_cfg, sample_splitting = TRUE, model_cfg = NULL)
+add_vimp(hte_cfg, sample_splitting = TRUE)
 }
 \arguments{
 \item{hte_cfg}{\code{HTE_cfg} object to update.}
@@ -12,8 +12,6 @@ add_vimp(hte_cfg, sample_splitting = TRUE, model_cfg = NULL)
 \item{sample_splitting}{Logical indicating whether to use sample splitting or not.
 Choosing not to use sample splitting means that inference will only be valid for
 moderators with non-null importance.}
-
-\item{model_cfg}{A \code{Model_cfg} object determining how to fit the joint effect model.}
 }
 \value{
 Updated \code{HTE_cfg} object

@@ -293,7 +293,8 @@ estimate_QoI <- function(
             {{ weights }},
             .data$.pseudo_outcome,
             !!!covs,
-            .pcate.cfg = .QoI_cfg$pcate
+            .pcate.cfg = .QoI_cfg$pcate,
+            .Model_cfg = .HTE_cfg$effect
         )
         .data <- fx_mod$data
         result <- calculate_pcate_quantities(
@@ -308,12 +309,14 @@ estimate_QoI <- function(
     }
 
     if (!is.null(.QoI_cfg$vimp)) {
-        if (is.null(.QoI_cfg$vimp$model_cfg)) {
-            message("No model config provided for VIMP. Using config from outcome model.")
-            attr(.data, "HTE_cfg")$qoi$vimp$model_cfg <- .HTE_cfg$outcome
-            .QoI_cfg <- attr(.data, "HTE_cfg")$qoi
-        }
-        result <- calculate_vimp(.data, {{ weights }}, .data$.pseudo_outcome, !!!dots, .VIMP_cfg = .QoI_cfg$vimp)
+        result <- calculate_vimp(
+            .data,
+            {{ weights }},
+            .data$.pseudo_outcome,
+            !!!dots,
+            .VIMP_cfg = .QoI_cfg$vimp,
+            .Model_cfg = .HTE_cfg$effect
+        )
         result_list <- c(result_list, list(result))
     }
 

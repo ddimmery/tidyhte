@@ -61,7 +61,7 @@ for (cov in discrete_moderators) {
 
 qoi.cfg <- QoI_cfg$new(
     mcate = MCATE_cfg$new(cfgs = qoi.list),
-    vimp = VIMP_cfg$new(model_cfg = regression.cfg),
+    vimp = VIMP_cfg$new(),
     diag = Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE"),
         ps = c("SL_risk", "SL_coefs", "AUC")
@@ -71,6 +71,7 @@ qoi.cfg <- QoI_cfg$new(
 cfg <- HTE_cfg$new(
     treatment = trt.cfg,
     outcome = regression.cfg,
+    effect = regression.cfg,
     qoi = qoi.cfg
 )
 

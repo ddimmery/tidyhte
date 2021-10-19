@@ -4,7 +4,7 @@
 \alias{calculate_vimp}
 \title{Calculate Variable Importance of HTEs}
 \usage{
-calculate_vimp(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg)
+calculate_vimp(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg)
 }
 \arguments{
 \item{.data}{dataframe}
@@ -16,7 +16,9 @@ calculate_vimp(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg)
 \item{...}{Unquoted names of covariates to include in the joint effect model. The variable importance
 will be calculated for each of these covariates.}
 
-\item{.VIMP_cfg}{A \code{VIMP_cfg} object defining how the joint effect model should be estimated.}
+\item{.VIMP_cfg}{A \code{VIMP_cfg} object defining how VIMP should be estimated.}
+
+\item{.Model_cfg}{A \code{Model_cfg} object defining how the joint effect model should be estimated.}
 }
 \description{
 \code{calculate_vimp} estimates the reduction in (population) $R^2$ from removing a particular moderator

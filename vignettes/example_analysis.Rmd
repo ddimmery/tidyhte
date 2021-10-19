@@ -189,13 +189,12 @@ qoi.cfg <- QoI_cfg$new(
     # Don't use! The PCATE is still broken.
     pcate = PCATE_cfg$new(
         cfgs = qoi.list,
-        effect_cfg = regression.cfg,
         model_covariates = model_covariate_names,
         # In a real analysis, this should be higher so as to reduce Monte Carlo error.
         # num_mc_samples = list(x1 = 25, x2 = 1000, x3 = 1000, x4 = 25, x5 = 25)
         num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
     ),
-    vimp = VIMP_cfg$new(model_cfg = regression.cfg),
+    vimp = VIMP_cfg$new(),
     diag = Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE")
         #effect = c("SL_risk", "SL_coefs")
@@ -208,6 +207,7 @@ qoi.cfg <- QoI_cfg$new(
 cfg <- HTE_cfg$new(
     treatment = trt.cfg,
     outcome = regression.cfg,
+    effect = regression.cfg,
     qoi = qoi.cfg
 )
 ```
@@ -262,16 +262,6 @@ results
 ```{r ates}
 filter(results, grepl("SATE|PATE", estimand))
 ```
-
-```{r joint}
-fm <- paste0(".pseudo_outcome~", paste(purrr::map_chr(moderators, rlang::as_string), collapse = "+"))
-
-df_jm <- construct_pseudo_outcomes(prepped_data, {{ outcome_variable }}, {{ treatment_variable }})
-simple_joint_model <- stats::lm(as.formula(fm), df_jm)
-
-print(summary(simple_joint_model))
-```
-
 
 # Write results to file 
 

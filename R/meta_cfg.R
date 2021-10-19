@@ -57,9 +57,6 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
         #' @field cfgs Named list of covariates names to a `Model_cfg` object defining
         #' how to present that covariate's CATE surface.
         cfgs = list(),
-        #' @field effect_cfg A `Model_cfg` object indicating how to fit the second level effect
-        #' regression (joint across all selected covariates).
-        effect_cfg = list(),
         #' @field model_covariates A character vector of all the covariates to be included in the second-level
         #' effect regression.
         model_covariates = character(),
@@ -85,13 +82,11 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
         #' PCATE_cfg$new(
         #'    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
         #'    model_covariates = c("x1", "x2", "x3"),
-        #'    effect_cfg = SLLearner_cfg$new("SL.glm"),
         #'    num_mc_samples = list(x1 = 100)
         #' )
-        initialize = function(model_covariates, effect_cfg, cfgs, num_mc_samples = 100) {
+        initialize = function(model_covariates, cfgs, num_mc_samples = 100) {
             self$cfgs <- cfgs
             self$model_covariates <- model_covariates
-            self$effect_cfg <- effect_cfg
             if (checkmate::test_integerish(num_mc_samples, len = 1)) {
                 self$num_mc_samples <- as.list(
                     structure(rep(num_mc_samples, length(cfgs)), names = names(cfgs))
@@ -127,9 +122,6 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
 #' @export
 VIMP_cfg <- R6::R6Class("VIMP_cfg",
     public = list(
-        #' @field model_cfg A `Model_cfg` object indicating how to fit the second level effect
-        #' regression (joint across all moderators).
-        model_cfg = list(),
         #' @field estimand String indicating the estimand to target.
         estimand = "VIMP",
         #' @field sample_splitting Logical indicating whether to use sample splitting in the calculation
@@ -137,17 +129,14 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
         sample_splitting = TRUE,
         #' @description
         #' Create a new `VIMP_cfg` object with specified model configuration.
-        #' @param model_cfg A `Model_cfg` object indicating how to fit the second level effect
-        #' regression (joint across all moderators).
         #' @param sample_splitting Logical indicating whether to use sample splitting in the calculation
         #' of variable importance. Choosing not to use sample splitting means that inference will only be
         #' valid for moderators with non-null importance.
         #' @return A new `VIMP_cfg` object.
         #' @examples
-        #' VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
-        initialize = function(model_cfg, sample_splitting = TRUE) {
+        #' VIMP_cfg$new()
+        initialize = function(sample_splitting = TRUE) {
             soft_require("vimp")
-            self$model_cfg <- model_cfg
             self$sample_splitting <- sample_splitting
             invisible(self)
         }
@@ -232,10 +221,9 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
         #' pcate_cfg <- PCATE_cfg$new(
         #'    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
         #'    model_covariates = c("x1", "x2", "x3"),
-        #'    effect_cfg = SLLearner_cfg$new("SL.glm"),
         #'    num_mc_samples = list(x1 = 100)
         #' )
-        #' vimp_cfg <- VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
+        #' vimp_cfg <- VIMP_cfg$new()
         #' diag_cfg <- Diagnostics_cfg$new(
         #'    outcome = c("SL_risk", "SL_coefs", "MSE"),
         #'    ps = c("SL_risk", "SL_coefs", "AUC")
@@ -276,6 +264,8 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
         outcome = list(),
         #' @field treatment `Model_cfg` object indicating how the propensity score model should be estimated.
         treatment = list(),
+        #' @field effect `Model_cfg` object indicating how the joint effect model should be estimated.
+        effect = list(),
         #' @field qoi `QoI_cfg` object indicating what the Quantities of Interest are and providing all
         #' necessary detail on how they should be estimated.
         qoi = list(),
@@ -287,6 +277,7 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
         #' analysis.
         #' @param outcome `Model_cfg` object indicating how outcome models should be estimated.
         #' @param treatment `Model_cfg` object indicating how the propensity score model should be estimated.
+        #' @param effect `Model_cfg` object indicating how the joint effect model should be estimated.
         #' @param qoi `QoI_cfg` object indicating what the Quantities of Interest are and providing all
         #' necessary detail on how they should be estimated.
         #' @param verbose Logical indicating whether to print debugging information.
@@ -295,10 +286,9 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
         #' pcate_cfg <- PCATE_cfg$new(
         #'    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
         #'    model_covariates = c("x1", "x2", "x3"),
-        #'    effect_cfg = SLLearner_cfg$new("SL.glm"),
         #'    num_mc_samples = list(x1 = 100)
         #' )
-        #' vimp_cfg <- VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
+        #' vimp_cfg <- VIMP_cfg$new()
         #' diag_cfg <- Diagnostics_cfg$new(
         #'    outcome = c("SL_risk", "SL_coefs", "MSE"),
         #'    ps = c("SL_risk", "SL_coefs", "AUC")
@@ -315,15 +305,20 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
         #' y_cfg <- SLEnsemble_cfg$new(
         #'    learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
         #' )
-        #' HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, qoi = qoi_cfg)
+        #' fx_cfg <- SLEnsemble_cfg$new(
+        #'    learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+        #' )
+        #' HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, effect = fx_cfg, qoi = qoi_cfg)
         initialize = function(
-            outcome = NULL, treatment = NULL, qoi = NULL, verbose = FALSE
+            outcome = NULL, treatment = NULL, effect = NULL, qoi = NULL, verbose = FALSE
         ) {
             if (is.null(outcome)) outcome <- SLEnsemble_cfg$new()
             if (is.null(treatment)) treatment <- SLEnsemble_cfg$new()
+            if (is.null(effect)) effect <- SLEnsemble_cfg$new()
             if (is.null(qoi)) qoi <- QoI_cfg$new()
             self$outcome <- outcome
             self$treatment <- treatment
+            self$effect <- effect
             self$qoi <- qoi
             self$verbose <- verbose
             invisible(self)

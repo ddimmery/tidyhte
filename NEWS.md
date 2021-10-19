@@ -6,6 +6,8 @@
 
 * First version of the recipe API is available for use!
 
+* Move joint effect model config to a single unified location in `HTE_cfg`.
+
 # tidyhte 0.1.5
 
 * Fixes to VIMP. Arguments to `cv_vim` were previously constructed incorrectly.

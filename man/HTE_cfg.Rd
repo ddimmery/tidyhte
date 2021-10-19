@@ -18,10 +18,9 @@ mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
 pcate_cfg <- PCATE_cfg$new(
    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
    model_covariates = c("x1", "x2", "x3"),
-   effect_cfg = SLLearner_cfg$new("SL.glm"),
    num_mc_samples = list(x1 = 100)
 )
-vimp_cfg <- VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
+vimp_cfg <- VIMP_cfg$new()
 diag_cfg <- Diagnostics_cfg$new(
    outcome = c("SL_risk", "SL_coefs", "MSE"),
    ps = c("SL_risk", "SL_coefs", "AUC")
@@ -38,7 +37,10 @@ ps_cfg <- SLEnsemble_cfg$new(
 y_cfg <- SLEnsemble_cfg$new(
    learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
 )
-HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, qoi = qoi_cfg)
+fx_cfg <- SLEnsemble_cfg$new(
+   learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+)
+HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, effect = fx_cfg, qoi = qoi_cfg)
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -46,6 +48,8 @@ HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, qoi = qoi_cfg)
 \item{\code{outcome}}{\code{Model_cfg} object indicating how outcome models should be estimated.}
 
 \item{\code{treatment}}{\code{Model_cfg} object indicating how the propensity score model should be estimated.}
+
+\item{\code{effect}}{\code{Model_cfg} object indicating how the joint effect model should be estimated.}
 
 \item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest are and providing all
 necessary detail on how they should be estimated.}
@@ -68,7 +72,13 @@ necessary detail on how they should be estimated.}
 Create a new \code{HTE_cfg} object with all necessary information about how to carry out an HTE
 analysis.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{HTE_cfg$new(outcome = NULL, treatment = NULL, qoi = NULL, verbose = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{HTE_cfg$new(
+  outcome = NULL,
+  treatment = NULL,
+  effect = NULL,
+  qoi = NULL,
+  verbose = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -77,6 +87,8 @@ analysis.
 \item{\code{outcome}}{\code{Model_cfg} object indicating how outcome models should be estimated.}
 
 \item{\code{treatment}}{\code{Model_cfg} object indicating how the propensity score model should be estimated.}
+
+\item{\code{effect}}{\code{Model_cfg} object indicating how the joint effect model should be estimated.}
 
 \item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest are and providing all
 necessary detail on how they should be estimated.}
@@ -91,10 +103,9 @@ necessary detail on how they should be estimated.}
 pcate_cfg <- PCATE_cfg$new(
    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
    model_covariates = c("x1", "x2", "x3"),
-   effect_cfg = SLLearner_cfg$new("SL.glm"),
    num_mc_samples = list(x1 = 100)
 )
-vimp_cfg <- VIMP_cfg$new(model_cfg = SLLearner_cfg$new("SL.glm"))
+vimp_cfg <- VIMP_cfg$new()
 diag_cfg <- Diagnostics_cfg$new(
    outcome = c("SL_risk", "SL_coefs", "MSE"),
    ps = c("SL_risk", "SL_coefs", "AUC")
@@ -111,7 +122,10 @@ ps_cfg <- SLEnsemble_cfg$new(
 y_cfg <- SLEnsemble_cfg$new(
    learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
 )
-HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, qoi = qoi_cfg)
+fx_cfg <- SLEnsemble_cfg$new(
+   learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+)
+HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, effect = fx_cfg, qoi = qoi_cfg)
 }
 \if{html}{\out{</div>}}
 

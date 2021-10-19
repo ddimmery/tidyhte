@@ -10,9 +10,10 @@
 basic_config <- function() {
     trt_cfg <- SLEnsemble_cfg$new()
     reg_cfg <- SLEnsemble_cfg$new()
+    fx_cfg <- SLEnsemble_cfg$new()
     qoi_cfg <- QoI_cfg$new(
         ate = TRUE,
-        vimp = VIMP_cfg$new(model_cfg = NULL, sample_splitting = TRUE),
+        vimp = VIMP_cfg$new(sample_splitting = TRUE),
         diag = Diagnostics_cfg$new(
             ps = c("AUC", "MSE", "SL_risk", "SL_coefs"),
             outcome = c("MSE", "SL_risk", "SL_coefs"),
@@ -22,6 +23,7 @@ basic_config <- function() {
     hte_cfg <- HTE_cfg$new(
         treatment = trt_cfg,
         outcome = reg_cfg,
+        effect = fx_cfg,
         qoi = qoi_cfg
     )
     invisible(hte_cfg)
@@ -93,6 +95,25 @@ add_outcome_diagnostic <- function(hte_cfg, diag) {
     invisible(hte_cfg)
 }
 
+#' Add an additional model to the joint effect ensemble
+#'
+#' This adds a learner to the ensemble used for estimating a model
+#' of the conditional expectation of the pseudo-outcome.
+#' @param hte_cfg `HTE_cfg` object to update.
+#' @param model_name Character indicating the name of the model to
+#' incorporate into the joint effect ensemble. Possible values
+#' use `SuperLearner` naming conventions. A full list is available
+#' with `SuperLearner::listWrappers("SL")`
+#' @param ... Parameters over which to grid-search for this model class.
+#' @return Updated `HTE_cfg` object
+#' @export
+add_effect_model <- function(hte_cfg, model_name, ...) {
+    hps <- rlang::dots_list(..., .named = TRUE)
+    if (length(hps) == 0) hps <- NULL
+    hte_cfg$effect$add_sublearner(model_name, hps)
+    invisible(hte_cfg)
+}
+
 #' Add an additional diagnostic to the effect model
 #'
 #' This adds a diagnostic to the effect model.
@@ -159,12 +180,10 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' @param sample_splitting Logical indicating whether to use sample splitting or not.
 #' Choosing not to use sample splitting means that inference will only be valid for
 #' moderators with non-null importance.
-#' @param model_cfg A `Model_cfg` object determining how to fit the joint effect model.
 #' @return Updated `HTE_cfg` object
 #' @export
-add_vimp <- function(hte_cfg, sample_splitting = TRUE, model_cfg = NULL) {
+add_vimp <- function(hte_cfg, sample_splitting = TRUE) {
     hte_cfg$qoi$vimp <- VIMP_cfg$new(
-        model_cfg = model_cfg,
         sample_splitting = sample_splitting
     )
     invisible(hte_cfg)

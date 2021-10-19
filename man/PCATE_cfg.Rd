@@ -18,7 +18,6 @@ covariates. Two highly correlated variables may have very different PCATE surfac
 PCATE_cfg$new(
    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
    model_covariates = c("x1", "x2", "x3"),
-   effect_cfg = SLLearner_cfg$new("SL.glm"),
    num_mc_samples = list(x1 = 100)
 )
 }
@@ -27,9 +26,6 @@ PCATE_cfg$new(
 \describe{
 \item{\code{cfgs}}{Named list of covariates names to a \code{Model_cfg} object defining
 how to present that covariate's CATE surface.}
-
-\item{\code{effect_cfg}}{A \code{Model_cfg} object indicating how to fit the second level effect
-regression (joint across all selected covariates).}
 
 \item{\code{model_covariates}}{A character vector of all the covariates to be included in the second-level
 effect regression.}
@@ -55,7 +51,7 @@ calculate the double integral (See Details).}
 \subsection{Method \code{new()}}{
 Create a new \code{PCATE_cfg} object with specified model name and hyperparameters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PCATE_cfg$new(model_covariates, effect_cfg, cfgs, num_mc_samples = 100)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PCATE_cfg$new(model_covariates, cfgs, num_mc_samples = 100)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -64,15 +60,15 @@ Create a new \code{PCATE_cfg} object with specified model name and hyperparamete
 \item{\code{model_covariates}}{A character vector of all the covariates to be included in the second-level
 effect regression.}
 
-\item{\code{effect_cfg}}{A \code{Model_cfg} object indicating how to fit the second level effect
-regression (joint across all selected covariates).}
-
 \item{\code{cfgs}}{Named list from moderator name to a \code{Model_cfg} object defining how to present
 that covariate's CATE surface.}
 
 \item{\code{num_mc_samples}}{A named list from covariate name to the number of Monte Carlo samples to take to
 calculate the double integral (See Details). If all covariates should use the same number of samples,
 simply pass the (integer) number of samples.}
+
+\item{\code{effect_cfg}}{A \code{Model_cfg} object indicating how to fit the second level effect
+regression (joint across all selected covariates).}
 }
 \if{html}{\out{</div>}}
 }
@@ -84,7 +80,6 @@ A new \code{PCATE_cfg} object.
 \preformatted{PCATE_cfg$new(
    cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
    model_covariates = c("x1", "x2", "x3"),
-   effect_cfg = SLLearner_cfg$new("SL.glm"),
    num_mc_samples = list(x1 = 100)
 )
 }
