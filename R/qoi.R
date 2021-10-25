@@ -14,14 +14,17 @@
 #' discussion of these options.
 #' @export
 construct_pseudo_outcomes <- function(.data, outcome, treatment, type = "dr") {
+    outcome <- rlang::enexpr(outcome)
+    treatment <- rlang::enexpr(treatment)
+
     YA <- unlist(dplyr::select(.data, {{ outcome }}))
     A <- unlist(dplyr::select(.data, {{ treatment }}))
     mu0 <- .data[[".mu0_hat"]]
     mu1 <- .data[[".mu1_hat"]]
     pi <- .data[[".pi_hat"]]
     .data$.pseudo_outcome <- pseudo_outcome_factory(type)(A, YA, pi, mu1, mu0)
-    attr(.data, "treatment") <- rlang::as_string(treatment)
-    attr(.data, "outcome") <- rlang::as_string(outcome)
+    attr(.data, "treatment") <- rlang::as_name(treatment)
+    attr(.data, "outcome") <- rlang::as_name(outcome)
     .data
 }
 

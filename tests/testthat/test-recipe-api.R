@@ -6,6 +6,8 @@ test_that("basic config shortcut", {
 test_that("recipe manipulations on ps", {
     checkmate::expect_r6(add_propensity_score_model(cfg, "SL.glmnet"), "HTE_cfg")
 
+    checkmate::expect_r6(add_known_propensity_score(cfg, "pscore"), "HTE_cfg")
+
     checkmate::expect_r6(add_propensity_diagnostic(cfg, "MSE"), "HTE_cfg")
 })
 
@@ -27,6 +29,8 @@ test_that("recipe manipulations on moderators", {
     expect_error(add_moderator(cfg, "unknown", x1), "Unknown `model_type`.")
 
     checkmate::expect_r6(add_moderator(cfg, "KernelSmooth", x2, .model_arguments = rlang::list2(neval = 50)), "HTE_cfg")
+
+    checkmate::expect_r6(add_moderator(cfg, "KernelSmooth", x2), "HTE_cfg")
 })
 
 test_that("recipe manipulations on vimp", {

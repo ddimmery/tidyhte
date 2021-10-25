@@ -12,6 +12,7 @@ SL_model_slot <- function(prediction) {
 estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     w_col <- attr(.data, "weights")
     id_col <- attr(.data, "identifier")
+
     if (tolower(diag_name) == "auc") {
         soft_require("WeightedROC")
         labels <- .data[[label]]
@@ -19,11 +20,6 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
             predictions <- .data[[prediction]]
             n1 <- sum(.data[[label]] * .data[[w_col]])
             n <- sum(.data[[w_col]])
-            # result <- muffle_messages(
-            #     as.double(pROC::auc(labels, predictions)),
-            #     "Setting levels",
-            #     "Setting direction"
-            # )
             wroc <- WeightedROC::WeightedROC(predictions, labels, .data[[w_col]])
             auc <- WeightedROC::WeightedAUC(wroc)
             result <- dplyr::tibble(
@@ -50,7 +46,8 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     } else if (tolower(diag_name) == "sl_coefs") {
         if (
             ("SL_coefs" %in% names(attributes(.data))) &&
-            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs")))
+            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs"))) &&
+            length(attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
         ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
@@ -68,7 +65,8 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
     } else if (tolower(diag_name) == "sl_risk") {
         if (
             ("SL_coefs" %in% names(attributes(.data))) &&
-            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs")))
+            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs"))) &&
+            length(attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
         ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
@@ -121,6 +119,10 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
     }
 
     for (diag in fx_cfg) {
+        if (!(".pseudo_outcome_hat" %in% names(.data))) {
+            message(paste("Skipping diagnostic on .pseudo_outcome due to lack of model."))
+            break
+        }
         result <- estimate_diagnostic(.data, ".pseudo_outcome", ".pseudo_outcome_hat", diag)
         result$level <- "Effect Surface"
         result_list <- c(result_list, list(result))

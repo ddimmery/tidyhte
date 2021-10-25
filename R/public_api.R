@@ -120,11 +120,12 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .weights = 
     dots <- rlang::enexprs(...)
     outcome <- rlang::enexpr(outcome)
     treatment <- rlang::enexpr(treatment)
+
+    .weights <- rlang::enexpr(.weights)
     if (is.null(.weights)) {
         .data[[".weights"]] <- rep(1, nrow(.data))
         .weights <- rlang::quo(!! rlang::sym(".weights"))
     }
-    .weights <- rlang::enexpr(.weights)
 
     check_data_has_hte_cfg(.data)
     .HTE_cfg <- attr(.data, "HTE_cfg")
@@ -287,6 +288,7 @@ estimate_QoI <- function(
     }
 
     if (!is.null(.QoI_cfg$pcate)) {
+        warning("Only use PCATEs if you know what you're doing!")
         covs <- rlang::syms(.QoI_cfg$pcate$model_covariates)
         fx_mod <- fit_fx_predictor(
             .data,

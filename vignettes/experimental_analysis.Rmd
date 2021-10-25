@@ -1,0 +1,238 @@
+---
+title: HTE Analysis in an Experiment
+author: Drew Dimmery (drew.dimmery@gmail.com)
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{HTE Analysis in an Experiment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style type="text/css">
+div.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+# Introduction
+
+In this example analysis, I will demonstrate how to run an analysis of heterogeneous treatment effects in a randomized control trial using the methods of Kennedy (2020). This implies that propensity scores are _known_, so estimates will generally be unbiased.
+
+This analysis will focus on using machine learning ensembles (through SuperLearner) to estimate nuisance functions and then provide a tibble of estimates of conditional treatment effects along with their associated standard errors.
+
+# Load packages and setup environment
+
+```{r setup, print=FALSE, message=FALSE}
+# library(tidyhte)
+devtools::load_all()
+library(ggplot2)
+library(dplyr)
+```
+
+
+# Simulate data
+
+If real data is used, simply replace this block with an appropriate `readr::read_csv` call or equivalent, creating a tibble. I will assume this tibble is stored as `data` for the remainder of this document.
+
+Note that datatypes can be either continuous or discrete, and that there can be columns in the tibble that are not included in any resulting anayses.
+
+```{r sim_data}
+set.seed(100)
+n <- 5000
+data <- tibble(
+    uid = 1:n
+) %>%
+    mutate(
+        a = rbinom(n, 1, 0.3),
+        ps = rep(0.3, n),
+        x1 = rnorm(n),
+        x2 = factor(sample(1:4, n, prob = c(1 / 100, 39 / 100, 1 / 5, 2 / 5), replace = TRUE)),
+        x3 = factor(sample(1:3, n, prob = c(1 / 5, 1 / 5, 3 / 5), replace = TRUE)),
+        x4 = (x1 + rnorm(n)) / 2,
+        x5 = rnorm(n),
+        y = (
+            a + x1 - a * (x1 - mean(x1)) + (4 * rbinom(n, 1, 0.5) - 1) * a * (x2 == 2) +
+            a * (x2 == 3) + 0.5 * a * (x2 == 4) +
+            rnorm(n)
+        ),
+        w = 0.1 + rexp(n, 1 / 0.9)
+    )
+```
+
+# Define Recipe
+
+## Propensity Score Model 
+
+In this example, the propensity score is known because the data is from a randomized experiment. We don't need to estimate a model for the propensity score.
+
+For CATEs on discrete moderators, this implies that our estimates will simply be equivalent to AIPW estimators and will therefore inherit unbiasedness. For continuous moderators, similarly, if the CATE functions are smooth, we will attain consistency for recovering the true function non-parametrically.
+
+## Outcome Model
+
+We estimate the outcome (T-learner) plugin estimate using an ensemble of machine learning models, including a wide array of model complexities from linear models, GAMs, regularized regressions. In this example, non-linear models are not included (due to runtime), but they could easily be added by uncommenting the associated lines.
+
+Each individual component of the model provides a list of hyperparameters, over which a full cross-product is taken and all resulting models are estimate. For instance, `SL.glmnet` sweeps over one hyperparameter (the mixing parameters between ridge and Lasso). A model with each of the hyper-parameter values will be estimated and incorporated into the ensemble. Note that `SL.glmnet` automatically tunes the regularization parameter using `cv.glmnet`, so this is not included as a hyperparameter.
+
+
+## Quantities of interest
+
+Quantities of Interest determine how results are reported to the user. You can think about this as determining, for instance how results should be plotted in a resulting chart.
+
+For simplicity, this example simply provides results in one of two ways:
+- Discrete covariates are stratified and the conditional effect is plotted at each distinct level of the covariate.
+- Continuous covariates have the effect surface estimated using local-linear regression via `nprobust` of Calonico, Cattaneo and Farrell (2018). See, similarly, Kennedy, Ma, McHugh and Small (2017) for justification of this approach. Results are obtained for a grid of 100 quantiles across the domain of the covariate.
+
+An additional quantity of interest provided is the variable importance of a learned joint model of conditional effects (over all covariates). The approach implemented is described in Williamson, Gilbert, Carone and Simon (2020).
+
+```{r recipe}
+hte_cfg <- basic_config() %>%
+    add_known_propensity_score("ps") %>% 
+    add_outcome_model("SL.glm.interaction") %>%
+    add_outcome_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_outcome_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    # add_outcome_model("SL.ranger", num.trees = c(25, 50, 100, 250), splitrule = c("variance", "extratrees")) %>%
+    # add_outcome_model("SL.xgboost", ntrees = c(50, 100, 250, 500), maxdepth = c(1, 3, 5), shrinkage = c(0.1, 0.01)) %>%
+    add_effect_model("SL.glm.interaction") %>%
+    add_effect_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_effect_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_moderator("Stratified", x2, x3) %>%
+    add_moderator("KernelSmooth", x1, x4, x5) ->
+    hte_cfg
+```
+
+
+# Estimate Models
+
+To actually perform the estimation, the following will be sufficient. Note that the configuration of covariate names at the top of the document makes all of this a little more complex with all the curly-brackets and bangs.
+
+```{r estimate, message=FALSE}
+data %>%
+    attach_config(hte_cfg) %>%
+    make_splits(uid, .num_splits = 4) %>%
+    produce_plugin_estimates(
+        y,
+        a,
+        x1, x2, x3, x4, x5,
+    ) -> prepped_data
+
+construct_pseudo_outcomes(prepped_data, y, a) %>%
+    estimate_QoI(x1, x2, x3, x4, x5) -> results
+```
+
+
+```{r show_qoi, message=FALSE}
+results
+```
+
+
+# ATEs 
+```{r ates}
+filter(results, grepl("SATE|PATE", estimand))
+```
+
+# Plots
+## Plot Ensemble Coefficients
+
+```{r sl_coef}
+filter(results, grepl("SL coefficient", estimand)) %>%
+mutate(level = factor(level, levels = c("Control Response", "Treatment Response"))) %>%
+ggplot(aes(
+            x = reorder(term, estimate),
+            y = estimate,
+            ymin = estimate - 1.96 * std_error,
+            ymax = estimate + 1.96 * std_error
+    )) +
+    geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
+    geom_pointrange() +
+    expand_limits(y = 0) +
+    scale_x_discrete("Model name") +
+    scale_y_continuous("Coefficient in SuperLearner Ensemble") +
+    facet_wrap(~level) +
+    coord_flip() +
+    ggtitle("SuperLearner Ensemble") +
+    theme_minimal()
+```
+
+## Plot risk for each submodel
+```{r sl_risk}
+filter(results, grepl("SL risk", estimand)) %>%
+mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
+ggplot() +
+    geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
+    geom_pointrange(
+        aes(
+            x = reorder(term, -estimate),
+            y = estimate,
+            ymin = estimate - 1.96 * std_error,
+            ymax = estimate + 1.96 * std_error)
+        ) +
+    expand_limits(y = 0) +
+    scale_x_discrete("Model name") +
+    scale_y_continuous("CV Risk in SuperLearner Ensemble") +
+    facet_wrap(~level, scales = "free_x") +
+    coord_flip() +
+    ggtitle("Submodel Risk Estimates") +
+    theme_minimal()
+```
+
+## Plot VIMP
+
+```{r vimp}
+ggplot(filter(results, estimand == "VIMP")) +
+    geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
+    geom_pointrange(
+        aes(x = term, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+    expand_limits(y = 0) +
+    scale_x_discrete("Covariate") +
+    scale_y_continuous("Reduction in R² from full model") +
+    coord_flip() +
+    ggtitle("Covariate Importance") +
+    theme_minimal()
+```
+
+## Plot Continuous Covariates' MCATE
+```{r cts_mcate_plot, message=FALSE}
+for (cov in c("x1", "x4", "x5")) {
+    ggplot(filter(results, estimand == "MCATE", term == cov)) +
+        geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
+        geom_ribbon(
+            aes(x = value, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.75
+        ) +
+        geom_line(
+            aes(x = value, y = estimate)
+        ) +
+        expand_limits(y = 0) +
+        scale_x_continuous("Covariate level") +
+        scale_y_continuous("CATE") +
+        ggtitle(paste("Marginal effects across", cov)) +
+        theme_minimal() -> gp
+    print(gp)
+}
+```
+
+## Plot Discrete Covariates' MCATE
+```{r discrete_mcate_plot}
+for (cov in c("x2", "x3")) {
+    ggplot(filter(results, estimand == "MCATE", term == cov)) +
+        geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
+        geom_pointrange(
+            aes(x = level, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+        expand_limits(y = 0) +
+        scale_x_discrete("Covariate level") +
+        scale_y_continuous("CATE") +
+        ggtitle(paste("Marginal effects across", cov)) +
+        theme_minimal() -> gp
+    print(gp)
+}
+```
+
+
+# Session Info
+```{r session_info}
+print(sessionInfo())
+```

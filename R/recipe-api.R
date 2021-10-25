@@ -44,7 +44,24 @@ basic_config <- function() {
 add_propensity_score_model <- function(hte_cfg, model_name, ...) {
     hps <- rlang::dots_list(..., .named = TRUE)
     if (length(hps) == 0) hps <- NULL
+    if (!checkmate::test_r6(hte_cfg$treatment, classes = "SLEnsemble_cfg")) {
+        hte_cfg$treatment <- SLEnsemble_cfg$new()
+    }
     hte_cfg$treatment$add_sublearner(model_name, hps)
+    invisible(hte_cfg)
+}
+
+#' Uses a known propensity score
+#'
+#' This replaces the propensity score model with a known value
+#' of the propensity score.
+#' @param hte_cfg `HTE_cfg` object to update.
+#' @param covariate_name Character indicating the name of the covariate
+#' name in the dataframe corresponding to the known propensity score.
+#' @return Updated `HTE_cfg` object
+#' @export
+add_known_propensity_score <- function(hte_cfg, covariate_name) {
+    hte_cfg$treatment <- Known_cfg$new(covariate_name)
     invisible(hte_cfg)
 }
 
@@ -77,6 +94,9 @@ add_propensity_diagnostic <- function(hte_cfg, diag) {
 add_outcome_model <- function(hte_cfg, model_name, ...) {
     hps <- rlang::dots_list(..., .named = TRUE)
     if (length(hps) == 0) hps <- NULL
+    if (!checkmate::test_r6(hte_cfg$outcome, classes = "SLEnsemble_cfg")) {
+        hte_cfg$outcome <- SLEnsemble_cfg$new()
+    }
     hte_cfg$outcome$add_sublearner(model_name, hps)
     invisible(hte_cfg)
 }
@@ -159,6 +179,7 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
         if (discrete) {
             qoi_list[[mod_name]] <- model_cls$new(covariate = mod_name)
         } else {
+            if (is.null(.model_arguments)) .model_arguments <- list()
             qoi_list[[mod_name]] <- do.call(model_cls$new, .model_arguments)
         }
     }

@@ -125,10 +125,16 @@ test_that("Construct Pseudo-outcomes", {
 
 test_that("Estimate QoIs", {
     skip_on_cran()
-    results <<- estimate_QoI(data4, !!!moderators)
+    expect_warning(
+        results <<- estimate_QoI(data4, !!!moderators),
+        "Only use PCATEs if you know what you're doing!"
+    )
     checkmate::expect_data_frame(results)
     data4 <- attach_config(data4, cfg2)
-    results2 <<- estimate_QoI(data4, !!!moderators)
+    expect_warning(
+        results2 <<- estimate_QoI(data4, !!!moderators),
+        "Only use PCATEs if you know what you're doing!"
+    )
     checkmate::expect_data_frame(results2)
 })
 
