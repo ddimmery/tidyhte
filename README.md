@@ -52,96 +52,48 @@ devtools::install_github("ddimmery/tidyhte")
 
 # Setting up a configuration
 
-The eventual API for this will look more or less like the following:
+To set up a simple configuration, it’s straightforward to use the Recipe
+API:
 
 ``` r
-initialize_config() %>%
-    add_propensity_model("known", pscore) %>%
-    add_outcome_model("glmnet", interactions = FALSE, alpha = c(0.05, 0.15, 0.2, 0.25)) %>%
-    add_outcome_model("glmnet", interactions = TRUE, alpha = c(0.05, 0.15, 0.2, 0.25)) %>%
-    add_outcome_model("xgboost", ntrees = c(50, 100, 250, 500), shrinkage = c(0.01, 0.1)) %>%
-    add_quantity_of_interest("MCATE", x1, "KernelSmooth") %>%
-    add_quantity_of_interest("MCATE", x2, "Stratified") %>%
-    add_quantity_of_interest("VIMP", x1, x2) %>%
-    add_propensity_diagnostic("AUC") %>%
-    add_propensity_diagnostic("SL coefficients") %>%
-    add_outcome_diagnostic("MSE") %>%
-    add_outcome_diagnostic("SL coefficients")
+library(tidyhte)
+library(dplyr)
+
+basic_config() %>%
+    add_propensity_score_model("SL.glmnet") %>%
+    add_outcome_model("SL.glmnet") %>%
+    add_moderator("Stratified", x1, x2) %>%
+    add_moderator("KernelSmooth", x3) %>%
+    add_vimp(sample_splitting = FALSE) -> hte_cfg
 ```
 
-This is not yet implemented, so the current approach is a bit less
-pretty:
-
-``` r
-trt.cfg <- Known_cfg$new(propensity_score_variable_name)
-
-regression.cfg <- SLEnsemble_cfg$new(
-    learner_cfgs = list(
-        SLLearner_cfg$new(
-            "SL.glm"
-        ),
-        SLLearner_cfg$new(
-            "SL.glmnet",
-            list(
-                alpha = c(0.05, 0.15)
-            )
-        )
-    )
-)
-
-qoi.list <- list()
-for (cov in continuous_moderators) {
-    qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100)
-}
-for (cov in discrete_moderators) {
-    qoi.list[[rlang::as_string(cov)]] <- Stratified_cfg$new(cov)
-}
-
-qoi.cfg <- QoI_cfg$new(
-    mcate = MCATE_cfg$new(cfgs = qoi.list),
-    pcate = PCATE_cfg$new(
-        cfgs = qoi.list,
-        effect_cfg = regression.cfg,
-        model_covariates = model_covariate_names,
-        num_mc_samples = list(x1 = 5, x2 = 10, x3 = 10, x4 = 5, x5 = 5)
-    ),
-    vimp = VIMP_cfg$new(model_cfg = regression.cfg),
-    diag = Diagnostics_cfg$new(
-        outcome = c("SL_risk", "SL_coefs", "MSE"),
-        effect = c("SL_risk", "SL_coefs")
-    )
-)
-
-cfg <- HTE_cfg$new(
-    treatment = trt.cfg,
-    outcome = regression.cfg,
-    qoi = qoi.cfg
-)
-```
+The `basic_config` includes a number of defaults: it starts off the
+SuperLearner ensembles for both treatment and outcome with linear models
+(`"SL.glm"`)
 
 # Running an Analysis
 
 ``` r
 data %>%
+    attach_config(hte_cfg) %>%
     make_splits(userid, .num_splits = 12) %>%
     produce_plugin_estimates(
         outcome_variable,
         treatment_variable,
-        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6,
-        .HTE_cfg = cfg
+        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
     ) %>%
     construct_pseudo_outcomes(outcome_variable, treatment_variable) -> data
 
 data %>%
-    estimate_QoI(outcome_variable, treatment_variable, covariate1, covariate2, .HTE_cfg = cfg) -> results
+    estimate_QoI(covariate1, covariate2) -> results
 ```
 
-To get information on a moderator not included above would just require
-rerunning the final line:
+To get information on estimate CATEs for a moderator not included
+previously would just require rerunning the final line:
 
 ``` r
 data %>%
-    estimate_QoI(outcome_variable, treatment_variable, covariate3, .HTE_cfg = cfg) -> results
+    estimate_QoI(covariate3) -> results
 ```
 
 Replicating this on a new outcome would be as simple as running the
@@ -149,35 +101,38 @@ following, with no reconfiguration necessary.
 
 ``` r
 data %>%
+    attach_config(hte_cfg) %>%
     produce_plugin_estimates(
         second_outcome_variable,
         treatment_variable,
-        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6,
-        .HTE_cfg = cfg
+        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
     ) %>%
     construct_pseudo_outcomes(second_outcome_variable, treatment_variable) %>%
-    estimate_QoI(second_outcome_variable, treatment_variable, covariate1, covariate2, .HTE_cfg = cfg) -> results
+    estimate_QoI(covariate1, covariate2) -> results
 ```
 
 This leads to the ability to easily chain together analyses across many
 outcomes in an easy way:
 
 ``` r
+library("foreach")
+
 data %>%
+    attach_config(hte_cfg) %>%
     make_splits(userid, .num_splits = 12) -> data
 
-foreach(outcome = list_of_outcomes, .combine = "bind_rows") %dopar% {
+foreach(outcome = list_of_outcomes, .combine = "bind_rows") %do% {
     data %>%
     produce_plugin_estimates(
         outcome,
         treatment_variable,
-        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6,
-        .HTE_cfg = cfg
+        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
     ) %>%
     construct_pseudo_outcomes(outcome, treatment_variable) %>%
-    estimate_QoI(outcome, treatment_variable, covariate1, covariate2, .HTE_cfg = cfg) %>%
+    estimate_QoI(covariate1, covariate2) %>%
     mutate(outcome = rlang::as_string(outcome))
 }
 ```
 
-I’m sure you could do that purely tidily if you wanted.
+The function `estimate_QoI` returns results in a tibble format which
+makes it easy to manipulate or plot results.
