@@ -8,14 +8,28 @@ navbar:
     left:  [home, reference, tutorials, news]
     right: [github]
 reference:
-- title: Public API
+- title: Estimation API
   desc: >
-    Tidy functions for performing an analysis of hetergeneous treatment effects.
+    Tidy functions for performing an analysis of heterogeneous treatment effects.
 - contents:
   - make_splits
   - produce_plugin_estimates
   - construct_pseudo_outcomes
   - estimate_QoI
+- title: Recipe API
+  desc: >
+    Tidy functions for configuring a "recipe" for how to estimate heterogeneous treatment effects.
+- contents:
+  - basic_config
+  - add_propensity_score_model
+  - add_known_propensity_score
+  - add_propensity_diagnostic
+  - add_outcome_model
+  - add_outcome_diagnostic
+  - add_effect_model
+  - add_effect_diagnostic
+  - add_moderator
+  - add_vimp
 - title: Model Configuration
   desc: >
     Classes to define the configuration of models to be used in the eventual HTE analysis.
