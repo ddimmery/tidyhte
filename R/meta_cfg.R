@@ -127,17 +127,23 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
         #' @field sample_splitting Logical indicating whether to use sample splitting in the calculation
         #' of variable importance.
         sample_splitting = TRUE,
+        #' @field linear
+        linear = FALSE,
         #' @description
         #' Create a new `VIMP_cfg` object with specified model configuration.
         #' @param sample_splitting Logical indicating whether to use sample splitting in the calculation
         #' of variable importance. Choosing not to use sample splitting means that inference will only be
         #' valid for moderators with non-null importance.
+        #' @param linear_only Logical indicating whether the variable importance should use only a single
+        #' linear-only model. Variable importance measure will only be consistent for the population
+        #' quantity if the true model of pseudo-outcomes is linear.
         #' @return A new `VIMP_cfg` object.
         #' @examples
         #' VIMP_cfg$new()
-        initialize = function(sample_splitting = TRUE) {
+        initialize = function(sample_splitting = TRUE, linear_only = FALSE) {
             soft_require("vimp")
             self$sample_splitting <- sample_splitting
+            self$linear <- linear_only
             invisible(self)
         }
     )

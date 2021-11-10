@@ -131,3 +131,53 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
     }
     dplyr::bind_rows(!!!result_list)
 }
+
+
+#' Calculate Linear Variable Importance of HTEs
+#'
+#' `calculate_linear_vimp` estimates the linear hypothesis test from removing a particular moderator
+#' from a linear model containing all moderators.
+#' @param .data dataframe
+#' @param weight_col Unquoted name of the weight column.
+#' @param pseudo_outcome Unquoted name of the pseudo-outcome.
+#' @param ... Unquoted names of covariates to include in the joint effect model. The variable importance
+#' will be calculated for each of these covariates.
+#' @param .VIMP_cfg A `VIMP_cfg` object defining how VIMP should be estimated.
+#' @param .Model_cfg A `Model_cfg` object defining how the joint effect model should be estimated.
+#' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
+#' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
+#' \doi{10.1111/biom.13392}
+#' @importFrom progress progress_bar
+#' @import SuperLearner
+calculate_linear_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
+    dots <- rlang::enexprs(...)
+    weight_col <- rlang::enexpr(weight_col)
+    pseudo_outcome <- rlang::enexpr(pseudo_outcome)
+
+    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots, .weight_col = {{ weight_col }})
+
+    df <- dplyr::bind_cols(
+        .label = data$label,
+        .weights = data$weights,
+        data$model_frame
+    )
+
+    full_mod <- stats::lm(.label ~ . - .weights, df, weights = .weights)
+    r_0 <- residuals(full_mod) ^ 2
+
+    result_list <- list()
+    for (moderator in names(data$model_frame)) {
+        reduced_mod <- stats::lm(.label ~ . - .weights, df %>% dplyr::select(-!!moderator), weights = .weights)
+        r_1 <- residuals(reduced_mod) ^ 2
+
+        diff <- r_1 - r_0
+        result <- dplyr::tibble(
+            estimand = "VIMP",
+            term = moderator,
+            estimate = stats::weighted.mean(diff, data$weights),
+            std_error = clustered_se_of_mean(diff, data$cluster, data$weights)
+        )
+        result_list <- c(result_list, list(result))
+    }
+    dplyr::bind_rows(!!!result_list)
+}

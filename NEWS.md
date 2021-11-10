@@ -12,6 +12,8 @@
 
 * Add an initial draft of a vignette on methodological details undergirding the package.
 
+* Adds a linear-only version of variable importance that calculates the reduction in residual MSE from including a particular moderator.
+
 # tidyhte 0.1.5
 
 * Fixes to VIMP. Arguments to `cv_vim` were previously constructed incorrectly.

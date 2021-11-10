@@ -96,11 +96,11 @@ SLPredictor <- R6::R6Class("SLPredictor",
         fit = function(data) {
             X_df <- tibble::as_tibble(data$features)
             self$model_features <- names(X_df)
-            self$model <- SuperLearner::SuperLearner(
+            self$model <- muffle_warnings(SuperLearner::SuperLearner(
                 Y = data$label, X = X_df, family = self$family,
                 SL.library = self$SL.library, env = self$SL.env, cvControl = data$SL_cv_control(),
                 obsWeights = data$weights
-            )
+            ), "rank-deficient fit")
             invisible(self)
         },
         predict = function(data) {

@@ -153,7 +153,7 @@ test_that("splitting works when quickblock isn't installed", {
     expect_message(
         mockr::with_mock(
             package_present = function(x) FALSE,
-            make_splits(d, cov1, .num_splits = 4)
+            make_splits(d, uid, cov1, .num_splits = 4)
         ),
         "`quickblock` is not installed, so falling back to un-stratified CV."
     )

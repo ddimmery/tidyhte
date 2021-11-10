@@ -313,14 +313,25 @@ estimate_QoI <- function(
     }
 
     if (!is.null(.QoI_cfg$vimp)) {
-        result <- calculate_vimp(
-            .data,
-            {{ weights }},
-            .data$.pseudo_outcome,
-            !!!dots,
-            .VIMP_cfg = .QoI_cfg$vimp,
-            .Model_cfg = .HTE_cfg$effect
-        )
+        if (!.QoI_cfg$vimp$linear) {
+            result <- calculate_vimp(
+                .data,
+                {{ weights }},
+                .data$.pseudo_outcome,
+                !!!dots,
+                .VIMP_cfg = .QoI_cfg$vimp,
+                .Model_cfg = .HTE_cfg$effect
+            )
+        } else {
+            result <- calculate_linear_vimp(
+                .data,
+                {{ weights }},
+                .data$.pseudo_outcome,
+                !!!dots,
+                .VIMP_cfg = .QoI_cfg$vimp,
+                .Model_cfg = .HTE_cfg$effect
+            )
+        }
         result_list <- c(result_list, list(result))
     }
 
