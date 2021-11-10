@@ -220,23 +220,24 @@ trained in the course of HTE estimation.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'>## ------------------------------------------------</span>
-<span class='co'>## Method `Diagnostics_cfg$new`</span>
-<span class='co'>## ------------------------------------------------</span>
-
-<span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span>
-   outcome <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"MSE"</span><span class='op'>)</span>,
-   ps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"AUC"</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;Diagnostics_cfg&gt;
-#&gt;   Public:
-#&gt;     add: function (ps = NULL, outcome = NULL, effect = NULL) 
-#&gt;     clone: function (deep = FALSE) 
-#&gt;     effect: 
-#&gt;     initialize: function (ps = NULL, outcome = NULL, effect = NULL) 
-#&gt;     outcome: SL_risk SL_coefs MSE
-#&gt;     ps: SL_risk SL_coefs AUC</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='co'>## ------------------------------------------------</span></span>
+<span class='r-in'><span class='co'>## Method `Diagnostics_cfg$new`</span></span>
+<span class='r-in'><span class='co'>## ------------------------------------------------</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>Diagnostics_cfg</span><span class='op'>$</span><span class='fu'>new</span><span class='op'>(</span></span>
+<span class='r-in'>   outcome <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"MSE"</span><span class='op'>)</span>,</span>
+<span class='r-in'>   ps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SL_risk"</span>, <span class='st'>"SL_coefs"</span>, <span class='st'>"AUC"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;Diagnostics_cfg&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   Public:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     add: function (ps = NULL, outcome = NULL, effect = NULL) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     clone: function (deep = FALSE) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     effect: </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     initialize: function (ps = NULL, outcome = NULL, effect = NULL) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     outcome: SL_risk SL_coefs MSE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     ps: SL_risk SL_coefs AUC</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
