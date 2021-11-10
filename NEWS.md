@@ -8,6 +8,10 @@
 
 * Move joint effect model config to a single unified location in `HTE_cfg`.
 
+* Save the names of features used in SuperLearner ensembles so that when out-of-sample predictions are requested, columns of all zeros can be imputed for features that do not exist. This imputation will simply eliminate errors when there is a factor variable with a level observed in training but not in testing. This error would never appear in the case of a continuous covariate, because it will always exist across splits, so it only eliminates errors due to one-hot-encoding factor variables.
+
+* Add an initial draft of a vignette on methodological details undergirding the package.
+
 # tidyhte 0.1.5
 
 * Fixes to VIMP. Arguments to `cv_vim` were previously constructed incorrectly.

@@ -1,0 +1,458 @@
+\documentclass{article}
+%\VignetteIndexEntry{Methodological Details}
+
+\usepackage[compact]{titlesec}
+\usepackage[text={7.5in,10in}]{geometry}
+\usepackage{mathptmx}
+
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{xcolor}
+\usepackage[colorlinks=true, citecolor=teal, linkcolor=teal]{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\usepackage{xspace}
+\usepackage{xfrac}
+\usepackage{bbm}
+
+\usepackage{natbib}
+\usepackage{booktabs}
+
+\usepackage{paralist}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+
+\usetikzlibrary{arrows.meta}
+\tikzset{>={Latex[width=3mm,length=3mm]}}
+
+\newtheorem*{rep@theorem}{\rep@title}
+\newcommand{\newreptheorem}[2]{%
+\newenvironment{rep#1}[1]{%
+ \def\rep@title{#2 \ref{##1}}%
+ \begin{rep@theorem}}%
+ {\end{rep@theorem}}}
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{hypothesis}{Hypothesis}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{repproposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{lemma}{Lemma}
+\newtheorem{algorithm}{Algorithm}
+
+\newtheorem{example}{Example}[subsection]
+\newtheorem{definition}{Definition}[subsection]
+
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}} \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\renewcommand\exp[1]{\text{exp}\left\{ #1 \right\}}
+\newcommand\indep{\protect\mathpalette{\protect\independenT}{\perp}} \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern3mu{#1#2}}}
+\renewcommand\top{\,{\buildrel p \over \to}\,}
+\newcommand\tod{\,{\buildrel \cali{D} \over \to}\,}
+\newcommand\toas{\,{\buildrel a.s. \over \to}\,}
+\newcommand\var{\text{var}}
+\newcommand\posscite[1]{\citeauthor{#1}'s (\citeyear{#1})}
+\newcommand\pr{\mathbbm{P}}
+\newcommand\E{\mathbbm{E}}
+\newcommand\tidyhte{\texttt{tidyhte}\xspace}
+\DeclareMathOperator{\plim}{plim}
+
+\title{Methodological Details of \tidyhte}
+
+\author{
+Drew Dimmery\\
+Research Network Data Science\\
+University of Vienna\\
+\texttt{drew.dimmery@univie.ac.at}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In this paper, we introduce the \tidyhte package for estimation of heterogeneous treatment effects (HTE) from observational or experimental data.
+This package implements the methods of \citet{kennedy2020optimal} and presents them through a tidy-style user-facing API.
+\end{abstract}
+
+<<echo=FALSE>>=
+suppressMessages({
+library(palmerpenguins)
+library(dplyr)
+devtools::load_all("~/GitHub/tidyhte")
+#library(tidyhte)
+library(magrittr)
+library(SuperLearner)
+library(pillar)
+library(ggplot2)
+
+theme_set(theme_minimal())
+})
+
+set.seed(100)
+n <- nrow(penguins)
+@
+
+\section{Introduction}
+
+This document details the broad strokes of how `tidyhte` constructs estimates of heterogeneous treatment effects. It will highlight a variety of the features of the package and discuss the mathematics which undergird them.
+
+After a brief introduction to the methods of HTE estimation of \citet{kennedy2020optimal}, the structure will generally follow the estimation API of `tidyhte`: it will begin by discussing the creation of cross-validation folds, then highlight nuisance function estimation, proceed to the construction of "pseudo outcomes", a concept from \citet{kennedy2020optimal}, and conclude by demonstrating the calculation of a few varieties of Quantities of Interest: the actual statistics which are desired by the end-user.
+
+\section{Preliminaries}
+
+\subsection{Problem Setting}
+
+Our data is defined by the triple $Z_i = (X_i, A_i, Y_i)$, with $X \in \mathbb{R}^d$, $Y \in \mathbb{R}$ and $A \in \{0, 1\}$. Define the following nuisance functions:
+\begin{align}
+\pi(x) \equiv \mathbb{P}(A = 1 \mid X = x) \\
+\mu_a(x) \equiv \mathbb{E}(Y \mid X = x, A = a)
+\end{align}
+
+Heterogeneous treatment effects are defined as the difference in conditional expectations under treatment and control, ${\tau(x) \equiv \mu_1(x) - \mu_0(x)}$. Throughout, we will maintain the following assumptions:
+
+\begin{assumption}[Consistency] $Y_i = Y_i(A_i)$\end{assumption}
+
+\begin{assumption}[No Unmeasured Confounding] $A \indep (Y(1), Y(0)) \mid X$\end{assumption}
+
+\begin{assumption}[Positivity] $\epsilon \leq \pi \leq 1 - \epsilon$ with probability $1$\end{assumption}
+
+Under these assumptions, $\tau(x) = \mathbb{E}[Y(1) - Y(0) \mid X = x]$.
+
+For the remainder of this paper, we will use a semi-simulated running example based on the \texttt{penguins} dataset of \citet{palmerpenguins}.
+We will imagine a nutritional intervention for which we wish to measure the causal effect on body mass.
+We also have a lower variance measurement of the average food consumed per day over an observation period.
+Gentoo penguins gain weight by this intervention on average, while vice-versa for Adelie penguins.
+The average change in weight for Chinstrap penguins is zero.
+
+<<>>=
+penguins <- within(penguins, {
+  id <- 1:n
+  propensity_score <- 0.5
+  treatment <- rbinom(n, 1, propensity_score)
+  tau <- 0.2 * (species == "Gentoo") - 0.2 * (species == "Adelie") + rnorm(n, sd = 0.05)
+  food_consumed_g <- rnorm(n, 500, 5) * (1 + tau * treatment)
+  body_mass_g <- body_mass_g * (1 + tau * treatment)
+})
+@
+
+\subsection{Overview of Method}
+
+We begin by introducing the following "DR-Learner" algorithm:
+
+\begin{algorithm}[DR-learner] This consists of three main steps:
+\begin{enumerate}
+\item \textbf{Given}: estimates of nuisance functions trained elsewhere: $\left(\hat{\pi}, \hat{\mu}_0, \hat{\mu}_1\right)$
+
+\item \textbf{Construct "pseudo-outcome"}: This quantity is a transformation of the provided nuisance function estimators.
+\begin{align*}
+  \hat{\psi}(Z) = \frac{A - \hat{\pi}(X)}{\hat{\pi}(X)(1 - \hat{\pi}(X))} \left( Y - \hat{\mu}_{A}(X) \right) + \hat{\mu}_{1}(X) - \hat{\mu}_{0}(X)
+\end{align*}
+
+\item \textbf{Second-stage regression}: Construct a smoothing model over the transformed pseudo-outcome.
+\begin{align*}\hat{\tau}_{dr}(x) = \hat{\E}[\hat{\psi}(Z) \mid X = x]\end{align*}
+\end{enumerate}
+\end{algorithm}
+
+This algorithm is written when estimates of nuisance functions are trained on separate data and, therefore, can be treated as fixed. The easiest way to do this is with a sample-splitting procedure, after which results are averaged across splits.
+
+The crucial result, Theorem 2 of \citet{kennedy2020optimal}, shows that the error of the second stage regression will match the error of an oracle regression of the true individual treatment effects on covariates $X$ up to a factor which depends on the product of the errors of the two estimated nuisance functions (that is, the errors in $\pi$ and in $\mu$).
+
+When the second-stage regression is simple, like subgroup averages within cells defined by $X$, the DR-Learner inherits unbiasedness and efficiency like an AIPW estimator~\citep{robins1995analysis, van2003unified, tsiatis2006semiparametric, tsiatis2008covariate, chernozhukov2018double}.
+
+The approximation results of \citet{kennedy2020optimal} applied to regressions on this transformed outcome allows for a lot of flexibility in quantities of interest that may be estimated. We will use this fact to allow the estimation of a variety of models \emph{as if} they were estimated on the individual causal effects themselves: for example, variable importance measures operate off the assumption that various second-stage regressions will be accurate.
+
+\subsection{Principles}
+
+The \tidyhte package is premised on the idea of breaking up the analysis of HTEs into a few distinct parts, which can then be mixed together as desired.
+The first step is to define a configuration object describing at a high-level how HTE estimation should be performed.
+During estimation, the specific variables of interest are indicated.
+This design allows for repeating very similar analyses multiple times with very little overhead.
+Instances when this might be useful are when the user wishes to explore heterogeneity across a variety of outcomes, or when there are a variety of treatment contrasts of particular interest.
+Each of these analyses will tend to share common features: similar classes of models will be included in the ensembles for nuisance estimation, for example.
+
+\section{Recipe API}
+
+In order to build up definitions around how HTE should be estimated, \tidyhte provides an API to progressively build up a configuration object.
+A \texttt{basic\_config} function creates a bare-bones configuration consisting of only linear models for the respective nuisance functions and a number of diagnostics.
+
+<<>>=
+cfg <- basic_config() %>%
+    add_known_propensity_score("propensity_score") %>%
+    add_outcome_model("SL.glmnet", alpha = c(0.0, 0.25, 0.5, 0.75, 1.0)) %>%
+    add_moderator("Stratified", species, island, sex, year) %>%
+    add_moderator("KernelSmooth", bill_length_mm, bill_depth_mm, flipper_length_mm) %>%
+    add_vimp(sample_splitting = FALSE)
+@
+
+Since the subject of interest is an experimental intervention, the propensity score is known.
+Using this known propensity score provides unbiasedness for many quantities of interest (although this may leave some efficiency on the table CITE).
+In this case, in addition to the (default) linear model included in the SuperLearner ensemble, we add an elastic-net regression.
+We sweep over a variety of mixing parameters between LASSO and ridge, throwing each of these models into the ensemble.
+This means that SuperLearner will perform model selection and averaging to identify the best hyper-parameter values.
+Furthermore, we define all of the moderators of interest and how their results should be collected and displayed.
+Discrete moderators will just take stratified averages at each level of the moderator, while continuous moderators will use local polynomial regression~\citep{fan2018local, calonico2019nprobust}.
+Finally, we add a variable importance measure from \citet{williamson2021nonparametric}.
+
+After the configuration is completed, it can be attached to the dataset.
+
+<<>>=
+penguins %<>% attach_config(cfg)
+@
+
+\section{Cross-validation}
+
+The first step in an analysis of heterogeneous treatment effects following this procedure is to define how to construct splits to be used for cross-validation. \tidyhte accomplishes this by using blocking methods to construct lower-variance splits than a purely randomized splitting procedure would entail. Existing methods for generating splits often provide options for stratifying based on a binary outcome to ensure there is variance in the outcome in all splits, even when the outcome is very sparse. For instance, \texttt{SuperLearner::SuperLearner.CV.control} provides such an option.
+
+The appropriate function in \tidyhte is \texttt{make\_splits}.
+This function takes in a dataframe and determines a set of splits which accord with the provided unit identifier and number of splits. 
+If any covariates are provided to this function, it will include them in a blocking design for constructing randomized splits using the methods of \citet{higgins2016improving} as implemented in the \texttt{quickblock} package. 
+
+There are a few relevant methodological notes about how this blocking for cross-validation strata works. 
+In short, blocks are constructed which are sized to be at least as large as the number of splits to use. 
+These blocks are constructed to minimize the within-block distance between units (where distances are Euclidean based on the provided covariates).
+When more than one row shares an identifier, blocking is performed on the average covariate value within each identifier.
+Rows with the same identifier are then assigned to the same split.
+Precise details on the construction of blocks may be found in \citet{higgins2016improving}.
+Within each block, a vector of split IDs is constructed which has a marginal distribution as close to the uniform distribution over splits as possible (up to integer division errors).
+This set of split IDs is then randomly permuted within blocks.
+
+Consistent with tidy semantics, the original dataframe is returned, but with the addition of a column \texttt{.split\_id} representing these newly constructed splits, and a few attributes for bookkeeping (e.g. the column name of the identifier).
+Since the object returned is the same as what was passed in, this makes for easy chaining of commands using \texttt{dplyr}.
+
+<<>>=
+penguins %<>% make_splits(id, species, sex, flipper_length_mm, .num_splits = 4)
+@
+
+Note that \tidyhte gracefully handles missing data via listwise deletion.
+More advanced imputation methods are not yet supported.
+
+\section{Nuisance Function Estimation}
+
+Estimation of nuisance functions such as the propensity score and the outcome regression are typically handled by the SuperLearner library.
+Specifying a full array of models with diverse hyperparameters is much simplified through the \tidyhte API.
+To specify a cross-validated learner using SuperLearner syntax requires substantially more boilerplate:
+
+<<eval=FALSE>>=
+learners <- create.Learner(
+    "SL.glmnet",
+    tune = list(
+        alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)
+    ),
+    detailed_names = TRUE,
+    name_prefix = paste0("SLglmnet")
+)
+
+CV.SuperLearner(label, covariates, SL.library = learners$names)
+@
+
+In contrast, the \tidyhte Recipe API requires only the following one line:
+
+<<eval=FALSE>>=
+add_outcome_model(cfg, "SL.glmnet", alpha = c(0.0, 0.25, 0.5, 0.75, 1.0))
+@
+
+<<results='hide',message=FALSE,warning=FALSE>>=
+penguins %<>% produce_plugin_estimates(
+  # outcome
+  food_consumed_g, 
+  # treatment
+  treatment, 
+  # covariates
+  species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm
+)
+@
+
+\section{Pseudo-outcome construction}
+
+Once nuisance functions are estimated, it is simply a matter of combining these results together into the appropriate pseudo-outcome.
+For typical HTE estimation, the pseudo-outcome of interest is the one analyzed by \citet{kennedy2020optimal}: the uncentered influence function of the average treatment effect~\citep{robins1995analysis}.
+
+<<psi,results='hide',message=FALSE,warning=FALSE>>=
+penguins %<>% construct_pseudo_outcomes(food_consumed_g, treatment)
+@
+
+\section{Quantities of Interest}
+
+Finally, it comes to the most glamorous part of the analysis, when effects are estimated and put into charts.
+
+The design of \tidyhte chooses to leave the charting to the end-user, but merely returns a tidy tibble with all of the requested quantities of interest.
+
+<<qoi,results='hide',message=FALSE,warning=FALSE>>=
+penguins %>% 
+  estimate_QoI(species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm) ->
+  results
+@
+
+The resulting tibble provides looks like the following:
+
+<<>>=
+glimpse(results)
+@
+
+The \texttt{estimand} column denotes the class of Quantities of Interest to be estimated, and include such values as "MCATE" and "VIMP".
+The \texttt{term} column denotes the covariate being referred to (if relevant) in the results.
+For example, a calculated MCATE refers to a particular covariate, indicated by this column.
+The columns \texttt{value} and \texttt{level} refer to quantities which indicate a more granular division within a particular term, with the former representing a numeric value while the latter indicates a categorical one.
+For example, in the case of the MCATE, if the covariate is discrete, the value at which the MCATE was calculated would be in the \texttt{level} column, while if it were continuous, it would be in the \texttt{value} column.
+Each of these columns is, therefore, type-stable.
+The final two columns for \texttt{estimate} and \texttt{std\_error} are self explanatory.
+The details on their calculation lie with the particular Quantity of Interest requested.
+
+It's then a simple matter to plot results using code like the following, results shown in figures~\ref{fig:mcate_discrete} and \ref{fig:mcate_cts}.
+
+<<eval=FALSE>>=
+filter(results, estimand == "MCATE", is.na(value)) %>%
+ggplot(aes(level, estimate)) +
+geom_point() +
+geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+geom_hline(yintercept = 0, linetype = "dashed") +
+coord_flip() +
+facet_wrap(~term, scales="free_y")
+@
+
+\begin{figure}
+<<discretemcate,echo=FALSE,results='hide',fig=FALSE>>=
+filter(results, estimand == "MCATE", is.na(value)) %>%
+ggplot(aes(level, estimate)) +
+geom_point() +
+geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+geom_hline(yintercept = 0, linetype = "dashed") +
+coord_flip() +
+facet_wrap(~term, scales="free_y") -> gp
+ggsave(plot = gp, filename = "mcate_discrete.pdf", height = 4, width = 8)
+@
+\centering
+\includegraphics[width=\textwidth]{mcate_discrete.pdf}
+\caption{CATEs for Discrete Moderators}
+\label{fig:mcate_discrete}
+\end{figure}
+
+\begin{figure}
+<<ctsmcate,echo=FALSE>>=
+filter(results, estimand == "MCATE", is.na(level)) %>%
+ggplot(aes(value, estimate)) +
+geom_line() +
+geom_ribbon(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_hline(yintercept = 0, linetype = "dashed") +
+scale_x_continuous("Covariate value") +
+scale_y_continuous("CATE") +
+coord_flip() +
+facet_wrap(~term, scales="free_y") -> gp
+ggsave(plot = gp, filename = "mcate_cts.pdf", height = 6, width = 8)
+@
+\centering
+\includegraphics[width=0.75\textwidth]{mcate_cts.pdf}
+\caption{CATEs for Continuous Moderators}
+\label{fig:mcate_cts}
+\end{figure}
+
+Similarly, it's easy to plot diagnostic information, as in Figures~\ref{fig:diag} and \ref{fig:coef}.
+
+\begin{figure}
+<<risk,echo=FALSE>>=
+filter(results, estimand == "SL risk") %>%
+ggplot(aes(reorder(term, estimate), estimate)) +
+geom_point() +
+geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_hline(yintercept = 0, linetype = "dashed") +
+scale_x_discrete("") +
+scale_y_continuous("Risk") +
+facet_wrap(~level) +
+coord_flip() -> gp
+ggsave(plot = gp, filename = "slrisk.pdf", height = 2, width = 8)
+@
+\centering
+\includegraphics[width=0.8\textwidth]{slrisk.pdf}
+\caption{Risk in SuperLearner Ensemble}
+\label{fig:risk}
+\end{figure}
+
+\begin{figure}
+<<coef,echo=FALSE>>=
+filter(results, estimand == "SL coefficient") %>%
+ggplot(aes(reorder(term, estimate), estimate)) +
+geom_point() +
+geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_hline(yintercept = 0, linetype = "dashed") +
+scale_x_discrete("") +
+scale_y_continuous("Coefficient") +
+facet_wrap(~level) +
+coord_flip() -> gp
+ggsave(plot = gp, filename = "slcoef.pdf", height = 2, width = 8)
+@
+\centering
+\includegraphics[width=0.8\textwidth]{slcoef.pdf}
+\caption{Coefficient in SuperLearner Ensemble}
+\label{fig:coef}
+\end{figure}
+
+And finally, we can examine the variable importance measure of \citet{williamson2021nonparametric} when applied to a joint model of the pseudo-outcome, as in figure~\ref{fig:vimp}.
+
+\begin{figure}
+<<vimp,echo=FALSE,fig=FALSE>>=
+filter(results, estimand == "VIMP") %>%
+ggplot(aes(reorder(term, estimate), estimate)) +
+geom_point() +
+geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_hline(yintercept = 0, linetype = "dashed") +
+scale_x_discrete("") +
+scale_y_continuous("Reduction in R²") +
+coord_flip() -> gp
+ggsave(plot = gp, filename = "vimp.pdf", height = 4, width = 8)
+@
+\centering
+\includegraphics[width=0.8\textwidth]{vimp.pdf}
+\caption{Variable Importance}
+\label{fig:vimp}
+\end{figure}
+
+\section{Replicate Analyses}
+
+One of the biggest benefits of \tidyhte is its ability to repeat similar analyses.
+
+As an example, to perform the same analysis used above on a different outcome would require the following code:
+
+<<repeat,message=FALSE,warning=FALSE>>=
+penguins %<>% produce_plugin_estimates(
+  # outcome
+  body_mass_g, 
+  # treatment
+  treatment, 
+  # covariates
+  species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm
+) %>%
+construct_pseudo_outcomes(body_mass_g, treatment) %>%
+estimate_QoI(species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm) -> results_mass
+@
+
+All the same quantities can be easily plotted for this outcome as well, and results may be joined together conveniently.
+
+<<>>=
+results_all <- bind_rows(
+  results %>% mutate(outcome = "food_consumed_g"),
+  results_mass %>% mutate(outcome = "body_mass_g")
+)
+@
+
+By allowing the user to flexibly compose HTE estimators, it drastically reduces the amount of work necessary for a typical HTE analysis which by nature tends to involve multiple moderators, models and outcomes.
+
+\section{Conclusion}
+
+This paper has introduced the concepts underlying the \tidyhte package and given examples as to how the package can be used.
+
+\newpage 
+\bibliographystyle{plainnat}  
+\bibliography{refs}
+
+\end{document}

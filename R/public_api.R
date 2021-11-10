@@ -55,14 +55,16 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
 
     qb_present <- package_present("quickblock")
 
-    if (!qb_present) message("`quickblock` is not installed, so falling back to un-stratified CV.")
+    if (length(dots) > 0 && !qb_present) {
+        message("`quickblock` is not installed, so falling back to un-stratified CV.")
+    }
 
     ok_data <- listwise_deletion(.data, !!!dots)
 
     if (length(dots) > 0 && qb_present) {
         soft_require("quickblock")
         block_data <-  tibble::as_tibble(stats::model.matrix(~. + 0, dplyr::select(ok_data, !!!dots)))
-        block_data$id_col <- .data[[rlang::as_name(identifier)]]
+        block_data$id_col <- ok_data[[rlang::as_name(identifier)]]
         block_data %>%
             dplyr::group_by(.data$id_col) %>%
             dplyr::summarize_all(mean) -> block_data

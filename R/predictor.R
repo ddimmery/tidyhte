@@ -84,6 +84,7 @@ SLPredictor <- R6::R6Class("SLPredictor",
     inherit = Predictor,
     public = list(
         model = list(),
+        model_features = character(),
         SL.library = character(),
         SL.env = NULL,
         family = list(),
@@ -93,16 +94,23 @@ SLPredictor <- R6::R6Class("SLPredictor",
             self$family <- family
         },
         fit = function(data) {
+            X_df <- tibble::as_tibble(data$features)
+            self$model_features <- names(X_df)
             self$model <- SuperLearner::SuperLearner(
-                Y = data$label, X = data$model_frame, family = self$family,
+                Y = data$label, X = X_df, family = self$family,
                 SL.library = self$SL.library, env = self$SL.env, cvControl = data$SL_cv_control(),
                 obsWeights = data$weights
             )
             invisible(self)
         },
         predict = function(data) {
+            X_df <- tibble::as_tibble(data$features)
+            missing_features <- setdiff(self$model_features, names(X_df))
+            for (missing_feature in missing_features) {
+                X_df[[missing_feature]] <- 0
+            }
             pred <- muffle_warnings(
-                drop(predict(self$model, newdata = data$model_frame)$pred),
+                drop(predict(self$model, newdata = X_df)$pred),
                 "rank-deficient fit"
             )
             covs <- rep(NA_real_, length(pred))

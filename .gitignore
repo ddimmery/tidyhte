@@ -39,3 +39,17 @@ inst/doc
 docs
 /doc/
 /Meta/
+*.fls
+*.aux
+*.log
+*.fdb_latexmk
+*.out
+*.synctex.gz
+.build.timestamp
+vignettes/*.tex
+vignettes/methodological-details.dvi
+vignettes/methodological-details.blg
+vignettes/methodological-details.bbl
+vignettes/figure/mcate-1.pdf
+vignettes/figure/discretemcate-1.pdf
+vignettes/figure/ctsmcate-1.pdf
