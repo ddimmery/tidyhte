@@ -30,7 +30,8 @@ Suggests:
     vimp,
     mockr,
     estimatr,
-    quadprog
+    quadprog,
+    palmerpenguins
 Config/testthat/edition: 3
 Imports: 
     checkmate,
