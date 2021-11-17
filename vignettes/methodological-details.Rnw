@@ -9,10 +9,9 @@
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{xcolor}
 \usepackage[colorlinks=true, citecolor=teal, linkcolor=teal]{hyperref}       % hyperlinks
-\usepackage{url}            % simple URL typesetting
+%\usepackage{url}            % simple URL typesetting
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{microtype}      % microtypography
-\usepackage{lipsum}
 
 
 \usepackage{amssymb}
@@ -20,19 +19,12 @@
 \usepackage{amsthm}
 
 \usepackage{xspace}
-\usepackage{xfrac}
 \usepackage{bbm}
 
 \usepackage{natbib}
 \usepackage{booktabs}
 
 \usepackage{paralist}
-
-\usepackage{tikz}
-\usetikzlibrary{matrix,arrows,decorations.pathmorphing}
-
-\usetikzlibrary{arrows.meta}
-\tikzset{>={Latex[width=3mm,length=3mm]}}
 
 \newtheorem*{rep@theorem}{\rep@title}
 \newcommand{\newreptheorem}[2]{%
@@ -356,7 +348,7 @@ ggsave(plot = gp, filename = "mcate_cts.pdf", height = 6, width = 8)
 \label{fig:mcate_cts}
 \end{figure}
 
-Similarly, it's easy to plot diagnostic information, as in Figures~\ref{fig:diag} and \ref{fig:coef}.
+Similarly, it's easy to plot diagnostic information, as in Figures~\ref{fig:risk} and \ref{fig:coef}.
 
 \begin{figure}
 <<risk,echo=FALSE>>=

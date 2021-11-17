@@ -40,11 +40,13 @@ jobs:
           r-version: ${{ matrix.config.r }}
       
       - uses: r-lib/actions/setup-tinytex@v1
-        env:
-          # install full prebuilt version
-          TINYTEX_INSTALLER: TinyTeX
 
       - uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Install LaTeX packages
+      run: |
+          sudo tlmgr install titlesec geometry mathptmx fontenc xcolor hyperref amsfonts microtype
+          sudo tlmgr install amssymb amsmath amsthm xspace bbm natbib booktabs paralist
 
       - name: Query dependencies
         run: |
