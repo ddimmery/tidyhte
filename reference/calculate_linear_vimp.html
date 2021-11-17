@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>tidyhte: Tidy Estimation of Heterogeneous Treatment Effects — tidyhte-package • tidyhte</title>
+<title>Calculate Linear Variable Importance of HTEs — calculate_linear_vimp • tidyhte</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="tidyhte: Tidy Estimation of Heterogeneous Treatment Effects — tidyhte-package" />
-<meta property="og:description" content="Tools for the estimation of heterogeneous treatment effects using tidy semantics. Methods are based on the doubly-robust learner of Kennedy (n.d.)." />
+<meta property="og:title" content="Calculate Linear Variable Importance of HTEs — calculate_linear_vimp" />
+<meta property="og:description" content="calculate_linear_vimp estimates the linear hypothesis test from removing a particular moderator
+from a linear model containing all moderators." />
 
 <meta name="robots" content="noindex" />
 
@@ -136,29 +137,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>tidyhte: Tidy Estimation of Heterogeneous Treatment Effects</h1>
-    <small class="dont-index">Source: <a href='http://github.com/ddimmery/tidyhte/blob/master/R/tidyhte-package.R'><code>R/tidyhte-package.R</code></a></small>
-    <div class="hidden name"><code>tidyhte-package.Rd</code></div>
+    <h1>Calculate Linear Variable Importance of HTEs</h1>
+    <small class="dont-index">Source: <a href='http://github.com/ddimmery/tidyhte/blob/master/R/variable_importance.R'><code>R/variable_importance.R</code></a></small>
+    <div class="hidden name"><code>calculate_linear_vimp.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Tools for the estimation of heterogeneous treatment effects using tidy semantics. Methods are based on the doubly-robust learner of Kennedy (n.d.).</p>
+    <p><code>calculate_linear_vimp</code> estimates the linear hypothesis test from removing a particular moderator
+from a linear model containing all moderators.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>calculate_linear_vimp</span><span class='op'>(</span>
+  <span class='va'>.data</span>,
+  <span class='va'>weight_col</span>,
+  <span class='va'>pseudo_outcome</span>,
+  <span class='va'>...</span>,
+  <span class='va'>.VIMP_cfg</span>,
+  <span class='va'>.Model_cfg</span>
+<span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>.data</th>
+      <td><p>dataframe</p></td>
+    </tr>
+    <tr>
+      <th>weight_col</th>
+      <td><p>Unquoted name of the weight column.</p></td>
+    </tr>
+    <tr>
+      <th>pseudo_outcome</th>
+      <td><p>Unquoted name of the pseudo-outcome.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Unquoted names of covariates to include in the joint effect model. The variable importance
+will be calculated for each of these covariates.</p></td>
+    </tr>
+    <tr>
+      <th>.VIMP_cfg</th>
+      <td><p>A <code>VIMP_cfg</code> object defining how VIMP should be estimated.</p></td>
+    </tr>
+    <tr>
+      <th>.Model_cfg</th>
+      <td><p>A <code>Model_cfg</code> object defining how the joint effect model should be estimated.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>The best places to get started with <code>tidyhte</code> is <code>vignette("example_analysis")</code> which
-walks through a full analysis of HTE on simulated data.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>The core public-facing functions are <code>make_splits</code>, <code>produce_plugin_estimates</code>,
-<code>construct_pseudo_outcomes</code> and <code>estimate_QoI</code>. Configuration is accomplished through <code>HTE_cfg</code>
-in addition to a variety of related classes.</p></div>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p><strong>Maintainer</strong>: Drew Dimmery <a href='mailto:drew.dimmery@univie.ac.at'>drew.dimmery@univie.ac.at</a> (<a href='https://orcid.org/0000-0001-9602-6325'>ORCID</a>)</p>
+    <p>Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
+assessment using machine learning techniques. <em>Biometrics</em>. 2021; 77: 9-- 22.
+doi: <a href='https://doi.org/10.1111/biom.13392'>10.1111/biom.13392</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
