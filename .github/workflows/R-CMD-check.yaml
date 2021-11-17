@@ -46,9 +46,8 @@ jobs:
 
       - name: Install LaTeX packages
         run: |
-          tlmgr init-usertree
-          tlmgr --usermode install titlesec geometry xcolor hyperref amsfonts microtype
-          tlmgr --usermode install amsmath bbm natbib booktabs paralist bbm-macros
+          tlmgr install titlesec geometry xcolor hyperref amsfonts microtype
+          tlmgr install amsmath bbm natbib booktabs paralist bbm-macros
 
       - name: Query dependencies
         run: |
