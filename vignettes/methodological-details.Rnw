@@ -1,6 +1,7 @@
 \documentclass{article}
 %\VignetteIndexEntry{Methodological Details}
-
+%\VignetteEngine{knitr::knitr}
+%\VignetteEncoding{UTF-8}
 \usepackage[compact]{titlesec}
 \usepackage[text={7.5in,10in}]{geometry}
 \usepackage{mathptmx}
@@ -89,11 +90,9 @@ This package implements the methods of \citet{kennedy2020optimal} and presents t
 suppressMessages({
 library(palmerpenguins)
 library(dplyr)
-devtools::load_all("~/GitHub/tidyhte")
-#library(tidyhte)
+library(tidyhte)
 library(magrittr)
 library(SuperLearner)
-library(pillar)
 library(ggplot2)
 
 theme_set(theme_minimal())
@@ -322,7 +321,7 @@ facet_wrap(~term, scales="free_y")
 @
 
 \begin{figure}
-<<discretemcate,echo=FALSE,results='hide',fig=FALSE>>=
+<<discretemcate,echo=FALSE,results='hide',fig.keep='none'>>=
 filter(results, estimand == "MCATE", is.na(value)) %>%
 ggplot(aes(level, estimate)) +
 geom_point() +
@@ -400,7 +399,7 @@ ggsave(plot = gp, filename = "slcoef.pdf", height = 2, width = 8)
 And finally, we can examine the variable importance measure of \citet{williamson2021nonparametric} when applied to a joint model of the pseudo-outcome, as in figure~\ref{fig:vimp}.
 
 \begin{figure}
-<<vimp,echo=FALSE,fig=FALSE>>=
+<<vimp,echo=FALSE,fig.keep='none'>>=
 filter(results, estimand == "VIMP") %>%
 ggplot(aes(reorder(term, estimate), estimate)) +
 geom_point() +
@@ -417,7 +416,7 @@ ggsave(plot = gp, filename = "vimp.pdf", height = 4, width = 8)
 \label{fig:vimp}
 \end{figure}
 
-\section{Replicate Analyses}
+\section{Replicating Analyses}
 
 One of the biggest benefits of \tidyhte is its ability to repeat similar analyses.
 

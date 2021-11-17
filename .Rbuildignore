@@ -9,3 +9,7 @@
 ^pkgdown$
 ^doc$
 ^Meta$
+figure$
+cache$
+figure$
+\.dvi$

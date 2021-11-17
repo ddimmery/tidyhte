@@ -6,9 +6,7 @@
 \alias{tidyhte-package}
 \title{tidyhte: Tidy Estimation of Heterogeneous Treatment Effects}
 \description{
-Tools for the estimation of heterogeneous treatment effects
-    using tidy semantics. Methods are based on the doubly-robust learner
-    of Kennedy (n.d.).
+Tools for the estimation of heterogeneous treatment effects using tidy semantics. Methods are based on the doubly-robust learner of Kennedy (n.d.).
 }
 \details{
 The best places to get started with \code{tidyhte} is \code{vignette("example_analysis")} which

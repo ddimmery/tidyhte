@@ -127,7 +127,8 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
         #' @field sample_splitting Logical indicating whether to use sample splitting in the calculation
         #' of variable importance.
         sample_splitting = TRUE,
-        #' @field linear
+        #' @field linear Logical indicating whether the variable importance assuming a linear model
+        #' should be estimated.
         linear = FALSE,
         #' @description
         #' Create a new `VIMP_cfg` object with specified model configuration.

@@ -148,6 +148,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 #' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
 #' \doi{10.1111/biom.13392}
 #' @importFrom progress progress_bar
+#' @importFrom stats residuals
 #' @import SuperLearner
 calculate_linear_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
     dots <- rlang::enexprs(...)
@@ -158,17 +159,16 @@ calculate_linear_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_
 
     df <- dplyr::bind_cols(
         .label = data$label,
-        .weights = data$weights,
         data$model_frame
     )
 
-    full_mod <- stats::lm(.label ~ . - .weights, df, weights = .weights)
-    r_0 <- residuals(full_mod) ^ 2
+    full_mod <- stats::lm(".label ~ .", df, weights = data$weights)
+    r_0 <- stats::residuals(full_mod) ^ 2
 
     result_list <- list()
     for (moderator in names(data$model_frame)) {
-        reduced_mod <- stats::lm(.label ~ . - .weights, df %>% dplyr::select(-!!moderator), weights = .weights)
-        r_1 <- residuals(reduced_mod) ^ 2
+        reduced_mod <- stats::lm(".label ~ .", df %>% dplyr::select(-!!moderator), weights = data$weights)
+        r_1 <- stats::residuals(reduced_mod) ^ 2
 
         diff <- r_1 - r_0
         result <- dplyr::tibble(

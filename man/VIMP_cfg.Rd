@@ -22,6 +22,9 @@ VIMP_cfg$new()
 
 \item{\code{sample_splitting}}{Logical indicating whether to use sample splitting in the calculation
 of variable importance.}
+
+\item{\code{linear}}{Logical indicating whether the variable importance assuming a linear model
+should be estimated.}
 }
 \if{html}{\out{</div>}}
 }
@@ -38,7 +41,7 @@ of variable importance.}
 \subsection{Method \code{new()}}{
 Create a new \code{VIMP_cfg} object with specified model configuration.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VIMP_cfg$new(sample_splitting = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VIMP_cfg$new(sample_splitting = TRUE, linear_only = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -47,6 +50,10 @@ Create a new \code{VIMP_cfg} object with specified model configuration.
 \item{\code{sample_splitting}}{Logical indicating whether to use sample splitting in the calculation
 of variable importance. Choosing not to use sample splitting means that inference will only be
 valid for moderators with non-null importance.}
+
+\item{\code{linear_only}}{Logical indicating whether the variable importance should use only a single
+linear-only model. Variable importance measure will only be consistent for the population
+quantity if the true model of pseudo-outcomes is linear.}
 }
 \if{html}{\out{</div>}}
 }
