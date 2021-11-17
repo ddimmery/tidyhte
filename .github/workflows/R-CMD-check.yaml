@@ -39,17 +39,12 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
       
-      - uses: r-lib/actions/setup-tinytex@master
+      - uses: r-lib/actions/setup-tinytex@v1
+        env:
+          # install full prebuilt version
+          TINYTEX_INSTALLER: TinyTeX
 
       - uses: r-lib/actions/setup-pandoc@v1
-
-      - name: Add TeX dependencies
-        run: >
-          tinytex::tlmgr_install(
-          pkgs = c("titlesec", "geometry", "mathptmx", "fontenc", "xcolor", "hyperref", "url",
-          "amsfonts", "microtype", "amssymb", "amsthm", "xspace", "xfrac", "bbm", "natbib", "booktabs",
-          "paralist", "tikz"
-          ))
 
       - name: Query dependencies
         run: |
