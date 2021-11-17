@@ -4,14 +4,10 @@
 %\VignetteEncoding{UTF-8}
 \usepackage[compact]{titlesec}
 \usepackage[text={7.5in,10in}]{geometry}
-\usepackage{mathptmx}
 
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{xcolor}
 \usepackage[colorlinks=true, citecolor=teal, linkcolor=teal]{hyperref}       % hyperlinks
-%\usepackage{url}            % simple URL typesetting
-\usepackage{amsfonts}       % blackboard math symbols
-\usepackage{microtype}      % microtypography
 
 
 \usepackage{amssymb}
@@ -67,6 +63,11 @@ Drew Dimmery\\
 Research Network Data Science\\
 University of Vienna\\
 \texttt{drew.dimmery@univie.ac.at}
+\and
+Edward Kennedy\\
+Department of Statistics and Data Science\\
+Carnegie Mellon University\\
+\texttt{edward@stat.cmu.edu}
 }
 
 \begin{document}
