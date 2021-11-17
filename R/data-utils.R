@@ -31,6 +31,7 @@ split_data <- function(.data, split_id) {
 
 
 #' @importFrom stats model.matrix model.frame
+#' @importFrom purrr map
 Model_data <- R6::R6Class("Model_data", list(
     label = NULL,
     features = NULL,

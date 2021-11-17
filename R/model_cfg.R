@@ -5,6 +5,7 @@
 #' sublearner to be included in SuperLearner. By constructing with a named list
 #' of hyperparameters, this configuration allows distinct submodels
 #' for each unique combination of hyperparameters.
+#' @importFrom R6 R6Class
 #' @export
 SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
     public = list(
@@ -40,6 +41,7 @@ SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
 #' @description
 #' `Model_cfg` is the base class from which all other model configurations
 #' inherit.
+#' @importFrom R6 R6Class
 #' @export
 Model_cfg <- R6::R6Class("Model_cfg",
     list(
@@ -63,6 +65,7 @@ Model_cfg <- R6::R6Class("Model_cfg",
 #' a-priori. The prototypical usage of this class is when heterogeneous
 #' treatment effects are estimated in the context of a randomized control
 #' trial with known propensity scores.
+#' @importFrom R6 R6Class
 #' @export
 Known_cfg <- R6::R6Class("Known_cfg",
     inherit = Model_cfg,
@@ -93,6 +96,7 @@ Known_cfg <- R6::R6Class("Known_cfg",
 #' @description
 #' `Constant_cfg` is a configuration class for estimating a constant model.
 #' That is, the model is a simple, one-parameter mean model.
+#' @importFrom R6 R6Class
 #' @export
 Constant_cfg <- R6::R6Class("Constant_cfg",
     inherit = Model_cfg,
@@ -120,6 +124,7 @@ Constant_cfg <- R6::R6Class("Constant_cfg",
 #' regression to construct a smooth representation of the relationship between
 #' two variables. This is typically used for displaying a surface of the conditional
 #' average treatment effect over a continuous covariate.
+#' @importFrom R6 R6Class
 #' @export
 KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
     inherit = Model_cfg,
@@ -162,6 +167,7 @@ KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
 #' @description
 #' `Stratified_cfg` is a configuration class for stratifying a covariate
 #' and calculating statistics within each cell.
+#' @importFrom R6 R6Class
 #' @export
 Stratified_cfg <- R6::R6Class("Stratified_cfg",
     inherit = Model_cfg,
@@ -193,6 +199,7 @@ Stratified_cfg <- R6::R6Class("Stratified_cfg",
 #' `SLEnsemble_cfg` is a configuration class for estimation of a model
 #' using an ensemble of models using `SuperLearner`.
 #' @import SuperLearner
+#' @importFrom R6 R6Class
 #' @export
 SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
     inherit = Model_cfg,

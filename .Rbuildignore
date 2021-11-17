@@ -13,3 +13,5 @@ figure$
 cache$
 figure$
 \.dvi$
+\.bbl$
+\.blg$
