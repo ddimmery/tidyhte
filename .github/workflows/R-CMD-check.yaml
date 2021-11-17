@@ -44,10 +44,15 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Install LaTeX packages
+        run: |
+          tlmgr init-usertree
+          tlmgr --usermode install titlesec geometry xcolor hyperref amsfonts microtype
+          tlmgr --usermode install amsmath bbm natbib booktabs paralist bbm-macros
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
-          install.packages('knitr')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
@@ -71,11 +76,6 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
-        shell: Rscript {0}
-
-      - name: Pre-compile Rnw
-        run: |
-          knitr::knit2pdf("vignettes/methodological-details.Rnw")
         shell: Rscript {0}
 
       - name: Check
