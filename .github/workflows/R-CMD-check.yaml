@@ -75,7 +75,7 @@ jobs:
 
       - name: Pre-compile Rnw
         run: |
-          knitr::knit2pdf("vignettes/methodological-details.tex")
+          knitr::knit2pdf("vignettes/methodological-details.Rnw")
         shell: Rscript {0}
 
       - name: Check
