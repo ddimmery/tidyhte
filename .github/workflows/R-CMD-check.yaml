@@ -45,10 +45,10 @@ jobs:
 
       - name: Add TeX dependencies
         run: |
-          tinytex::tlmgr_install(
-            pkgs = c("titlesec", "geometry", "mathptmx", "fontenc", "xcolor", "hyperref", "url", 
-            "amsfonts", "microtype", "amssymb", "amsthm", "xspace", "xfrac", "bbm", "natbib", "booktabs", 
-            "paralist", "tikz"
+          tinytex::tlmgr_install( \
+            pkgs = c("titlesec", "geometry", "mathptmx", "fontenc", "xcolor", "hyperref", "url", \
+            "amsfonts", "microtype", "amssymb", "amsthm", "xspace", "xfrac", "bbm", "natbib", "booktabs", \
+            "paralist", "tikz" \
           ))
 
       - name: Query dependencies
