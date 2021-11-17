@@ -47,7 +47,7 @@ jobs:
       - name: Install LaTeX packages
         run: |
           tlmgr install titlesec geometry xcolor hyperref amsfonts microtype
-          tlmgr install amsmath bbm natbib booktabs paralist
+          tlmgr install amsmath bbm natbib booktabs paralist bbm
 
       - name: Query dependencies
         run: |
