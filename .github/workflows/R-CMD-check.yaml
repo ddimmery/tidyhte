@@ -44,7 +44,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Install LaTeX packages
-      run: |
+        run: |
           sudo tlmgr install titlesec geometry mathptmx fontenc xcolor hyperref amsfonts microtype
           sudo tlmgr install amssymb amsmath amsthm xspace bbm natbib booktabs paralist
 
