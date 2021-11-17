@@ -44,11 +44,11 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Add TeX dependencies
-        run: |
-          tinytex::tlmgr_install( \
-            pkgs = c("titlesec", "geometry", "mathptmx", "fontenc", "xcolor", "hyperref", "url", \
-            "amsfonts", "microtype", "amssymb", "amsthm", "xspace", "xfrac", "bbm", "natbib", "booktabs", \
-            "paralist", "tikz" \
+        run: >
+          tinytex::tlmgr_install(
+          pkgs = c("titlesec", "geometry", "mathptmx", "fontenc", "xcolor", "hyperref", "url",
+          "amsfonts", "microtype", "amssymb", "amsthm", "xspace", "xfrac", "bbm", "natbib", "booktabs",
+          "paralist", "tikz"
           ))
 
       - name: Query dependencies
