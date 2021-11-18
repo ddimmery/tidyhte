@@ -5,8 +5,19 @@ template:
     noindex: true
 navbar:
   structure:
-    left:  [home, reference, tutorials, news]
+    left:  [home, reference, articles, news]
     right: [github]
+  components:
+    home: ~
+    articles:
+      text: Vignettes
+      menu:
+      - text: Methodological details
+        href: articles/methodological_details.html
+      - text: Example experimental analysis
+        href: articles/experimental_analysis.html
+      - text: Example observational analysis
+        href: articles/observational_analysis.html
 reference:
 - title: Estimation API
   desc: >

@@ -29,9 +29,12 @@ of moderators. It’s written to be fairly easy to extend to different
 models and to add additional diagnostics and ways to output information
 from a set of HTE estimates.
 
-The best place to start for learning how to use `tidyhte` is the
-vignette which runs through an example analysis from start to finish:
-`vignette("example_analysis")`
+The best place to start for learning how to use `tidyhte` are the
+vignettes which runs through example analyses from start to finish:
+`vignette("experimental_analysis")` and
+`vignette("observational_analysis")`. There is also a writeup
+summarizing the method and implementation in
+`vignette("methodological-details")`.
 
 # Installation
 

@@ -1,6 +1,6 @@
 ---
 title: HTE Analysis in an Experiment
-author: Drew Dimmery (drew.dimmery@gmail.com)
+author: Drew Dimmery (ddimmery@univie.ac.at)
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
     rmarkdown::html_vignette:
@@ -28,8 +28,7 @@ This analysis will focus on using machine learning ensembles (through SuperLearn
 # Load packages and setup environment
 
 ```{r setup, print=FALSE, message=FALSE}
-# library(tidyhte)
-devtools::load_all()
+library(tidyhte)
 library(ggplot2)
 library(dplyr)
 ```
