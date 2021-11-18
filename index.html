@@ -47,31 +47,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/experimental_analysis.html">HTE Analysis in an Experiment</a>
+      <a href="articles/methodological_details.html">Methodological details</a>
     </li>
     <li>
-      <a href="articles/observational_analysis.html">HTE Analysis on Observational Data</a>
+      <a href="articles/experimental_analysis.html">Example experimental analysis</a>
+    </li>
+    <li>
+      <a href="articles/observational_analysis.html">Example observational analysis</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -101,7 +98,7 @@
 
 <p><code>tidyhte</code> provides tidy semantics for estimation of heterogeneous treatment effects through the use of <a href="https://arxiv.org/abs/2004.14497">Kennedy’s (n.d.) doubly-robust learner</a>.</p>
 <p>The goal of <code>tidyhte</code> is to use a sort of “recipe” design. This should (hopefully) make it extremely easy to scale an analysis of HTE from the common single-outcome / single-moderator case to many outcomes and many moderators. The configuration of <code>tidyhte</code> should make it extremely easy to perform the same analysis across many outcomes and for a wide-array of moderators. It’s written to be fairly easy to extend to different models and to add additional diagnostics and ways to output information from a set of HTE estimates.</p>
-<p>The best place to start for learning how to use <code>tidyhte</code> is the vignette which runs through an example analysis from start to finish: <code>vignette("example_analysis")</code></p>
+<p>The best place to start for learning how to use <code>tidyhte</code> are the vignettes which runs through example analyses from start to finish: <code><a href="articles/experimental_analysis.html">vignette("experimental_analysis")</a></code> and <code><a href="articles/observational_analysis.html">vignette("observational_analysis")</a></code>. There is also a writeup summarizing the method and implementation in <code>vignette("methodological-details")</code>.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">

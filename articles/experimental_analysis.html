@@ -45,31 +45,28 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../news/index.html">Changelog</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Vignettes
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/experimental_analysis.html">HTE Analysis in an Experiment</a>
+      <a href="../articles/methodological_details.html">Methodological details</a>
     </li>
     <li>
-      <a href="../articles/observational_analysis.html">HTE Analysis on Observational Data</a>
+      <a href="../articles/experimental_analysis.html">Example experimental analysis</a>
+    </li>
+    <li>
+      <a href="../articles/observational_analysis.html">Example observational analysis</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -93,7 +90,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>HTE Analysis in an Experiment</h1>
-                        <h4 class="author">Drew Dimmery (<a href="mailto:drew.dimmery@gmail.com" class="email">drew.dimmery@gmail.com</a>)</h4>
+                        <h4 class="author">Drew Dimmery (<a href="mailto:ddimmery@univie.ac.at" class="email">ddimmery@univie.ac.at</a>)</h4>
             
             <h4 class="date">18 November, 2021</h4>
       
@@ -121,8 +118,7 @@ div.main-container {
 <h1 class="hasAnchor">
 <a href="#load-packages-and-setup-environment" class="anchor"></a>Load packages and setup environment</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># library(tidyhte)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/load_all.html">load_all</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/ddimmery/tidyhte">tidyhte</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
 </div>
@@ -365,36 +361,33 @@ div.main-container {
 ## 
 ## other attached packages:
 ## [1] nnls_1.4            SuperLearner_2.0-28 dplyr_1.0.7        
-## [4] ggplot2_3.3.5       tidyhte_0.1.5       testthat_3.1.0     
+## [4] ggplot2_3.3.5       tidyhte_0.1.5      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] pkgload_1.2.3         splines_4.1.2         foreach_1.5.1        
-##  [4] gam_1.20              highr_0.9             yaml_2.2.1           
-##  [7] remotes_2.4.1         progress_1.2.2        sessioninfo_1.2.1    
-## [10] pillar_1.6.4          backports_1.3.0       lattice_0.20-45      
-## [13] glue_1.5.0            quadprog_1.5-8        digest_0.6.28        
-## [16] checkmate_2.0.0       colorspace_2.0-2      htmltools_0.5.2      
-## [19] Matrix_1.3-4          pkgconfig_2.0.3       devtools_2.4.2       
-## [22] purrr_0.3.4           scales_1.1.1          processx_3.5.2       
-## [25] tibble_3.1.6          farver_2.1.0          generics_0.1.1       
-## [28] usethis_2.1.3         ellipsis_0.3.2        cachem_1.0.6         
-## [31] withr_2.4.2           cli_3.1.0             survival_3.2-13      
-## [34] magrittr_2.0.1        crayon_1.4.2          memoise_2.0.0        
-## [37] evaluate_0.14         ps_1.6.0              fs_1.5.0             
-## [40] fansi_0.5.0           MASS_7.3-54           pkgbuild_1.2.0       
-## [43] distances_0.1.8       textshaping_0.3.6     tools_4.1.2          
-## [46] nprobust_0.4.0        data.table_1.14.2     prettyunits_1.1.1    
-## [49] hms_1.1.1             lifecycle_1.0.1       WeightedROC_2020.1.31
-## [52] stringr_1.4.0         munsell_0.5.0         glmnet_4.1-3         
-## [55] callr_3.7.0           compiler_4.1.2        pkgdown_1.6.1        
-## [58] systemfonts_1.0.2     rlang_0.4.12          grid_4.1.2           
-## [61] iterators_1.0.13      vimp_2.2.5            rstudioapi_0.13      
-## [64] labeling_0.4.2        quickblock_0.2.0      rmarkdown_2.11       
-## [67] gtable_0.3.0          codetools_0.2-18      R6_2.5.1             
-## [70] knitr_1.36            fastmap_1.1.0         utf8_1.2.2           
-## [73] rprojroot_2.0.2       ragg_1.1.3            shape_1.4.6          
-## [76] desc_1.4.0            stringi_1.7.5         Rcpp_1.0.7           
-## [79] vctrs_0.3.8           tidyselect_1.1.1      xfun_0.28</code></pre>
+##  [1] Rcpp_1.0.7            lattice_0.20-45       prettyunits_1.1.1    
+##  [4] WeightedROC_2020.1.31 glmnet_4.1-3          rprojroot_2.0.2      
+##  [7] digest_0.6.28         foreach_1.5.1         utf8_1.2.2           
+## [10] R6_2.5.1              backports_1.3.0       evaluate_0.14        
+## [13] highr_0.9             pillar_1.6.4          rlang_0.4.12         
+## [16] progress_1.2.2        data.table_1.14.2     gam_1.20             
+## [19] Matrix_1.3-4          checkmate_2.0.0       rmarkdown_2.11       
+## [22] pkgdown_1.6.1         labeling_0.4.2        textshaping_0.3.6    
+## [25] desc_1.4.0            splines_4.1.2         stringr_1.4.0        
+## [28] vimp_2.2.5            munsell_0.5.0         compiler_4.1.2       
+## [31] xfun_0.28             pkgconfig_2.0.3       systemfonts_1.0.2    
+## [34] nprobust_0.4.0        shape_1.4.6           htmltools_0.5.2      
+## [37] tidyselect_1.1.1      tibble_3.1.6          quadprog_1.5-8       
+## [40] codetools_0.2-18      fansi_0.5.0           crayon_1.4.2         
+## [43] withr_2.4.2           MASS_7.3-54           grid_4.1.2           
+## [46] gtable_0.3.0          lifecycle_1.0.1       magrittr_2.0.1       
+## [49] scales_1.1.1          cli_3.1.0             stringi_1.7.5        
+## [52] cachem_1.0.6          farver_2.1.0          fs_1.5.0             
+## [55] ellipsis_0.3.2        ragg_1.1.3            generics_0.1.1       
+## [58] vctrs_0.3.8           iterators_1.0.13      tools_4.1.2          
+## [61] glue_1.5.0            purrr_0.3.4           hms_1.1.1            
+## [64] fastmap_1.1.0         survival_3.2-13       yaml_2.2.1           
+## [67] colorspace_2.0-2      memoise_2.0.0         knitr_1.36           
+## [70] quickblock_0.2.0      distances_0.1.8</code></pre>
 </div>
   </div>
 

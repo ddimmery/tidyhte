@@ -3,6 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   experimental_analysis: experimental_analysis.html
+  methodological_details: methodological_details.html
   observational_analysis: observational_analysis.html
-last_built: 2021-11-18T09:46Z
+last_built: 2021-11-18T16:07Z
 
