@@ -75,7 +75,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">add_vimp</span><span class="op">(</span><span class="va">hte_cfg</span>, sample_splitting <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">add_vimp</span><span class="op">(</span><span class="va">hte_cfg</span>, sample_splitting <span class="op">=</span> <span class="cn">TRUE</span>, linear_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,6 +86,10 @@
 <dd><p>Logical indicating whether to use sample splitting or not.
 Choosing not to use sample splitting means that inference will only be valid for
 moderators with non-null importance.</p></dd>
+<dt>linear_only</dt>
+<dd><p>Logical indicating whether the variable importance should use only a single
+linear-only model. Variable importance measure will only be consistent for the population
+quantity if the true model of pseudo-outcomes is linear.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
