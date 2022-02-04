@@ -35,9 +35,8 @@ test_that("zero_range works", {
 
 test_that("soft_require works", {
     expect_error(
-        soft_require("this_package_doesnt_exist"),
-        "The `this_package_doesnt_exist` package is required.",
-        fixed = TRUE
+        soft_require("thispackagedoesntexist"),
+        class = "rlib_error_package_not_found"
     )
 
     expect_error(soft_require("SuperLearner"), NA)

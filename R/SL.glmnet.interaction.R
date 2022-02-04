@@ -32,6 +32,7 @@
 #' @export
 #' @importFrom stats predict model.matrix
 #' @import SuperLearner
+#' @keywords internal
 SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
                       alpha = 1, nfolds = 10, nlambda = 100, useMin = TRUE,
                       loss = "deviance",
@@ -84,6 +85,7 @@ SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
 #' @export
 #' @importFrom stats model.matrix
 #' @import SuperLearner
+#' @keywords internal
 predict.SL.glmnet.interaction <- function(object, newdata,
                               remove_extra_cols = T,
                               add_missing_cols = T,

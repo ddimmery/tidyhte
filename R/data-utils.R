@@ -24,7 +24,7 @@ HTEFold <- R6::R6Class("HTEFold", list(
 #' - `train` - The split to be used for training the plugin estimates
 #' - `holdout` - The split not used for training
 #' - `in_holdout` - A logical vector indicating for each unit whether they lie in the holdout.
-#' @export
+#' @keywords internal
 split_data <- function(.data, split_id) {
     HTEFold$new(.data, split_id)
 }
