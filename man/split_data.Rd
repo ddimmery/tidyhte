@@ -23,3 +23,4 @@ Returns an R6 object \code{HTEFold} with three public fields:
 This takes a dataset and a split ID and generates two subsets of the
 data corresponding to a training set and a holdout.
 }
+\keyword{internal}

@@ -4,7 +4,7 @@
 \alias{add_vimp}
 \title{Adds variable importance information}
 \usage{
-add_vimp(hte_cfg, sample_splitting = TRUE)
+add_vimp(hte_cfg, sample_splitting = TRUE, linear_only = FALSE)
 }
 \arguments{
 \item{hte_cfg}{\code{HTE_cfg} object to update.}
@@ -12,6 +12,10 @@ add_vimp(hte_cfg, sample_splitting = TRUE)
 \item{sample_splitting}{Logical indicating whether to use sample splitting or not.
 Choosing not to use sample splitting means that inference will only be valid for
 moderators with non-null importance.}
+
+\item{linear_only}{Logical indicating whether the variable importance should use only a single
+linear-only model. Variable importance measure will only be consistent for the population
+quantity if the true model of pseudo-outcomes is linear.}
 }
 \value{
 Updated \code{HTE_cfg} object
