@@ -36,3 +36,13 @@ test_that("recipe manipulations on moderators", {
 test_that("recipe manipulations on vimp", {
     checkmate::expect_r6(add_vimp(cfg, sample_splitting = FALSE), "HTE_cfg")
 })
+
+test_that("init treatment", {
+    cfg$treatment <- NULL
+    checkmate::expect_r6(add_propensity_score_model(cfg, "SL.glmnet"), "HTE_cfg")
+})
+
+test_that("init outcome", {
+    cfg$outcome <- NULL
+    checkmate::expect_r6(add_outcome_model(cfg, "SL.glmnet"), "HTE_cfg")
+})

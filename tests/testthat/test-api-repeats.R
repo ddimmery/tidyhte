@@ -57,9 +57,9 @@ for (cov in discrete_moderators) {
 
 qoi.cfg <- QoI_cfg$new(
     mcate = MCATE_cfg$new(cfgs = qoi.list),
-    vimp = VIMP_cfg$new(),
+    vimp = VIMP_cfg$new(linear_only = TRUE),
     diag = Diagnostics_cfg$new(
-        outcome = c("SL_risk", "SL_coefs", "MSE")
+        outcome = c("SL_risk", "SL_coefs", "MSE", "RROC")
     )
 )
 
@@ -118,12 +118,15 @@ n_rows <- (
     2 * 4 + # one row per model in the ensemble for each PO + ps for SL coefficient
     2 + # one row per moderator for variable importance
     1 * 100 + # 100 rows per continuous moderator for local regression for MCATE and for PCATE
-    (2 + 2) # 2 rows per discrete moderator level for MCATE and for PCATE
+    (2 + 2) + # 2 rows per discrete moderator level for MCATE and for PCATE
+    n + n0 # 1 row per observation for RROC
 )
 
-
 test_that("Check results data", {
-    skip_on_cran()
+    checkmate::check_character(results$estimand, any.missing = FALSE)
+    checkmate::check_double(results$estimate, any.missing = FALSE)
+    checkmate::check_double(results$std_error, any.missing = FALSE)
+    
     checkmate::expect_tibble(
         results,
         all.missing = FALSE,

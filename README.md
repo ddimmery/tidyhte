@@ -14,6 +14,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 Status](https://www.r-pkg.org/badges/version/tidyhte)](https://cran.r-project.org/package=tidyhte)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![DOI](https://zenodo.org/badge/375330850.svg)](https://zenodo.org/badge/latestdoi/375330850)
 <!-- badges: end -->
 
 `tidyhte` provides tidy semantics for estimation of heterogeneous

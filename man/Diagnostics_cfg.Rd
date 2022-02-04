@@ -14,7 +14,7 @@ trained in the course of HTE estimation.
 ## ------------------------------------------------
 
 Diagnostics_cfg$new(
-   outcome = c("SL_risk", "SL_coefs", "MSE"),
+   outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
    ps = c("SL_risk", "SL_coefs", "AUC")
 )
 }
@@ -26,6 +26,8 @@ Diagnostics_cfg$new(
 \item{\code{outcome}}{Model diagnostics for the outcome models.}
 
 \item{\code{effect}}{Model diagnostics for the joint effect model.}
+
+\item{\code{params}}{Parameters for any requested diagnostics.}
 }
 \if{html}{\out{</div>}}
 }
@@ -43,7 +45,7 @@ Diagnostics_cfg$new(
 \subsection{Method \code{new()}}{
 Create a new \code{Diagnostics_cfg} object with specified diagnostics to estimate.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Diagnostics_cfg$new(ps = NULL, outcome = NULL, effect = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Diagnostics_cfg$new(ps = NULL, outcome = NULL, effect = NULL, params = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -54,6 +56,8 @@ Create a new \code{Diagnostics_cfg} object with specified diagnostics to estimat
 \item{\code{outcome}}{Model diagnostics for the outcome models.}
 
 \item{\code{effect}}{Model diagnostics for the joint effect model.}
+
+\item{\code{params}}{List providing values for parameters to any requested diagnostics.}
 }
 \if{html}{\out{</div>}}
 }
@@ -63,7 +67,7 @@ A new \code{Diagnostics_cfg} object.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{Diagnostics_cfg$new(
-   outcome = c("SL_risk", "SL_coefs", "MSE"),
+   outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
    ps = c("SL_risk", "SL_coefs", "AUC")
 )
 }

@@ -16,6 +16,14 @@ data <- dplyr::tibble(
         w = rexp(n, plogis(x1 - mean(x1)))
     )
 
+n_missing_cells <- 25
+
+for (i in seq_len(n_missing_cells)) {
+    row <- sample(n, 1)
+    col <- sample(names(data)[2:9], 1)
+    data[row, col] <- NA
+}
+
 userid <- rlang::expr(uid)
 weight_variable <- rlang::expr(w)
 
@@ -63,9 +71,10 @@ qoi.cfg <- QoI_cfg$new(
     mcate = MCATE_cfg$new(cfgs = qoi.list),
     vimp = VIMP_cfg$new(),
     diag = Diagnostics_cfg$new(
-        outcome = c("SL_risk", "SL_coefs", "MSE"),
-        ps = c("SL_risk", "SL_coefs", "AUC")
-    )
+        outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
+        ps = c("SL_risk", "SL_coefs", "AUC"),
+        params = list(num_bins = 100)
+    ),
 )
 
 cfg <- HTE_cfg$new(
@@ -82,32 +91,35 @@ test_that("add config", {
 })
 
 test_that("Split data", {
-    data2 <<- make_splits(data1, {{ userid }}, .num_splits = 4)
+    suppressMessages(data2 <<- make_splits(data1, {{ userid }}, .num_splits = 4))
     checkmate::expect_data_frame(data2)
 })
 
 test_that("Estimate Plugin Models", {
-    data3 <<- produce_plugin_estimates(
+    suppressMessages(data3 <<- produce_plugin_estimates(
         data2,
         {{ outcome_variable }},
         {{ treatment_variable }},
         !!!model_covariates,
         .weights = {{ weight_variable }}
-    )
+    ))
     checkmate::expect_data_frame(data3)
 })
 
 test_that("Construct Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }})
+    suppressMessages(data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }}))
     checkmate::expect_data_frame(data4)
 })
 
 test_that("Estimate QoIs (continuous)", {
-    expect_error(estimate_QoI(data4, !!!continuous_moderators), "`nprobust` does not support the use of weights.")
+    expect_error(
+        suppressMessages(estimate_QoI(data4, !!!continuous_moderators)),
+        "`nprobust` does not support the use of weights."
+    )
 })
 
 test_that("Estimate QoIs (discrete)", {
-    results <<- estimate_QoI(data4, !!!discrete_moderators)
+    suppressMessages(results <<- estimate_QoI(data4, !!!discrete_moderators))
     checkmate::expect_data_frame(results)
 })
 
@@ -120,7 +132,8 @@ n_rows <- (
     2 * 1 + 1 + # one row per model in the ensemble for each PO + ps for SL coefficient
     2 + # one row per moderator for variable importance
     # 1 * 100 + # 100 rows per continuous moderator for local regression for MCATE
-    (4 + 3) # 1 rows per discrete moderator level for MCATE
+    (4 + 3) + # 1 rows per discrete moderator level for MCATE
+    2 * 100 # 100 rows for RROC for each PO
 )
 
 test_that("PATE > SATE", {
@@ -144,7 +157,7 @@ test_that("Check results data", {
         results,
         all.missing = FALSE,
         nrows = n_rows,
-        ncols = 5, # only 5 columns because no continuous moderators
+        ncols = 6,
         types = c(
             estimand = "character",
             term = "character",

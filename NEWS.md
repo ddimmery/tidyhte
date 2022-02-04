@@ -1,4 +1,4 @@
-# tidyhte (dev)
+# tidyhte 0.2.0
 
 * Add methods to configs which allow the addition of models and moderators after the initial instantiation. This is a first step towards the eventual recipe API.
 
@@ -13,6 +13,10 @@
 * Add an initial draft of a vignette on methodological details undergirding the package.
 
 * Adds a linear-only version of variable importance that calculates the reduction in residual MSE from including a particular moderator.
+
+* Adds a Regression ROC Curve diagnostic for regression models.
+
+* Allows access to predictions from effect regression.
 
 # tidyhte 0.1.5
 

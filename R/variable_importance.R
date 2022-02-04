@@ -135,7 +135,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 
 #' Calculate Linear Variable Importance of HTEs
 #'
-#' `calculate_linear_vimp` estimates the linear hypothesis test from removing a particular moderator
+#' `calculate_linear_vimp` estimates the linear hypothesis test of removing a particular moderator
 #' from a linear model containing all moderators.
 #' @param .data dataframe
 #' @param weight_col Unquoted name of the weight column.
@@ -148,7 +148,9 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 #' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
 #' \doi{10.1111/biom.13392}
 #' @importFrom progress progress_bar
-#' @importFrom stats residuals
+#' @importFrom stats lm residuals weighted.mean
+#' @importFrom dplyr select %>% tibble
+#' @importFrom rlang enexprs enexpr
 #' @import SuperLearner
 calculate_linear_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
     dots <- rlang::enexprs(...)

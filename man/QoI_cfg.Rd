@@ -43,6 +43,8 @@ QoI_cfg$new(
 \item{\code{diag}}{A configuration object of type \code{Diagnostics_cfg} of model diagnostics to calculate.}
 
 \item{\code{ate}}{Logical flag indicating whether an estimate of the ATE should be returned.}
+
+\item{\code{predictions}}{Logical flag indicating whether estimates of the CATE for every unit should be returned.}
 }
 \if{html}{\out{</div>}}
 }
@@ -59,7 +61,14 @@ QoI_cfg$new(
 \subsection{Method \code{new()}}{
 Create a new \code{QoI_cfg} object with specified Quantities of Interest to estimate.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{QoI_cfg$new(mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL, ate = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{QoI_cfg$new(
+  mcate = NULL,
+  pcate = NULL,
+  vimp = NULL,
+  diag = NULL,
+  ate = TRUE,
+  predictions = FALSE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -74,6 +83,8 @@ Create a new \code{QoI_cfg} object with specified Quantities of Interest to esti
 \item{\code{diag}}{A configuration object of type \code{Diagnostics_cfg} of model diagnostics to calculate.}
 
 \item{\code{ate}}{A logical flag for whether to calculate the Average Treatment Effect (ATE) or not.}
+
+\item{\code{predictions}}{A logical flag for whether to return predictions of the CATE for every unit or not.}
 }
 \if{html}{\out{</div>}}
 }

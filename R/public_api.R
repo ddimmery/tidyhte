@@ -216,9 +216,6 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .weights = 
     ok_data$.mu1_hat <- mu1_hat
     ok_data$.mu0_hat <- mu0_hat
 
-    identifier <- attr(.data, "identifier")
-    identifier <- rlang::ensym(identifier)
-
     .data <- dplyr::left_join(
         .data %>% dplyr::select(!dplyr::matches(c(".pi_hat", ".mu1_hat", ".mu0_hat"))),
         ok_data %>% dplyr::select(.data$.row_id, .data$.pi_hat, .data$.mu1_hat, .data$.mu0_hat),
@@ -266,12 +263,13 @@ estimate_QoI <- function(
         ".mu1_hat",
         ".mu0_hat"
     ))
-    outcome <- attr(.data, "outcome")
-    outcome <- rlang::sym(outcome)
-    treatment <- attr(.data, "treatment")
-    treatment <- rlang::sym(treatment)
-    weights <- attr(.data, "weights")
-    weights <- rlang::sym(weights)
+    identifier_name <- attr(.data, "identifier")
+    outcome_name <- attr(.data, "outcome")
+    outcome <- rlang::sym(outcome_name)
+    treatment_name <- attr(.data, "treatment")
+    treatment <- rlang::sym(treatment_name)
+    weights_name <- attr(.data, "weights")
+    weights <- rlang::sym(weights_name)
 
     .data <- listwise_deletion(.data, {{ outcome }}, {{ treatment }}, !!!dots, !!!nuisance_models)
 
@@ -289,8 +287,7 @@ estimate_QoI <- function(
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
     }
 
-    if (!is.null(.QoI_cfg$pcate)) {
-        warning("Only use PCATEs if you know what you're doing!")
+    if (!is.null(.QoI_cfg$pcate) | .QoI_cfg$predictions) {
         covs <- rlang::syms(.QoI_cfg$pcate$model_covariates)
         fx_mod <- fit_fx_predictor(
             .data,
@@ -301,6 +298,22 @@ estimate_QoI <- function(
             .Model_cfg = .HTE_cfg$effect
         )
         .data <- fx_mod$data
+        ids <- identifier_name
+        fx <- .data[[".pseudo_outcome_hat"]]
+        if (.QoI_cfg$predictions) {
+            result <- dplyr::tibble(
+                estimand = "Predicted CATE",
+                term = outcome_name,
+                level = ids,
+                estimate = fx,
+                std_error = NA_real_
+            )
+            result_list <- c(result_list, list(result))
+        }
+    }
+
+    if (!is.null(.QoI_cfg$pcate)) {
+        warning("Only use PCATEs if you know what you're doing!")
         result <- calculate_pcate_quantities(
             .data,
             {{ weights }},

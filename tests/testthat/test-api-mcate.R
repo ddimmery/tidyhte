@@ -133,6 +133,10 @@ n_rows <- (
 
 
 test_that("Check results data", {
+    checkmate::check_character(results$estimand, any.missing = FALSE)
+    checkmate::check_double(results$estimate, any.missing = FALSE)
+    checkmate::check_double(results$std_error, any.missing = FALSE)
+
     checkmate::expect_tibble(
         results,
         all.missing = FALSE,

@@ -106,7 +106,7 @@ add_outcome_model <- function(hte_cfg, model_name, ...) {
 #' This adds a diagnostic to the outcome model.
 #' @param hte_cfg `HTE_cfg` object to update.
 #' @param diag Character indicating the name of the diagnostic
-#' to include. Possible values are `"MSE"` and, for
+#' to include. Possible values are `"MSE"`, `"RROC"` and, for
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
 #' @export
@@ -139,7 +139,7 @@ add_effect_model <- function(hte_cfg, model_name, ...) {
 #' This adds a diagnostic to the effect model.
 #' @param hte_cfg `HTE_cfg` object to update.
 #' @param diag Character indicating the name of the diagnostic
-#' to include. Possible values are `"MSE"` and, for
+#' to include. Possible values are `"MSE"`, `"RROC"` and, for
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
 #' @export
@@ -201,9 +201,12 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' @param sample_splitting Logical indicating whether to use sample splitting or not.
 #' Choosing not to use sample splitting means that inference will only be valid for
 #' moderators with non-null importance.
+#' @param linear_only Logical indicating whether the variable importance should use only a single
+#' linear-only model. Variable importance measure will only be consistent for the population
+#' quantity if the true model of pseudo-outcomes is linear.
 #' @return Updated `HTE_cfg` object
 #' @export
-add_vimp <- function(hte_cfg, sample_splitting = TRUE) {
+add_vimp <- function(hte_cfg, sample_splitting = TRUE, linear_only = FALSE) {
     hte_cfg$qoi$vimp <- VIMP_cfg$new(
         sample_splitting = sample_splitting
     )

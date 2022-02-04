@@ -168,22 +168,30 @@ Diagnostics_cfg <- R6::R6Class("Diagnostics_cfg",
         outcome = character(),
         #' @field effect Model diagnostics for the joint effect model.
         effect = character(),
+        #' @field params Parameters for any requested diagnostics.
+        params = list(),
 
         #' @description
         #' Create a new `Diagnostics_cfg` object with specified diagnostics to estimate.
         #' @param ps Model diagnostics for the propensity score model.
         #' @param outcome Model diagnostics for the outcome models.
         #' @param effect Model diagnostics for the joint effect model.
+        #' @param params List providing values for parameters to any requested diagnostics.
         #' @return A new `Diagnostics_cfg` object.
         #' @examples
         #' Diagnostics_cfg$new(
-        #'    outcome = c("SL_risk", "SL_coefs", "MSE"),
+        #'    outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
         #'    ps = c("SL_risk", "SL_coefs", "AUC")
         #' )
-        initialize = function(ps = NULL, outcome = NULL, effect = NULL) {
+        initialize = function(ps = NULL, outcome = NULL, effect = NULL, params = NULL) {
             if (!is.null(ps)) self$ps <- ps
             if (!is.null(outcome)) self$outcome <- outcome
             if (!is.null(effect)) self$effect <- effect
+            if (is.null(params)) {
+                self$params <- list()
+            } else {
+                self$params <- params
+            }
             invisible(self)
         },
         #' @description
@@ -219,6 +227,8 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
         diag = NULL,
         #' @field ate Logical flag indicating whether an estimate of the ATE should be returned.
         ate = logical(),
+        #' @field predictions Logical flag indicating whether estimates of the CATE for every unit should be returned.
+        predictions = logical(),
 
         #' @description
         #' Create a new `QoI_cfg` object with specified Quantities of Interest to estimate.
@@ -227,6 +237,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
         #' @param vimp A configuration object of type `VIMP_cfg` of variable importance to calculate.
         #' @param diag A configuration object of type `Diagnostics_cfg` of model diagnostics to calculate.
         #' @param ate A logical flag for whether to calculate the Average Treatment Effect (ATE) or not.
+        #' @param predictions A logical flag for whether to return predictions of the CATE for every unit or not.
         #' @return A new `Diagnostics_cfg` object.
         #' @examples
         #' mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
@@ -247,7 +258,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
         #'     diag = diag_cfg
         #' )
         initialize = function(
-            mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL, ate = TRUE
+            mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL, ate = TRUE, predictions = FALSE
         ) {
             if (is.null(mcate) && is.null(pcate) && is.null(vimp) && is.null(diag)) {
                 stop("Must define at least one QoI!")
@@ -257,6 +268,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
             if (!is.null(vimp)) self$vimp <- vimp
             if (!is.null(diag)) self$diag <- diag
             self$ate <- ate
+            self$predictions <- predictions
             invisible(self)
         }
     )

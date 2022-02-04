@@ -23,6 +23,7 @@ reference:
   desc: >
     Tidy functions for performing an analysis of heterogeneous treatment effects.
 - contents:
+  - attach_config
   - make_splits
   - produce_plugin_estimates
   - construct_pseudo_outcomes

@@ -10,7 +10,7 @@ add_effect_diagnostic(hte_cfg, diag)
 \item{hte_cfg}{\code{HTE_cfg} object to update.}
 
 \item{diag}{Character indicating the name of the diagnostic
-to include. Possible values are \code{"MSE"} and, for
+to include. Possible values are \code{"MSE"}, \code{"RROC"} and, for
 \code{SuperLearner} ensembles, \code{"SL_risk"} and \code{"SL_coefs"}.}
 }
 \value{

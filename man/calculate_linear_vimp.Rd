@@ -28,7 +28,7 @@ will be calculated for each of these covariates.}
 \item{.Model_cfg}{A \code{Model_cfg} object defining how the joint effect model should be estimated.}
 }
 \description{
-\code{calculate_linear_vimp} estimates the linear hypothesis test from removing a particular moderator
+\code{calculate_linear_vimp} estimates the linear hypothesis test of removing a particular moderator
 from a linear model containing all moderators.
 }
 \references{

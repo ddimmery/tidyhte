@@ -9,7 +9,7 @@ SL_model_slot <- function(prediction) {
 
 #' @importFrom stats sd weighted.mean
 #' @importFrom rlang .data
-estimate_diagnostic <- function(.data, label, prediction, diag_name) {
+estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
     w_col <- attr(.data, "weights")
     id_col <- attr(.data, "identifier")
 
@@ -81,6 +81,14 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name) {
             result <- NULL
             message("Cannot calculate SL_risk because the model is not SuperLearner.")
         }
+    } else if (tolower(diag_name) == "rroc") {
+        if ("num_bins" %in% names(params)) {
+            nbins <- params$num_bins
+        } else {
+            nbins <- nrow(.data)
+        }
+        result <- calculate_rroc(.data[[label]], .data[[prediction]], nbins = nbins)
+        result$term <- label
     }
     result
 }
@@ -90,12 +98,13 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
     ps_cfg <- .diag.cfg$ps
     y_cfg <- .diag.cfg$outcome
     fx_cfg <- .diag.cfg$effect
+    params <- .diag.cfg$params
     treatment_name <- attr(.data, "treatment")
     outcome_name <- attr(.data, "outcome")
 
     result_list <- list()
     for (diag in ps_cfg) {
-        result <- estimate_diagnostic(.data, treatment_name, ".pi_hat", diag)
+        result <- estimate_diagnostic(.data, treatment_name, ".pi_hat", diag, params)
         result$level <- "Propensity Score"
         result_list <- c(result_list, list(result))
     }
@@ -105,14 +114,16 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
             dplyr::filter(.data, .data[[treatment_name]] == 1),
             outcome_name,
             ".mu1_hat",
-            diag
+            diag,
+            params
         )
         result1$level <- "Treatment Response"
         result0 <- estimate_diagnostic(
             dplyr::filter(.data, .data[[treatment_name]] == 0),
             outcome_name,
             ".mu0_hat",
-            diag
+            diag,
+            params
         )
         result0$level <- "Control Response"
         result_list <- c(result_list, list(result0), list(result1))
@@ -123,7 +134,7 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
             message(paste("Skipping diagnostic on .pseudo_outcome due to lack of model."))
             break
         }
-        result <- estimate_diagnostic(.data, ".pseudo_outcome", ".pseudo_outcome_hat", diag)
+        result <- estimate_diagnostic(.data, ".pseudo_outcome", ".pseudo_outcome_hat", diag, params)
         result$level <- "Effect Surface"
         result_list <- c(result_list, list(result))
     }

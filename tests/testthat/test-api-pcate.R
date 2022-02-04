@@ -67,7 +67,8 @@ qoi.cfg <- QoI_cfg$new(
     diag = Diagnostics_cfg$new(
         outcome = c("SL_risk", "SL_coefs", "MSE"),
         effect = c("SL_risk", "SL_coefs")
-    )
+    ),
+    predictions = TRUE
 )
 
 qoi.cfg2 <- QoI_cfg$new(
@@ -144,12 +145,16 @@ n_rows <- (
     3 * 3 + # one row per model in the ensemble for each PO / fx for SL risk
     3 * 3 + # one row per model in the ensemble for each PO / fx for SL coefficient
     2 * 3 * 100 + # 100 rows per continuous moderator for local regression for MCATE and for PCATE
-    2 * (4 + 3) # 2 rows per discrete moderator level for MCATE and for PCATE
+    2 * (4 + 3) + # 2 rows per discrete moderator level for MCATE and for PCATE
+    n # One row for each predicted value
 )
 
 
 test_that("Check results data", {
-    skip_on_cran()
+    checkmate::check_character(results$estimand, any.missing = FALSE)
+    checkmate::check_double(results$estimate, any.missing = FALSE)
+    checkmate::check_double(results$std_error, any.missing = FALSE)
+
     checkmate::expect_tibble(
         results,
         all.missing = FALSE,
