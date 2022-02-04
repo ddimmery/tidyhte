@@ -88,3 +88,10 @@ reference:
 - contents:
   - MCATE_cfg
   - PCATE_cfg
+- title: internal
+  - SL.glmnet.interaction
+  - predict.SL.glmnet.interaction
+  - calculate_linear_vimp
+  - calculate_rroc
+  - calculate_vimp
+  - split_data

@@ -12,7 +12,6 @@
 #' @return A tibble with `nbins` rows.
 #' @importFrom dplyr tibble bind_rows
 #' @importFrom stats quantile
-#' @keywords internal
 calculate_rroc <- function(label, prediction, nbins = 100) {
     residuals <- label - prediction
     n <- length(residuals)
