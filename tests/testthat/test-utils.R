@@ -59,4 +59,12 @@ test_that("cluster robust SEs are correct", {
 
     expect_error(result <- clustered_se_of_mean(y, cl), NA)
     expect_equal(result, lmr$std.error, ignore_attr = TRUE)
+
+    cl <- sample(1:10, size = 125, replace = TRUE)
+    y <- cl + rnorm(125)
+    w <- 1 / 5 + rexp(125)
+    lmr <- estimatr::lm_robust(y~1, clusters = cl, se_type = "stata", weights = w)
+
+    expect_error(result <- clustered_se_of_mean(y, cl, weights = w), NA)
+    expect_equal(result, lmr$std.error, ignore_attr = TRUE)
 })
