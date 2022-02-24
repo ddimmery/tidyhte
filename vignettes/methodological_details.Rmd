@@ -238,7 +238,7 @@ The design of `tidyhte` chooses to leave the charting to the end-user, but merel
 
 
 ```{r qoi, results='hide', message=FALSE, warning=FALSE}
-penguins %>% 
+penguins %>%
   estimate_QoI(species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm) ->
   results
 ```

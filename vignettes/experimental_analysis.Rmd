@@ -94,11 +94,13 @@ hte_cfg <- basic_config() %>%
     add_outcome_model("SL.glm.interaction") %>%
     add_outcome_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
     add_outcome_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_outcome_diagnostic("RROC") %>%
     # add_outcome_model("SL.ranger", num.trees = c(25, 50, 100, 250), splitrule = c("variance", "extratrees")) %>%
     # add_outcome_model("SL.xgboost", ntrees = c(50, 100, 250, 500), maxdepth = c(1, 3, 5), shrinkage = c(0.1, 0.01)) %>%
     add_effect_model("SL.glm.interaction") %>%
     add_effect_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
     add_effect_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_effect_diagnostic("RROC") %>%
     add_moderator("Stratified", x2, x3) %>%
     add_moderator("KernelSmooth", x1, x4, x5) %>%
     add_vimp(sample_splitting = FALSE) ->
@@ -118,9 +120,10 @@ data %>%
         y,
         a,
         x1, x2, x3, x4, x5,
-    ) -> prepped_data
+    ) %>%
+    construct_pseudo_outcomes(y, a) -> prepped_data
 
-construct_pseudo_outcomes(prepped_data, y, a) %>%
+prepped_data %>%
     estimate_QoI(x1, x2, x3, x4, x5) -> results
 ```
 
@@ -177,6 +180,31 @@ ggplot() +
     facet_wrap(~level, scales = "free_x") +
     coord_flip() +
     ggtitle("Submodel Risk Estimates") +
+    theme_minimal()
+```
+
+## Plot Regression ROC Curves
+
+```{r rroc}
+filter(results, grepl("RROC", estimand)) %>%
+mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
+ggplot() +
+    geom_line(
+        aes(
+            x = value,
+            y = estimate
+        )
+    ) +
+    geom_point(
+        aes(x = value, y = estimate),
+        data = filter(results, grepl("RROC", estimand)) %>% group_by(level) %>% slice_head(n = 1)
+    ) +
+    expand_limits(y = 0) +
+    scale_x_continuous("Over-estimation") +
+    scale_y_continuous("Under-estimation") +
+    facet_wrap(~level, scales = "free_x") +
+    coord_flip() +
+    ggtitle("Regression ROC Curves") +
     theme_minimal()
 ```
 
