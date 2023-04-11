@@ -35,7 +35,7 @@ trial with known propensity scores."><meta name="robots" content="noindex"><!-- 
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
      
     <span class="caret"></span>
@@ -111,7 +111,7 @@ which inherit from <code>Model_cfg</code>.</p></dd>
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new <code>Known_cfg</code> object with specified covariate column.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/Known_cfg.html">Known_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">covariate_name</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/Known_cfg.html">Known_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">covariate_name</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -129,7 +129,7 @@ corresponding to the known model score (i.e. the true conditional expectation).<
 </div>
 <div class="section">
 <h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/Known_cfg.html">Known_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"propensity_score"</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/Known_cfg.html">Known_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"propensity_score"</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 
@@ -137,7 +137,7 @@ corresponding to the known model score (i.e. the true conditional expectation).<
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">Known_cfg</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Known_cfg</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -155,12 +155,12 @@ corresponding to the known model score (i.e. the true conditional expectation).<
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co">## ------------------------------------------------</span></span>
-<span class="r-in"><span class="co">## Method `Known_cfg$new`</span></span>
-<span class="r-in"><span class="co">## ------------------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Known_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"propensity_score"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="co">## Method `Known_cfg$new`</span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Known_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"propensity_score"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;Known_cfg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Inherits from: &lt;Model_cfg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Public:</span>
@@ -182,7 +182,7 @@ corresponding to the known model score (i.e. the true conditional expectation).<
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

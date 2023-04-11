@@ -32,7 +32,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
      
     <span class="caret"></span>
@@ -75,25 +75,32 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">add_vimp</span><span class="op">(</span><span class="va">hte_cfg</span>, sample_splitting <span class="op">=</span> <span class="cn">TRUE</span>, linear_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_vimp</span><span class="op">(</span><span class="va">hte_cfg</span>, sample_splitting <span class="op">=</span> <span class="cn">TRUE</span>, linear_only <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>hte_cfg</dt>
 <dd><p><code>HTE_cfg</code> object to update.</p></dd>
+
+
 <dt>sample_splitting</dt>
 <dd><p>Logical indicating whether to use sample splitting or not.
 Choosing not to use sample splitting means that inference will only be valid for
 moderators with non-null importance.</p></dd>
+
+
 <dt>linear_only</dt>
 <dd><p>Logical indicating whether the variable importance should use only a single
 linear-only model. Variable importance measure will only be consistent for the population
 quantity if the true model of pseudo-outcomes is linear.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Updated <code>HTE_cfg</code> object</p>
+    
+
+<p>Updated <code>HTE_cfg</code> object</p>
     </div>
 
   </div>
@@ -108,7 +115,7 @@ quantity if the true model of pseudo-outcomes is linear.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

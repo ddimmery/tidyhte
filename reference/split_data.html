@@ -33,7 +33,7 @@ data corresponding to a training set and a holdout."><meta name="robots" content
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
      
     <span class="caret"></span>
@@ -77,19 +77,24 @@ data corresponding to a training set and a holdout.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">split_data</span><span class="op">(</span><span class="va">.data</span>, <span class="va">split_id</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">split_data</span><span class="op">(</span><span class="va">.data</span>, <span class="va">split_id</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.data</dt>
 <dd><p>dataframe</p></dd>
+
+
 <dt>split_id</dt>
 <dd><p>integer representing the split to construct</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns an R6 object <code>HTEFold</code> with three public fields:</p><ul><li><p><code>train</code> - The split to be used for training the plugin estimates</p></li>
+    
+
+<p>Returns an R6 object <code>HTEFold</code> with three public fields:</p><ul><li><p><code>train</code> - The split to be used for training the plugin estimates</p></li>
 <li><p><code>holdout</code> - The split not used for training</p></li>
 <li><p><code>in_holdout</code> - A logical vector indicating for each unit whether they lie in the holdout.</p></li>
 </ul></div>
@@ -106,7 +111,7 @@ data corresponding to a training set and a holdout.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

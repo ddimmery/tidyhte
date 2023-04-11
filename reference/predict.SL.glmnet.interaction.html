@@ -32,7 +32,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
      
     <span class="caret"></span>
@@ -75,24 +75,33 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for SL.glmnet.interaction</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, remove_extra_cols <span class="op">=</span> <span class="cn">T</span>, add_missing_cols <span class="op">=</span> <span class="cn">T</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for SL.glmnet.interaction</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, remove_extra_cols <span class="op">=</span> <span class="cn">T</span>, add_missing_cols <span class="op">=</span> <span class="cn">T</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>Result object from SL.glmnet</p></dd>
+
+
 <dt>newdata</dt>
 <dd><p>Dataframe or matrix that will generate predictions.</p></dd>
+
+
 <dt>remove_extra_cols</dt>
 <dd><p>Remove any extra columns in the new data that were
 not part of the original model.</p></dd>
+
+
 <dt>add_missing_cols</dt>
 <dd><p>Add any columns from original data that do not exist
 in the new data, and set values to 0.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Any additional arguments (not used).</p></dd>
+
 </dl></div>
     <div id="see-also">
     <h2>See also</h2>
@@ -111,7 +120,7 @@ in the new data, and set values to 0.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

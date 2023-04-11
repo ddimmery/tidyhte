@@ -36,7 +36,7 @@ glmnet.'><meta name="robots" content="noindex"><!-- mathjax --><script src="http
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
      
     <span class="caret"></span>
@@ -83,57 +83,80 @@ glmnet.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">SL.glmnet.interaction</span><span class="op">(</span>
-  <span class="va">Y</span>,
-  <span class="va">X</span>,
-  <span class="va">newX</span>,
-  <span class="va">family</span>,
-  <span class="va">obsWeights</span>,
-  <span class="va">id</span>,
-  alpha <span class="op">=</span> <span class="fl">1</span>,
-  nfolds <span class="op">=</span> <span class="fl">10</span>,
-  nlambda <span class="op">=</span> <span class="fl">100</span>,
-  useMin <span class="op">=</span> <span class="cn">TRUE</span>,
-  loss <span class="op">=</span> <span class="st">"deviance"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SL.glmnet.interaction</span><span class="op">(</span></span>
+<span>  <span class="va">Y</span>,</span>
+<span>  <span class="va">X</span>,</span>
+<span>  <span class="va">newX</span>,</span>
+<span>  <span class="va">family</span>,</span>
+<span>  <span class="va">obsWeights</span>,</span>
+<span>  <span class="va">id</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  nfolds <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  nlambda <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  useMin <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  loss <span class="op">=</span> <span class="st">"deviance"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>Y</dt>
 <dd><p>Outcome variable</p></dd>
+
+
 <dt>X</dt>
 <dd><p>Covariate dataframe</p></dd>
+
+
 <dt>newX</dt>
 <dd><p>Dataframe to predict the outcome</p></dd>
+
+
 <dt>family</dt>
 <dd><p>"gaussian" for regression, "binomial" for binary
 classification. Untested options: "multinomial" for multiple classification
 or "mgaussian" for multiple response, "poisson" for non-negative outcome
 with proportional mean and variance, "cox".</p></dd>
+
+
 <dt>obsWeights</dt>
 <dd><p>Optional observation-level weights</p></dd>
+
+
 <dt>id</dt>
 <dd><p>Optional id to group observations from the same unit (not used
 currently).</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>Elastic net mixing parameter, range [0, 1]. 0 = ridge regression
 and 1 = lasso.</p></dd>
+
+
 <dt>nfolds</dt>
 <dd><p>Number of folds for internal cross-validation to optimize lambda.</p></dd>
+
+
 <dt>nlambda</dt>
 <dd><p>Number of lambda values to check, recommended to be 100 or more.</p></dd>
+
+
 <dt>useMin</dt>
 <dd><p>If TRUE use lambda that minimizes risk, otherwise use 1
 standard-error rule which chooses a higher penalty with performance within
 one standard error of the minimum (see Breiman et al. 1984 on CART for
 background).</p></dd>
+
+
 <dt>loss</dt>
 <dd><p>Loss function, can be "deviance", "mse", or "mae". If family =
 binomial can also be "auc" or "class" (misclassification error).</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Any additional arguments are passed through to cv.glmnet.</p></dd>
+
 </dl></div>
 
   </div>
@@ -148,7 +171,7 @@ binomial can also be "auc" or "class" (misclassification error).</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
