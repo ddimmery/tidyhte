@@ -21,7 +21,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 
     check_splits(.data)
 
-    split_ids <- .data[[".split_id"]]
+    split_ids <- as.integer(as.factor(.data[[".split_id"]]))
     unq_splits <- unique(split_ids)
     num_splits_in_data <- length(unq_splits)
     num_splits_in_attr <- attr(.data, "num_splits")
