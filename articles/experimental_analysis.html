@@ -88,11 +88,12 @@
 
       
 
-      </header><script src="experimental_analysis_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>HTE Analysis in an Experiment</h1>
-                        <h4 data-toc-skip class="author">Drew Dimmery (<a href="mailto:ddimmery@univie.ac.at" class="email">ddimmery@univie.ac.at</a>)</h4>
+                        <h4 data-toc-skip class="author">Drew Dimmery
+(<a href="mailto:ddimmery@univie.ac.at" class="email">ddimmery@univie.ac.at</a>)</h4>
             
             <h4 data-toc-skip class="date">12 April, 2023</h4>
       
@@ -113,8 +114,14 @@ div.main-container {
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In this example analysis, I will demonstrate how to run an analysis of heterogeneous treatment effects in a randomized control trial using the methods of Kennedy (2020). This implies that propensity scores are <em>known</em>, so estimates will generally be unbiased.</p>
-<p>This analysis will focus on using machine learning ensembles (through SuperLearner) to estimate nuisance functions and then provide a tibble of estimates of conditional treatment effects along with their associated standard errors.</p>
+<p>In this example analysis, I will demonstrate how to run an analysis
+of heterogeneous treatment effects in a randomized control trial using
+the methods of Kennedy (2020). This implies that propensity scores are
+<em>known</em>, so estimates will generally be unbiased.</p>
+<p>This analysis will focus on using machine learning ensembles (through
+SuperLearner) to estimate nuisance functions and then provide a tibble
+of estimates of conditional treatment effects along with their
+associated standard errors.</p>
 </div>
 <div class="section level2">
 <h2 id="load-packages-and-setup-environment">Load packages and setup environment<a class="anchor" aria-label="anchor" href="#load-packages-and-setup-environment"></a>
@@ -127,8 +134,13 @@ div.main-container {
 <div class="section level2">
 <h2 id="simulate-data">Simulate data<a class="anchor" aria-label="anchor" href="#simulate-data"></a>
 </h2>
-<p>If real data is used, simply replace this block with an appropriate <code>readr::read_csv</code> call or equivalent, creating a tibble. I will assume this tibble is stored as <code>data</code> for the remainder of this document.</p>
-<p>Note that datatypes can be either continuous or discrete, and that there can be columns in the tibble that are not included in any resulting anayses.</p>
+<p>If real data is used, simply replace this block with an appropriate
+<code>readr::read_csv</code> call or equivalent, creating a tibble. I
+will assume this tibble is stored as <code>data</code> for the remainder
+of this document.</p>
+<p>Note that datatypes can be either continuous or discrete, and that
+there can be columns in the tibble that are not included in any
+resulting anayses.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
@@ -157,21 +169,51 @@ div.main-container {
 <div class="section level3">
 <h3 id="propensity-score-model">Propensity Score Model<a class="anchor" aria-label="anchor" href="#propensity-score-model"></a>
 </h3>
-<p>In this example, the propensity score is known because the data is from a randomized experiment. We don’t need to estimate a model for the propensity score.</p>
-<p>For CATEs on discrete moderators, this implies that our estimates will simply be equivalent to AIPW estimators and will therefore inherit unbiasedness. For continuous moderators, similarly, if the CATE functions are smooth, we will attain consistency for recovering the true function non-parametrically.</p>
+<p>In this example, the propensity score is known because the data is
+from a randomized experiment. We don’t need to estimate a model for the
+propensity score.</p>
+<p>For CATEs on discrete moderators, this implies that our estimates
+will simply be equivalent to AIPW estimators and will therefore inherit
+unbiasedness. For continuous moderators, similarly, if the CATE
+functions are smooth, we will attain consistency for recovering the true
+function non-parametrically.</p>
 </div>
 <div class="section level3">
 <h3 id="outcome-model">Outcome Model<a class="anchor" aria-label="anchor" href="#outcome-model"></a>
 </h3>
-<p>We estimate the outcome (T-learner) plugin estimate using an ensemble of machine learning models, including a wide array of model complexities from linear models, GAMs, regularized regressions. In this example, non-linear models are not included (due to runtime), but they could easily be added by uncommenting the associated lines.</p>
-<p>Each individual component of the model provides a list of hyperparameters, over which a full cross-product is taken and all resulting models are estimate. For instance, <code>SL.glmnet</code> sweeps over one hyperparameter (the mixing parameters between ridge and Lasso). A model with each of the hyper-parameter values will be estimated and incorporated into the ensemble. Note that <code>SL.glmnet</code> automatically tunes the regularization parameter using <code>cv.glmnet</code>, so this is not included as a hyperparameter.</p>
+<p>We estimate the outcome (T-learner) plugin estimate using an ensemble
+of machine learning models, including a wide array of model complexities
+from linear models, GAMs, regularized regressions. In this example,
+non-linear models are not included (due to runtime), but they could
+easily be added by uncommenting the associated lines.</p>
+<p>Each individual component of the model provides a list of
+hyperparameters, over which a full cross-product is taken and all
+resulting models are estimate. For instance, <code>SL.glmnet</code>
+sweeps over one hyperparameter (the mixing parameters between ridge and
+Lasso). A model with each of the hyper-parameter values will be
+estimated and incorporated into the ensemble. Note that
+<code>SL.glmnet</code> automatically tunes the regularization parameter
+using <code>cv.glmnet</code>, so this is not included as a
+hyperparameter.</p>
 </div>
 <div class="section level3">
 <h3 id="quantities-of-interest">Quantities of interest<a class="anchor" aria-label="anchor" href="#quantities-of-interest"></a>
 </h3>
-<p>Quantities of Interest determine how results are reported to the user. You can think about this as determining, for instance how results should be plotted in a resulting chart.</p>
-<p>For simplicity, this example simply provides results in one of two ways: - Discrete covariates are stratified and the conditional effect is plotted at each distinct level of the covariate. - Continuous covariates have the effect surface estimated using local-linear regression via <code>nprobust</code> of Calonico, Cattaneo and Farrell (2018). See, similarly, Kennedy, Ma, McHugh and Small (2017) for justification of this approach. Results are obtained for a grid of 100 quantiles across the domain of the covariate.</p>
-<p>An additional quantity of interest provided is the variable importance of a learned joint model of conditional effects (over all covariates). The approach implemented is described in Williamson, Gilbert, Carone and Simon (2020).</p>
+<p>Quantities of Interest determine how results are reported to the
+user. You can think about this as determining, for instance how results
+should be plotted in a resulting chart.</p>
+<p>For simplicity, this example simply provides results in one of two
+ways: - Discrete covariates are stratified and the conditional effect is
+plotted at each distinct level of the covariate. - Continuous covariates
+have the effect surface estimated using local-linear regression via
+<code>nprobust</code> of Calonico, Cattaneo and Farrell (2018). See,
+similarly, Kennedy, Ma, McHugh and Small (2017) for justification of
+this approach. Results are obtained for a grid of 100 quantiles across
+the domain of the covariate.</p>
+<p>An additional quantity of interest provided is the variable
+importance of a learned joint model of conditional effects (over all
+covariates). The approach implemented is described in Williamson,
+Gilbert, Carone and Simon (2020).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hte_cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/basic_config.html">basic_config</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_known_propensity_score.html">add_known_propensity_score</a></span><span class="op">(</span><span class="st">"ps"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -197,7 +239,10 @@ div.main-container {
 <div class="section level2">
 <h2 id="estimate-models">Estimate Models<a class="anchor" aria-label="anchor" href="#estimate-models"></a>
 </h2>
-<p>To actually perform the estimation, the following will be sufficient. Note that the configuration of covariate names at the top of the document makes all of this a little more complex with all the curly-brackets and bangs.</p>
+<p>To actually perform the estimation, the following will be sufficient.
+Note that the configuration of covariate names at the top of the
+document makes all of this a little more complex with all the
+curly-brackets and bangs.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">hte_cfg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>

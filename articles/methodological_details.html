@@ -89,12 +89,14 @@
 
       
 
-      </header><script src="methodological_details_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Methodological Details</h1>
-                        <h4 data-toc-skip class="author">Drew Dimmery (<a href="mailto:ddimmery@univie.ac.at" class="email">ddimmery@univie.ac.at</a>)</h4>
-                        <h4 data-toc-skip class="author">Edward Kennedy (<a href="mailto:edward@stat.cmu.edu" class="email">edward@stat.cmu.edu</a>)</h4>
+                        <h4 data-toc-skip class="author">Drew Dimmery
+(<a href="mailto:ddimmery@univie.ac.at" class="email">ddimmery@univie.ac.at</a>)</h4>
+                        <h4 data-toc-skip class="author">Edward Kennedy
+(<a href="mailto:edward@stat.cmu.edu" class="email">edward@stat.cmu.edu</a>)</h4>
             
             <h4 data-toc-skip class="date">April 12, 2023</h4>
       
@@ -106,14 +108,33 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      <p>In this paper, we introduce the <code>tidyhte</code> package for estimation of heterogeneous treatment effects (HTE) from observational or experimental data. This package implements the methods of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span> and presents them through a tidy-style user-facing API. The design principles undergirding this package are (1) the APIs should be tidy-friendly, (2) Analyses should be easy to replicate with minor changes, (3) specifying complex ensembles for the nuisance functions should be straightforward, and (4) sensible diagnostics should be easily accessible.</p>
+      <p>In this paper, we introduce the <code>tidyhte</code> package
+      for estimation of heterogeneous treatment effects (HTE) from
+      observational or experimental data. This package implements the
+      methods of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span> and presents them through a
+      tidy-style user-facing API. The design principles undergirding
+      this package are (1) the APIs should be tidy-friendly, (2)
+      Analyses should be easy to replicate with minor changes, (3)
+      specifying complex ensembles for the nuisance functions should be
+      straightforward, and (4) sensible diagnostics should be easily
+      accessible.</p>
     </div>
     
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This document details the broad strokes of how <code>tidyhte</code> constructs estimates of heterogeneous treatment effects. It will highlight a variety of the features of the package and discuss the mathematics which undergird them.</p>
-<p>After a brief introduction to the methods of HTE estimation of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>, the structure will generally follow the estimation API of <code>tidyhte</code>: it will begin by discussing the creation of cross-validation folds, then highlight nuisance function estimation, proceed to the construction of “pseudo outcomes”, a concept from <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>, and conclude by demonstrating the calculation of a few varieties of Quantities of Interest: the actual statistics which are desired by the end-user.</p>
+<p>This document details the broad strokes of how <code>tidyhte</code>
+constructs estimates of heterogeneous treatment effects. It will
+highlight a variety of the features of the package and discuss the
+mathematics which undergird them.</p>
+<p>After a brief introduction to the methods of HTE estimation of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>, the structure will generally
+follow the estimation API of <code>tidyhte</code>: it will begin by
+discussing the creation of cross-validation folds, then highlight
+nuisance function estimation, proceed to the construction of “pseudo
+outcomes”, a concept from <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>,
+and conclude by demonstrating the calculation of a few varieties of
+Quantities of Interest: the actual statistics which are desired by the
+end-user.</p>
 </div>
 <div class="section level2">
 <h2 id="preliminaries">Preliminaries<a class="anchor" aria-label="anchor" href="#preliminaries"></a>
@@ -121,18 +142,33 @@
 <div class="section level3">
 <h3 id="problem-setting">Problem Setting<a class="anchor" aria-label="anchor" href="#problem-setting"></a>
 </h3>
-<p>Our data is defined by the triple <span class="math inline">\(Z_i = (X_i, A_i, Y_i)\)</span>, with <span class="math inline">\(X \in \mathbb{R}^d\)</span>, <span class="math inline">\(Y \in \mathbb{R}\)</span> and <span class="math inline">\(A \in \{0, 1\}\)</span>. Define the following nuisance functions: <span class="math display">\[
+<p>Our data is defined by the triple <span class="math inline">\(Z_i =
+(X_i, A_i, Y_i)\)</span>, with <span class="math inline">\(X \in
+\mathbb{R}^d\)</span>, <span class="math inline">\(Y \in
+\mathbb{R}\)</span> and <span class="math inline">\(A \in \{0,
+1\}\)</span>. Define the following nuisance functions: <span class="math display">\[
 \pi(x) \equiv \mathbb{P}(A = 1 \mid X = x) \\
 \mu_a(x) \equiv \mathbb{E}(Y \mid X = x, A = a)
 \]</span></p>
-<p>Heterogeneous treatment effects are defined as the difference in conditional expectations under treatment and control, <span class="math inline">\({\tau(x) \equiv \mu_1(x) - \mu_0(x)}\)</span>. Throughout, we will maintain the following assumptions:</p>
+<p>Heterogeneous treatment effects are defined as the difference in
+conditional expectations under treatment and control, <span class="math inline">\({\tau(x) \equiv \mu_1(x) - \mu_0(x)}\)</span>.
+Throughout, we will maintain the following assumptions:</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>Consistency</strong>: <span class="math inline">\(Y_i = Y_i(A_i)\)</span></p></li>
+<li><p><strong>Consistency</strong>: <span class="math inline">\(Y_i =
+Y_i(A_i)\)</span></p></li>
 <li><p><strong>No Unmeasured Confounding</strong>: <span class="math inline">\(A \perp (Y(1), Y(0)) \mid X\)</span></p></li>
-<li><p><strong>Positivity</strong>: <span class="math inline">\(\epsilon \leq \pi \leq 1 - \epsilon\)</span> with probability <span class="math inline">\(1\)</span></p></li>
+<li><p><strong>Positivity</strong>: <span class="math inline">\(\epsilon
+\leq \pi \leq 1 - \epsilon\)</span> with probability <span class="math inline">\(1\)</span></p></li>
 </ol>
-<p>Under these assumptions, <span class="math inline">\(\tau(x) = \mathbb{E}[Y(1) - Y(0) \mid X = x]\)</span>.</p>
-<p>For the remainder of this paper, we will use a semi-simulated running example based on the <code>penguins</code> dataset of <span class="citation">Horst, Hill, and Gorman (<a href="#ref-palmerpenguins" role="doc-biblioref">2020</a>)</span>. We will imagine a nutritional intervention for which we wish to measure the causal effect on body mass. We also have a lower variance measurement of the average food consumed per day over an observation period. Gentoo penguins gain weight by this intervention on average, while vice-versa for Adelie penguins. The average change in weight for Chinstrap penguins is zero.</p>
+<p>Under these assumptions, <span class="math inline">\(\tau(x) =
+\mathbb{E}[Y(1) - Y(0) \mid X = x]\)</span>.</p>
+<p>For the remainder of this paper, we will use a semi-simulated running
+example based on the <code>penguins</code> dataset of <span class="citation">Horst, Hill, and Gorman (<a href="#ref-palmerpenguins" role="doc-biblioref">2020</a>)</span>. We will imagine a nutritional
+intervention for which we wish to measure the causal effect on body
+mass. We also have a lower variance measurement of the average food
+consumed per day over an observation period. Gentoo penguins gain weight
+by this intervention on average, while vice-versa for Adelie penguins.
+The average change in weight for Chinstrap penguins is zero.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">within</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="op">{</span></span>
 <span>  <span class="va">id</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span></span>
@@ -147,31 +183,68 @@
 <h3 id="overview-of-method">Overview of Method<a class="anchor" aria-label="anchor" href="#overview-of-method"></a>
 </h3>
 <p>We begin by introducing the following “DR-Learner” algorithm:</p>
-<p><strong>DR-learner algorithm</strong>. This consists of three main steps:</p>
+<p><strong>DR-learner algorithm</strong>. This consists of three main
+steps:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Given</strong>: estimates of nuisance functions trained elsewhere: <span class="math inline">\(\left(\hat{\pi}, \hat{\mu}_0, \hat{\mu}_1\right)\)</span>
+<strong>Given</strong>: estimates of nuisance functions trained
+elsewhere: <span class="math inline">\(\left(\hat{\pi}, \hat{\mu}_0,
+\hat{\mu}_1\right)\)</span>
 </li>
 <li>
-<strong>Construct "pseudo-outcome</strong>: This quantity is a transformation of the provided nuisance function estimators. <span class="math display">\[
-  \hat{\psi}(Z) = \frac{A - \hat{\pi}(X)}{\hat{\pi}(X)(1 - \hat{\pi}(X))} \left( Y - \hat{\mu}_{A}(X) \right) + \hat{\mu}_{1}(X) - \hat{\mu}_{0}(X)
+<strong>Construct “pseudo-outcome</strong>: This quantity is a
+transformation of the provided nuisance function estimators. <span class="math display">\[
+  \hat{\psi}(Z) = \frac{A - \hat{\pi}(X)}{\hat{\pi}(X)(1 -
+\hat{\pi}(X))} \left( Y - \hat{\mu}_{A}(X) \right) + \hat{\mu}_{1}(X) -
+\hat{\mu}_{0}(X)
 \]</span>
 </li>
 <li>
-<strong>Second-stage regression</strong>: Construct a smoothing model over the transformed pseudo-outcome. <span class="math display">\[
+<strong>Second-stage regression</strong>: Construct a smoothing
+model over the transformed pseudo-outcome. <span class="math display">\[
 \hat{\tau}_{dr}(x) = \hat{\mathbb{E}}[\hat{\psi}(Z) \mid X = x]
 \]</span>
 </li>
 </ol>
-<p>This algorithm is written when estimates of nuisance functions are trained on separate data and, therefore, can be treated as fixed. The easiest way to do this is with a sample-splitting procedure, after which results are averaged across splits.</p>
-<p>The crucial result, Theorem 2 of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>, shows that the error of the second stage regression will match the error of an oracle regression of the true individual treatment effects on covariates <span class="math inline">\(X\)</span> up to a factor which depends on the product of the errors of the two estimated nuisance functions (that is, the errors in <span class="math inline">\(\pi\)</span> and in <span class="math inline">\(\mu\)</span>).</p>
-<p>When the second-stage regression is simple, like subgroup averages within cells defined by <span class="math inline">\(X\)</span>, the DR-Learner inherits unbiasedness and efficiency like an AIPW estimator <span class="citation">(Robins, Rotnitzky, and Zhao <a href="#ref-robins1995analysis" role="doc-biblioref">1995</a>; Van der Laan, Laan, and Robins <a href="#ref-van2003unified" role="doc-biblioref">2003</a>; Tsiatis <a href="#ref-tsiatis2006semiparametric" role="doc-biblioref">2006</a>; Tsiatis et al. <a href="#ref-tsiatis2008covariate" role="doc-biblioref">2008</a>; Chernozhukov et al. <a href="#ref-chernozhukov2018double" role="doc-biblioref">2018</a>)</span>.</p>
-<p>The approximation results of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span> applied to regressions on this transformed outcome allows for a lot of flexibility in quantities of interest that may be estimated. We will use this fact to allow the estimation of a variety of models <em>as if</em> they were estimated on the individual causal effects themselves: for example, variable importance measures operate off the assumption that various second-stage regressions will be accurate.</p>
+<p>This algorithm is written when estimates of nuisance functions are
+trained on separate data and, therefore, can be treated as fixed. The
+easiest way to do this is with a sample-splitting procedure, after which
+results are averaged across splits.</p>
+<p>The crucial result, Theorem 2 of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>,
+shows that the error of the second stage regression will match the error
+of an oracle regression of the true individual treatment effects on
+covariates <span class="math inline">\(X\)</span> up to a factor which
+depends on the product of the errors of the two estimated nuisance
+functions (that is, the errors in <span class="math inline">\(\pi\)</span> and in <span class="math inline">\(\mu\)</span>).</p>
+<p>When the second-stage regression is simple, like subgroup averages
+within cells defined by <span class="math inline">\(X\)</span>, the
+DR-Learner inherits unbiasedness and efficiency like an AIPW estimator
+<span class="citation">(<a href="#ref-robins1995analysis" role="doc-biblioref">Robins, Rotnitzky, and Zhao 1995</a>; <a href="#ref-van2003unified" role="doc-biblioref">Van der Laan, Laan, and
+Robins 2003</a>; <a href="#ref-tsiatis2006semiparametric" role="doc-biblioref">Tsiatis 2006</a>; <a href="#ref-tsiatis2008covariate" role="doc-biblioref">Tsiatis et al.
+2008</a>; <a href="#ref-chernozhukov2018double" role="doc-biblioref">Chernozhukov et al. 2018</a>)</span>.</p>
+<p>The approximation results of <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>
+applied to regressions on this transformed outcome allows for a lot of
+flexibility in quantities of interest that may be estimated. We will use
+this fact to allow the estimation of a variety of models <em>as if</em>
+they were estimated on the individual causal effects themselves: for
+example, variable importance measures operate off the assumption that
+various second-stage regressions will be accurate.</p>
 </div>
 <div class="section level3">
 <h3 id="principles">Principles<a class="anchor" aria-label="anchor" href="#principles"></a>
 </h3>
-<p>The <code>tidyhte</code> package is premised on the idea of breaking up the analysis of HTEs into a few distinct parts, which can then be mixed together as desired. The first step is to define a configuration object (or recipe) describing at a high-level how HTE estimation should be performed. During estimation, the specific variables of interest are indicated. This design allows for repeating very similar analyses multiple times with very little overhead. Instances when this might be useful are when the user wishes to explore heterogeneity across a variety of outcomes, or when there are a variety of treatment contrasts of particular interest. Each of these analyses will tend to share common features: similar classes of models will be included in the ensembles for nuisance estimation, for example.</p>
+<p>The <code>tidyhte</code> package is premised on the idea of breaking
+up the analysis of HTEs into a few distinct parts, which can then be
+mixed together as desired. The first step is to define a configuration
+object (or recipe) describing at a high-level how HTE estimation should
+be performed. During estimation, the specific variables of interest are
+indicated. This design allows for repeating very similar analyses
+multiple times with very little overhead. Instances when this might be
+useful are when the user wishes to explore heterogeneity across a
+variety of outcomes, or when there are a variety of treatment contrasts
+of particular interest. Each of these analyses will tend to share common
+features: similar classes of models will be included in the ensembles
+for nuisance estimation, for example.</p>
 <div class="section level4">
 <h4 id="clustered-data">Clustered data<a class="anchor" aria-label="anchor" href="#clustered-data"></a>
 </h4>
@@ -185,7 +258,11 @@
 <div class="section level2">
 <h2 id="recipe-api">Recipe API<a class="anchor" aria-label="anchor" href="#recipe-api"></a>
 </h2>
-<p>In order to build up definitions around how HTE should be estimated, <code>tidyhte</code> provides an API to progressively build up a configuration object. A <code>basic_config</code> function creates a bare-bones configuration consisting of only linear models for the respective nuisance functions and a number of diagnostics.</p>
+<p>In order to build up definitions around how HTE should be estimated,
+<code>tidyhte</code> provides an API to progressively build up a
+configuration object. A <code>basic_config</code> function creates a
+bare-bones configuration consisting of only linear models for the
+respective nuisance functions and a number of diagnostics.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/basic_config.html">basic_config</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_known_propensity_score.html">add_known_propensity_score</a></span><span class="op">(</span><span class="st">"propensity_score"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -193,27 +270,84 @@
 <span>    <span class="fu"><a href="../reference/add_moderator.html">add_moderator</a></span><span class="op">(</span><span class="st">"Stratified"</span>, <span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_moderator.html">add_moderator</a></span><span class="op">(</span><span class="st">"KernelSmooth"</span>, <span class="va">bill_length_mm</span>, <span class="va">bill_depth_mm</span>, <span class="va">flipper_length_mm</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_vimp.html">add_vimp</a></span><span class="op">(</span>sample_splitting <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>Since the subject of interest is an experimental intervention, the propensity score is known. Using this known propensity score provides unbiasedness for many quantities of interest (although this may leave some efficiency on the table CITE). In this case, in addition to the (default) linear model included in the SuperLearner ensemble, we add an elastic-net regression. We sweep over a variety of mixing parameters between LASSO and ridge, throwing each of these models into the ensemble. This means that SuperLearner will perform model selection and averaging to identify the best hyper-parameter values. Furthermore, we define all of the moderators of interest and how their results should be collected and displayed. Discrete moderators will just take stratified averages at each level of the moderator, while continuous moderators will use local polynomial regression <span class="citation">(Fan and Gijbels <a href="#ref-fan2018local" role="doc-biblioref">2018</a>; Calonico, Cattaneo, and Farrell <a href="#ref-calonico2019nprobust" role="doc-biblioref">2019</a>)</span>. Finally, we add a variable importance measure from <span class="citation">Williamson et al. (<a href="#ref-williamson2021nonparametric" role="doc-biblioref">2021</a>)</span>.</p>
-<p>After the configuration is completed, it can be attached to the dataset.</p>
+<p>Since the subject of interest is an experimental intervention, the
+propensity score is known. Using this known propensity score provides
+unbiasedness for many quantities of interest (although this may leave
+some efficiency on the table CITE). In this case, in addition to the
+(default) linear model included in the SuperLearner ensemble, we add an
+elastic-net regression. We sweep over a variety of mixing parameters
+between LASSO and ridge, throwing each of these models into the
+ensemble. This means that SuperLearner will perform model selection and
+averaging to identify the best hyper-parameter values. Furthermore, we
+define all of the moderators of interest and how their results should be
+collected and displayed. Discrete moderators will just take stratified
+averages at each level of the moderator, while continuous moderators
+will use local polynomial regression <span class="citation">(<a href="#ref-fan2018local" role="doc-biblioref">Fan and Gijbels 2018</a>;
+<a href="#ref-calonico2019nprobust" role="doc-biblioref">Calonico,
+Cattaneo, and Farrell 2019</a>)</span>. Finally, we add a variable
+importance measure from <span class="citation">Williamson et al. (<a href="#ref-williamson2021nonparametric" role="doc-biblioref">2021</a>)</span>.</p>
+<p>After the configuration is completed, it can be attached to the
+dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguins</span> <span class="op">%&lt;&gt;%</span> <span class="fu"><a href="../reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">cfg</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="cross-validation">Cross-validation<a class="anchor" aria-label="anchor" href="#cross-validation"></a>
 </h2>
-<p>The first step in an analysis of heterogeneous treatment effects following this procedure is to define how to construct splits to be used for cross-validation. <code>tidyhte</code> accomplishes this by using blocking methods to construct lower-variance splits than a purely randomized splitting procedure would entail. Existing methods for generating splits often provide options for stratifying based on a binary outcome to ensure there is variance in the outcome in all splits, even when the outcome is very sparse. For instance, <code><a href="https://rdrr.io/pkg/SuperLearner/man/SuperLearner.CV.control.html" class="external-link">SuperLearner::SuperLearner.CV.control</a></code> provides such an option.</p>
-<p>The appropriate function in <code>tidyhte</code> is <code>make_splits</code>. This function takes in a dataframe and determines a set of splits which accord with the provided unit identifier and number of splits. If any covariates are provided to this function, it will include them in a blocking design for constructing randomized splits using the methods of <span class="citation">Higgins, Sävje, and Sekhon (<a href="#ref-higgins2016improving" role="doc-biblioref">2016</a>)</span> as implemented in the <code>quickblock</code> package.</p>
-<p>There are a few relevant methodological notes about how this blocking for cross-validation strata works. In short, blocks are constructed which are sized to be at least as large as the number of splits to use. These blocks are constructed to minimize the within-block distance between units (where distances are Euclidean based on the provided covariates). When more than one row shares an identifier, blocking is performed on the average covariate value within each identifier. Rows with the same identifier are then assigned to the same split. Precise details on the construction of blocks may be found in <code>higgins2016improving</code>. Within each block, a vector of split IDs is constructed which has a marginal distribution as close to the uniform distribution over splits as possible (up to integer division errors). This set of split IDs is then randomly permuted within blocks.</p>
-<p>Consistent with tidy semantics, the original dataframe is returned, but with the addition of a column <code>.split_id</code> representing these newly constructed splits, and a few attributes for bookkeeping (e.g. the column name of the identifier). Since the object returned is the same as what was passed in, this makes for easy chaining of commands using <code>dplyr</code>.</p>
+<p>The first step in an analysis of heterogeneous treatment effects
+following this procedure is to define how to construct splits to be used
+for cross-validation. <code>tidyhte</code> accomplishes this by using
+blocking methods to construct lower-variance splits than a purely
+randomized splitting procedure would entail. Existing methods for
+generating splits often provide options for stratifying based on a
+binary outcome to ensure there is variance in the outcome in all splits,
+even when the outcome is very sparse. For instance,
+<code><a href="https://rdrr.io/pkg/SuperLearner/man/SuperLearner.CV.control.html" class="external-link">SuperLearner::SuperLearner.CV.control</a></code> provides such an
+option.</p>
+<p>The appropriate function in <code>tidyhte</code> is
+<code>make_splits</code>. This function takes in a dataframe and
+determines a set of splits which accord with the provided unit
+identifier and number of splits. If any covariates are provided to this
+function, it will include them in a blocking design for constructing
+randomized splits using the methods of <span class="citation">Higgins,
+Sävje, and Sekhon (<a href="#ref-higgins2016improving" role="doc-biblioref">2016</a>)</span> as implemented in the
+<code>quickblock</code> package.</p>
+<p>There are a few relevant methodological notes about how this blocking
+for cross-validation strata works. In short, blocks are constructed
+which are sized to be at least as large as the number of splits to use.
+These blocks are constructed to minimize the within-block distance
+between units (where distances are Euclidean based on the provided
+covariates). When more than one row shares an identifier, blocking is
+performed on the average covariate value within each identifier. Rows
+with the same identifier are then assigned to the same split. Precise
+details on the construction of blocks may be found in
+<code>higgins2016improving</code>. Within each block, a vector of split
+IDs is constructed which has a marginal distribution as close to the
+uniform distribution over splits as possible (up to integer division
+errors). This set of split IDs is then randomly permuted within
+blocks.</p>
+<p>Consistent with tidy semantics, the original dataframe is returned,
+but with the addition of a column <code>.split_id</code> representing
+these newly constructed splits, and a few attributes for bookkeeping
+(e.g. the column name of the identifier). Since the object returned is
+the same as what was passed in, this makes for easy chaining of commands
+using <code>dplyr</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguins</span> <span class="op">%&lt;&gt;%</span> <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">species</span>, <span class="va">sex</span>, <span class="va">flipper_length_mm</span>, .num_splits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Dropped 11 of 344 rows (3.2%) through listwise deletion.</span></span></code></pre>
-<p>Note that <code>tidyhte</code> gracefully handles missing data via listwise deletion. More advanced imputation methods are not yet supported.</p>
+<p>Note that <code>tidyhte</code> gracefully handles missing data via
+listwise deletion. More advanced imputation methods are not yet
+supported.</p>
 </div>
 <div class="section level2">
 <h2 id="nuisance-function-estimation">Nuisance function estimation<a class="anchor" aria-label="anchor" href="#nuisance-function-estimation"></a>
 </h2>
-<p>Estimation of nuisance functions such as the propensity score and the outcome regression are typically handled by the SuperLearner library. Specifying a full array of models with diverse hyperparameters is much simplified through the <code>tidyhte</code> API. To specify a cross-validated learner using SuperLearner syntax requires substantially more boilerplate:</p>
+<p>Estimation of nuisance functions such as the propensity score and the
+outcome regression are typically handled by the SuperLearner library.
+Specifying a full array of models with diverse hyperparameters is much
+simplified through the <code>tidyhte</code> API. To specify a
+cross-validated learner using SuperLearner syntax requires substantially
+more boilerplate:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">learners</span> <span class="op">&lt;-</span> <span class="fu">create.Learner</span><span class="op">(</span></span>
 <span>    <span class="st">"SL.glmnet"</span>,</span>
@@ -225,7 +359,8 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">CV.SuperLearner</span><span class="op">(</span><span class="va">label</span>, <span class="va">covariates</span>, SL.library <span class="op">=</span> <span class="va">learners</span><span class="op">$</span><span class="va">names</span><span class="op">)</span></span></code></pre></div>
-<p>In contrast, the <code>tidyhte</code> Recipe API requires only the following one line:</p>
+<p>In contrast, the <code>tidyhte</code> Recipe API requires only the
+following one line:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/add_outcome_model.html">add_outcome_model</a></span><span class="op">(</span><span class="va">cfg</span>, <span class="st">"SL.glmnet"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1.0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -241,15 +376,22 @@
 <div class="section level2">
 <h2 id="pseudo-outcome-construction">Pseudo-outcome construction<a class="anchor" aria-label="anchor" href="#pseudo-outcome-construction"></a>
 </h2>
-<p>Once nuisance functions are estimated, it is simply a matter of combining these results together into the appropriate pseudo-outcome. For typical HTE estimation, the pseudo-outcome of interest is the one analyzed by <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>: the uncentered influence function of the average treatment effect <span class="citation">(Robins, Rotnitzky, and Zhao <a href="#ref-robins1995analysis" role="doc-biblioref">1995</a>)</span>.</p>
+<p>Once nuisance functions are estimated, it is simply a matter of
+combining these results together into the appropriate pseudo-outcome.
+For typical HTE estimation, the pseudo-outcome of interest is the one
+analyzed by <span class="citation">Kennedy (<a href="#ref-kennedy2020optimal" role="doc-biblioref">2020</a>)</span>:
+the uncentered influence function of the average treatment effect <span class="citation">(<a href="#ref-robins1995analysis" role="doc-biblioref">Robins, Rotnitzky, and Zhao 1995</a>)</span>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguins</span> <span class="op">%&lt;&gt;%</span> <span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">food_consumed_g</span>, <span class="va">treatment</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quantities-of-interest">Quantities of interest<a class="anchor" aria-label="anchor" href="#quantities-of-interest"></a>
 </h2>
-<p>Finally, it comes to the most glamorous part of the analysis, when effects are estimated and put into charts.</p>
-<p>The design of <code>tidyhte</code> chooses to leave the charting to the end-user, but merely returns a tidy tibble with all of the requested quantities of interest.</p>
+<p>Finally, it comes to the most glamorous part of the analysis, when
+effects are estimated and put into charts.</p>
+<p>The design of <code>tidyhte</code> chooses to leave the charting to
+the end-user, but merely returns a tidy tibble with all of the requested
+quantities of interest.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguins</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, <span class="va">bill_length_mm</span>, <span class="va">bill_depth_mm</span>, <span class="va">flipper_length_mm</span><span class="op">)</span> <span class="op">-&gt;</span></span>
@@ -271,11 +413,26 @@
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MCATE    year     <span style="text-decoration: underline;">2</span>007 <span style="color: #BB0000;">NA</span>         -<span style="color: #BB0000;">12.9</span>        9.36</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span> MCATE    year     <span style="text-decoration: underline;">2</span>008 <span style="color: #BB0000;">NA</span>           0.838      9.42</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 339 more rows</span></span></span></code></pre>
-<p>The <code>estimand</code> column denotes the class of Quantities of Interest to be estimated, and include such values as “MCATE” and “VIMP”. The <code>term</code> column denotes the covariate being referred to (if relevant) in the results. For example, a calculated MCATE refers to a particular covariate, indicated by this column. The columns <code>value</code> and <code>level</code> refer to quantities which indicate a more granular division within a particular term, with the former representing a numeric value while the latter indicates a categorical one. For example, in the case of the MCATE, if the covariate is discrete, the value at which the MCATE was calculated would be in the <code>level</code> column, while if it were continuous, it would be in the <code>value</code> column. Each of these columns is, therefore, type-stable. The final two columns for <code>estimate</code> and <code>std_error</code> are self explanatory. The details on their calculation lie with the particular Quantity of Interest requested.</p>
+<p>The <code>estimand</code> column denotes the class of Quantities of
+Interest to be estimated, and include such values as “MCATE” and “VIMP”.
+The <code>term</code> column denotes the covariate being referred to (if
+relevant) in the results. For example, a calculated MCATE refers to a
+particular covariate, indicated by this column. The columns
+<code>value</code> and <code>level</code> refer to quantities which
+indicate a more granular division within a particular term, with the
+former representing a numeric value while the latter indicates a
+categorical one. For example, in the case of the MCATE, if the covariate
+is discrete, the value at which the MCATE was calculated would be in the
+<code>level</code> column, while if it were continuous, it would be in
+the <code>value</code> column. Each of these columns is, therefore,
+type-stable. The final two columns for <code>estimate</code> and
+<code>std_error</code> are self explanatory. The details on their
+calculation lie with the particular Quantity of Interest requested.</p>
 <div class="section level3">
 <h3 id="plotting-mcates">Plotting MCATEs<a class="anchor" aria-label="anchor" href="#plotting-mcates"></a>
 </h3>
-<p>It’s then a simple matter to plot results using code like the following:</p>
+<p>It’s then a simple matter to plot results using code like the
+following:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">level</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -327,7 +484,8 @@
 <div class="section level3">
 <h3 id="plotting-vimp">Plotting VIMP<a class="anchor" aria-label="anchor" href="#plotting-vimp"></a>
 </h3>
-<p>And finally, we can examine the variable importance measure of <span class="citation">Williamson et al. (<a href="#ref-williamson2021nonparametric" role="doc-biblioref">2021</a>)</span> when applied to a joint model of the pseudo-outcome:</p>
+<p>And finally, we can examine the variable importance measure of <span class="citation">Williamson et al. (<a href="#ref-williamson2021nonparametric" role="doc-biblioref">2021</a>)</span> when applied to a joint model of
+the pseudo-outcome:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"VIMP"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">term</span>, <span class="va">estimate</span><span class="op">)</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -343,8 +501,10 @@
 <div class="section level2">
 <h2 id="replicating-analyses">Replicating analyses<a class="anchor" aria-label="anchor" href="#replicating-analyses"></a>
 </h2>
-<p>One of the biggest benefits of <code>tidyhte</code> is its ability to repeat similar analyses.</p>
-<p>As an example, to perform the same analysis used above on a different outcome would require the following code:</p>
+<p>One of the biggest benefits of <code>tidyhte</code> is its ability to
+repeat similar analyses.</p>
+<p>As an example, to perform the same analysis used above on a different
+outcome would require the following code:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguins</span> <span class="op">%&lt;&gt;%</span> <span class="fu"><a href="../reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span></span>
 <span>  <span class="co"># outcome</span></span>
@@ -356,55 +516,87 @@
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="../reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">body_mass_g</span>, <span class="va">treatment</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, <span class="va">bill_length_mm</span>, <span class="va">bill_depth_mm</span>, <span class="va">flipper_length_mm</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results_mass</span></span></code></pre></div>
-<p>All the same quantities can be easily plotted for this outcome as well, and results may be joined together conveniently.</p>
+<p>All the same quantities can be easily plotted for this outcome as
+well, and results may be joined together conveniently.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
 <span>  <span class="va">results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="st">"food_consumed_g"</span><span class="op">)</span>,</span>
 <span>  <span class="va">results_mass</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="st">"body_mass_g"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>By allowing the user to flexibly compose HTE estimators, it drastically reduces the amount of work necessary for a typical HTE analysis which by nature tends to involve multiple moderators, models and outcomes.</p>
+<p>By allowing the user to flexibly compose HTE estimators, it
+drastically reduces the amount of work necessary for a typical HTE
+analysis which by nature tends to involve multiple moderators, models
+and outcomes.</p>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
-<p>This paper has introduced the concepts underlying the <code>tidyhte</code> package and given examples as to how the package can be used.</p>
+<p>This paper has introduced the concepts underlying the
+<code>tidyhte</code> package and given examples as to how the package
+can be used.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs">
-<div id="ref-calonico2019nprobust">
-<p>Calonico, Sebastian, Matias D Cattaneo, and Max H Farrell. 2019. “Nprobust: Nonparametric Kernel-Based Estimation and Robust Bias-Corrected Inference.” <em>arXiv Preprint arXiv:1906.00198</em>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-calonico2019nprobust" class="csl-entry">
+Calonico, Sebastian, Matias D Cattaneo, and Max H Farrell. 2019.
+<span>“Nprobust: Nonparametric Kernel-Based Estimation and Robust
+Bias-Corrected Inference.”</span> <em>arXiv Preprint
+arXiv:1906.00198</em>.
 </div>
-<div id="ref-chernozhukov2018double">
-<p>Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey, and James Robins. 2018. “Double/Debiased Machine Learning for Treatment and Structural Parameters.” <em>The Econometrics Journal</em> 21 (1): C1–C68.</p>
+<div id="ref-chernozhukov2018double" class="csl-entry">
+Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo,
+Christian Hansen, Whitney Newey, and James Robins. 2018.
+<span>“Double/Debiased Machine Learning for Treatment and Structural
+Parameters.”</span> <em>The Econometrics Journal</em> 21 (1): C1–68.
 </div>
-<div id="ref-fan2018local">
-<p>Fan, Jianqing, and Irene Gijbels. 2018. <em>Local Polynomial Modelling and Its Applications: Monographs on Statistics and Applied Probability 66</em>. Routledge.</p>
+<div id="ref-fan2018local" class="csl-entry">
+Fan, Jianqing, and Irene Gijbels. 2018. <em>Local Polynomial Modelling
+and Its Applications: Monographs on Statistics and Applied Probability
+66</em>. Routledge.
 </div>
-<div id="ref-higgins2016improving">
-<p>Higgins, Michael J, Fredrik Sävje, and Jasjeet S Sekhon. 2016. “Improving Massive Experiments with Threshold Blocking.” <em>Proceedings of the National Academy of Sciences</em> 113 (27): 7369–76.</p>
+<div id="ref-higgins2016improving" class="csl-entry">
+Higgins, Michael J, Fredrik Sävje, and Jasjeet S Sekhon. 2016.
+<span>“Improving Massive Experiments with Threshold Blocking.”</span>
+<em>Proceedings of the National Academy of Sciences</em> 113 (27):
+7369–76.
 </div>
-<div id="ref-palmerpenguins">
-<p>Horst, Allison M, Alison Presmanes Hill, and Kristen B Gorman. 2020. <em>Allisonhorst/Palmerpenguins: V0.1.0</em> (version v0.1.0). Zenodo. <a href="https://doi.org/10.5281/zenodo.3960218" class="external-link">https://doi.org/10.5281/zenodo.3960218</a>.</p>
+<div id="ref-palmerpenguins" class="csl-entry">
+Horst, Allison M, Alison Presmanes Hill, and Kristen B Gorman. 2020.
+<em>Allisonhorst/Palmerpenguins: V0.1.0</em> (version v0.1.0). Zenodo.
+<a href="https://doi.org/10.5281/zenodo.3960218" class="external-link">https://doi.org/10.5281/zenodo.3960218</a>.
 </div>
-<div id="ref-kennedy2020optimal">
-<p>Kennedy, Edward H. 2020. “Optimal Doubly Robust Estimation of Heterogeneous Causal Effects.” <em>arXiv Preprint arXiv:2004.14497</em>.</p>
+<div id="ref-kennedy2020optimal" class="csl-entry">
+Kennedy, Edward H. 2020. <span>“Optimal Doubly Robust Estimation of
+Heterogeneous Causal Effects.”</span> <em>arXiv Preprint
+arXiv:2004.14497</em>.
 </div>
-<div id="ref-robins1995analysis">
-<p>Robins, James M, Andrea Rotnitzky, and Lue Ping Zhao. 1995. “Analysis of Semiparametric Regression Models for Repeated Outcomes in the Presence of Missing Data.” <em>Journal of the American Statistical Association</em> 90 (429): 106–21.</p>
+<div id="ref-robins1995analysis" class="csl-entry">
+Robins, James M, Andrea Rotnitzky, and Lue Ping Zhao. 1995.
+<span>“Analysis of Semiparametric Regression Models for Repeated
+Outcomes in the Presence of Missing Data.”</span> <em>Journal of the
+American Statistical Association</em> 90 (429): 106–21.
 </div>
-<div id="ref-tsiatis2006semiparametric">
-<p>Tsiatis, Anastasios A. 2006. “Semiparametric Theory and Missing Data.”</p>
+<div id="ref-tsiatis2006semiparametric" class="csl-entry">
+Tsiatis, Anastasios A. 2006. <span>“Semiparametric Theory and Missing
+Data.”</span>
 </div>
-<div id="ref-tsiatis2008covariate">
-<p>Tsiatis, Anastasios A, Marie Davidian, Min Zhang, and Xiaomin Lu. 2008. “Covariate Adjustment for Two-Sample Treatment Comparisons in Randomized Clinical Trials: A Principled yet Flexible Approach.” <em>Statistics in Medicine</em> 27 (23): 4658–77.</p>
+<div id="ref-tsiatis2008covariate" class="csl-entry">
+Tsiatis, Anastasios A, Marie Davidian, Min Zhang, and Xiaomin Lu. 2008.
+<span>“Covariate Adjustment for Two-Sample Treatment Comparisons in
+Randomized Clinical Trials: A Principled yet Flexible Approach.”</span>
+<em>Statistics in Medicine</em> 27 (23): 4658–77.
 </div>
-<div id="ref-van2003unified">
-<p>Van der Laan, Mark J, MJ Laan, and James M Robins. 2003. <em>Unified Methods for Censored Longitudinal Data and Causality</em>. Springer Science &amp; Business Media.</p>
+<div id="ref-van2003unified" class="csl-entry">
+Van der Laan, Mark J, MJ Laan, and James M Robins. 2003. <em>Unified
+Methods for Censored Longitudinal Data and Causality</em>. Springer
+Science &amp; Business Media.
 </div>
-<div id="ref-williamson2021nonparametric">
-<p>Williamson, Brian D, Peter B Gilbert, Marco Carone, and Noah Simon. 2021. “Nonparametric Variable Importance Assessment Using Machine Learning Techniques.” <em>Biometrics</em> 77 (1): 9–22.</p>
+<div id="ref-williamson2021nonparametric" class="csl-entry">
+Williamson, Brian D, Peter B Gilbert, Marco Carone, and Noah Simon.
+2021. <span>“Nonparametric Variable Importance Assessment Using Machine
+Learning Techniques.”</span> <em>Biometrics</em> 77 (1): 9–22.
 </div>
 </div>
 </div>
