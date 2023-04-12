@@ -66,11 +66,11 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
         block_data <-  tibble::as_tibble(stats::model.matrix(~. + 0, dplyr::select(ok_data, !!!dots)))
         block_data$id_col <- ok_data[[rlang::as_name(identifier)]]
         block_data %>%
-            dplyr::group_by(.data$id_col) %>%
+            dplyr::group_by(id_col) %>%
             dplyr::summarize_all(mean) -> block_data
         ids <- block_data$id_col
         block_data %>%
-            dplyr::select(-.data$id_col) %>%
+            dplyr::select(-id_col) %>%
             as.matrix() %>%
             quickblock::quickblock(size_constraint = .num_splits) -> qb
         splits <- quickblock::assign_treatment(qb, treatments = 1:.num_splits)
@@ -87,7 +87,7 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
                 sample(.num_splits, dplyr::n() - .num_splits * num_per_split)
             ))
         ) %>%
-        dplyr::select(-.data$n) -> split_data
+        dplyr::select(-n) -> split_data
     }
 
     .data <- dplyr::left_join(
@@ -218,10 +218,10 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .weights = 
 
     .data <- dplyr::left_join(
         .data %>% dplyr::select(!dplyr::matches(c(".pi_hat", ".mu1_hat", ".mu0_hat"))),
-        ok_data %>% dplyr::select(.data$.row_id, .data$.pi_hat, .data$.mu1_hat, .data$.mu0_hat),
+        ok_data %>% dplyr::select(.row_id, .pi_hat, .mu1_hat, .mu0_hat),
         by = ".row_id"
     ) %>%
-    dplyr::select(-.data$.row_id)
+    dplyr::select(-.row_id)
 
     attr(.data, "SL_coefs") <- SL_coefs
     attr(.data, "weights") <- rlang::as_name(.weights)
@@ -280,7 +280,7 @@ estimate_QoI <- function(
         result <- calculate_mcate_quantities(
             .data,
             {{ weights }},
-            .data$.pseudo_outcome,
+            .pseudo_outcome,
             !!!dots,
             .MCATE_cfg = .QoI_cfg$mcate
         )
@@ -292,7 +292,7 @@ estimate_QoI <- function(
         fx_mod <- fit_fx_predictor(
             .data,
             {{ weights }},
-            .data$.pseudo_outcome,
+            .pseudo_outcome,
             !!!covs,
             .pcate.cfg = .QoI_cfg$pcate,
             .Model_cfg = .HTE_cfg$effect

@@ -20,7 +20,7 @@ n_missing_cells <- 25
 
 for (i in seq_len(n_missing_cells)) {
     row <- sample(n, 1)
-    col <- sample(names(data)[2:9], 1)
+    col <- sample(names(data)[c(2, 4:9)], 1)
     data[row, col] <- NA
 }
 

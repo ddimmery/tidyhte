@@ -66,10 +66,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
     } else {
         ss_folds <- rep(1, length(unq_splits))
     }
-    cv_preds_full <- vimp::extract_sampled_split_predictions(
-        cvsl_obj = full_fit, sample_splitting = TRUE,
-        sample_splitting_folds = ss_folds, full = TRUE
-    )
+    cv_preds_full <- full_fit$SL.predict
 
     pb$tick()
 
@@ -88,10 +85,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
         if (!sample_splitting) {
             ss_folds <- rep(2, length(unq_splits))
         }
-        cv_preds_reduced <- vimp::extract_sampled_split_predictions(
-            cvsl_obj = reduced_fit, sample_splitting = sample_splitting,
-            sample_splitting_folds = ss_folds, full = FALSE
-        )
+        cv_preds_reduced <- reduced_fit$SL.predict
         if (!sample_splitting) {
             ss_folds <- NULL
         }
@@ -103,6 +97,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
         muffle_warnings({
             result <- vimp::cv_vim(
             Y = data$label,
+            indx = idx,
             type = "r_squared",
             cross_fitted_f1 = cv_preds_full,
             cross_fitted_f2 = cv_preds_reduced,
@@ -119,7 +114,10 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
             scale_est = TRUE,
             sample_splitting = sample_splitting
         )
-        }, "estimate < 0", "rank-deficient fit", "(i.e. given weight 0)", "duplicates of previous learners")
+        }, "estimate < 0", "rank-deficient fit", "(i.e. given weight 0)",
+        "duplicates of previous learners", "All metalearner coefficients are zero",
+        "All algorithms have zero weight")
+
         result <- dplyr::tibble(
             estimand = "VIMP",
             term = covariate,

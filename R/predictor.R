@@ -153,8 +153,8 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                 )
             } else {
                 agg_tbl <- dplyr::tibble(y = self$label, x = self$covariates) %>%
-                    dplyr::group_by(.data$x) %>%
-                    dplyr::summarize(y = mean(.data$y), n = dplyr::n())
+                    dplyr::group_by(x) %>%
+                    dplyr::summarize(y = mean(y), n = dplyr::n())
                 agg_y <- agg_tbl$y
                 agg_x <- agg_tbl$x
                 bws <- nprobust::lpbwselect(agg_y, agg_x, eval = eval_pts, bwselect = "imse-dpi")
@@ -190,7 +190,6 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
 )
 
 #' @importFrom stats sd
-#' @importFrom rlang .data
 #' @importFrom magrittr %>%
 StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
     inherit = Predictor,
@@ -208,11 +207,11 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
                 cluster = data$cluster,
                 weights = data$weights
                 ) %>%
-            dplyr::group_by(.data$x) %>%
+            dplyr::group_by(x) %>%
             dplyr::summarize(
-                estimate = weighted.mean(.data$y),
-                std_error = clustered_se_of_mean(.data$y, .data$cluster, weights = .data$weights),
-                sample_size = length(unique(.data$cluster))
+                estimate = weighted.mean(y),
+                std_error = clustered_se_of_mean(y, cluster, weights = weights),
+                sample_size = length(unique(cluster))
             )
             invisible(self)
         },
@@ -222,16 +221,16 @@ StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
             unq_vals <- unique(unlist(data$model_frame))
             dplyr::tibble(x = unq_vals, idx = seq_len(length(unq_vals))) %>%
                 dplyr::inner_join(self$map, by = "x") %>%
-                dplyr::arrange(.data$idx) %>%
-                dplyr::select(.data$x, .data$estimate, .data$sample_size)
+                dplyr::arrange(idx) %>%
+                dplyr::select(x, estimate, sample_size)
         },
         predict_se = function(data) {
             # return mean and std err for requested buckets
             unq_vals <- unique(unlist(data$model_frame))
             dplyr::tibble(x = unq_vals, idx = seq_len(length(unq_vals))) %>%
                 dplyr::inner_join(self$map, by = "x") %>%
-                dplyr::arrange(.data$idx) %>%
-                dplyr::select(.data$x, .data$estimate, .data$std_error, .data$sample_size)
+                dplyr::arrange(idx) %>%
+                dplyr::select(x, estimate, std_error, sample_size)
         }
     )
 )

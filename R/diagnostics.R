@@ -51,13 +51,13 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
         ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(.data$model_name) %>%
+            dplyr::group_by(model_name) %>%
             dplyr::summarize(
-                estimate = mean(.data$coef),
-                std_error = stats::sd(.data$coef) / sqrt(dplyr::n()),
+                estimate = mean(coef),
+                std_error = stats::sd(coef) / sqrt(dplyr::n()),
                 estimand = "SL coefficient"
             ) %>%
-            dplyr::rename(term = .data$model_name)
+            dplyr::rename(term = model_name)
         } else {
             result <- NULL
             message("Cannot calculate SL_coefs because the model is not SuperLearner.")
@@ -70,13 +70,13 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
         ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(.data$model_name) %>%
+            dplyr::group_by(model_name) %>%
             dplyr::summarize(
-                estimate = mean(.data$cvRisk),
-                std_error = stats::sd(.data$cvRisk) / sqrt(dplyr::n()),
+                estimate = mean(cvRisk),
+                std_error = stats::sd(cvRisk) / sqrt(dplyr::n()),
                 estimand = "SL risk"
             ) %>%
-            dplyr::rename(term = .data$model_name)
+            dplyr::rename(term = model_name)
         } else {
             result <- NULL
             message("Cannot calculate SL_risk because the model is not SuperLearner.")
