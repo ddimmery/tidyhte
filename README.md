@@ -15,6 +15,7 @@ Status](https://www.r-pkg.org/badges/version/tidyhte)](https://cran.r-project.or
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/375330850.svg)](https://zenodo.org/badge/latestdoi/375330850)
+[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?style=flat)](https://discord.gg/MrxjbHc3jD)
 <!-- badges: end -->
 
 `tidyhte` provides tidy semantics for estimation of heterogeneous

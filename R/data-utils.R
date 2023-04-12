@@ -125,7 +125,7 @@ check_identifier <- function(data, id_col) {
     is_chr <- checkmate::test_character(ids)
     is_dbl <- checkmate::test_double(ids)
 
-    if (!(is_int | is_fct | is_chr) & is_dbl) ok <- FALSE
+    if (!(is_int || is_fct || is_chr) && is_dbl) ok <- FALSE
 
     if (!ok) {
         msg <- "Invalid identifier. Each unit / cluster must have its own unique ID."
@@ -148,7 +148,7 @@ check_weights <- function(data, weight_col) {
         stop(msg)
     }
 
-    if(min(wts) < 0) {
+    if (min(wts) < 0) {
         msg <- "Invalid weight column. Must be non-negative."
         stop(msg)
     }

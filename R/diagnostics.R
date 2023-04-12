@@ -8,7 +8,6 @@ SL_model_slot <- function(prediction) {
 
 
 #' @importFrom stats sd weighted.mean
-#' @importFrom rlang .data
 estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
     w_col <- attr(.data, "weights")
     id_col <- attr(.data, "identifier")
@@ -51,7 +50,7 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
         ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(model_name) %>%
+            dplyr::group_by(model_name) %>% # nolint
             dplyr::summarize(
                 estimate = mean(coef),
                 std_error = stats::sd(coef) / sqrt(dplyr::n()),
@@ -70,10 +69,10 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
         ) {
         result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(model_name) %>%
+            dplyr::group_by(model_name) %>% # nolint
             dplyr::summarize(
-                estimate = mean(cvRisk),
-                std_error = stats::sd(cvRisk) / sqrt(dplyr::n()),
+                estimate = mean(cvRisk), # nolint
+                std_error = stats::sd(cvRisk) / sqrt(dplyr::n()), # nolint
                 estimand = "SL risk"
             ) %>%
             dplyr::rename(term = model_name)
