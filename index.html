@@ -99,7 +99,7 @@
 
 <p><code>tidyhte</code> provides tidy semantics for estimation of heterogeneous treatment effects through the use of <a href="https://arxiv.org/abs/2004.14497" class="external-link">Kennedy’s (n.d.) doubly-robust learner</a>.</p>
 <p>The goal of <code>tidyhte</code> is to use a sort of “recipe” design. This should (hopefully) make it extremely easy to scale an analysis of HTE from the common single-outcome / single-moderator case to many outcomes and many moderators. The configuration of <code>tidyhte</code> should make it extremely easy to perform the same analysis across many outcomes and for a wide-array of moderators. It’s written to be fairly easy to extend to different models and to add additional diagnostics and ways to output information from a set of HTE estimates.</p>
-<p>The best place to start for learning how to use <code>tidyhte</code> are the vignettes which runs through example analyses from start to finish: <code><a href="articles/experimental_analysis.html">vignette("experimental_analysis")</a></code> and <code><a href="articles/observational_analysis.html">vignette("observational_analysis")</a></code>. There is also a writeup summarizing the method and implementation in <code>vignette("methodological-details")</code>.</p>
+<p>The best place to start for learning how to use <code>tidyhte</code> are the vignettes which runs through example analyses from start to finish: <code><a href="articles/experimental_analysis.html">vignette("experimental_analysis")</a></code> and <code><a href="articles/observational_analysis.html">vignette("observational_analysis")</a></code>. There is also a writeup summarizing the method and implementation in <code><a href="articles/methodological_details.html">vignette("methodological_details")</a></code>.</p>
 </div>
 <div class="section level1">
 <h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -179,6 +179,22 @@
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html" class="external-link">as_string</a></span><span class="op">(</span><span class="va">outcome</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>The function <code>estimate_QoI</code> returns results in a tibble format which makes it easy to manipulate or plot results.</p>
+</div>
+<div class="section level1">
+<h1 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h1>
+<p>There are two main ways to get help:</p>
+<div class="section level2">
+<h2 id="github-issues">GitHub Issues<a class="anchor" aria-label="anchor" href="#github-issues"></a>
+</h2>
+<p>If you have a problem, feel free to <a href="https://github.com/ddimmery/tidyhte/issues/new/choose" class="external-link">open an issue on GitHub</a>. Please try to provide a <a href="https://stackoverflow.com/help/minimal-reproducible-example" class="external-link">minimal reproducible example</a>. If that isn’t possible, explain as clearly and simply why that is, along with all of the relevant debugging steps you’ve already taken.</p>
+</div>
+<div class="section level2">
+<h2 id="discord">Discord<a class="anchor" aria-label="anchor" href="#discord"></a>
+</h2>
+<p>Support for the package will also be provided in the Experimentation Community Discord: <a href="https://discord.gg/MrxjbHc3jD" class="external-link"><img src="https://dcbadge.vercel.app/api/server/MrxjbHc3jD?theme=clean&amp;compact=true"></a></p>
+<p>You are welcome to come in and get support for your usage in the <code>tidyhte</code> channel. Keep in mind that everyone is volunteering their time to help, so try to come prepared with the debugging steps you’ve already taken.</p>
+</div>
 </div>
 
   </div>
