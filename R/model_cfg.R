@@ -28,7 +28,7 @@ SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
         #' SLLearner_cfg$new("SL.glm")
         #' SLLearner_cfg$new("SL.gam", list(deg.gam = c(2, 3)))
         hyperparameters = NULL,
-        initialize = function(model_name, hp=NULL) {
+        initialize = function(model_name, hp = NULL) {
             self$model_name <- model_name
             self$hyperparameters <- hp
             invisible(self)
@@ -145,8 +145,9 @@ KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
         #' regression. More points will provide a smoother line at the cost
         #' of somewhat higher computation.
         #' @param eval_min_quantile Minimum quantile at which to evaluate the smoother.
-        #' A value of zero will do no clipping. Clipping is performed from both the top and the bottom
-        #' of the empirical distribution. A value of alpha would evaluate over \[alpha, 1 - alpha\].
+        #' A value of zero will do no clipping. Clipping is performed from both the
+        #' top and the bottom of the empirical distribution. A value of alpha would
+        #' evaluate over \[alpha, 1 - alpha\].
         #' @return A new `KernelSmooth_cfg` object.
         #' @examples
         #' KernelSmooth_cfg$new(neval = 100)

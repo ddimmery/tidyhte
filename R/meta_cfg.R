@@ -1,26 +1,30 @@
 #' Configuration of Marginal CATEs
 #'
 #' @description
-#' `MCATE_cfg` is a configuration class for estimating marginal response surfaces based on heterogeneous
-#' treatment effect estimates. "Marginal" in this context implies that all other covariates are marginalized.
-#' Thus, if two covariates are highly correlated, it is likely that their MCATE surfaces will be extremely similar.
+#' `MCATE_cfg` is a configuration class for estimating marginal response
+#' surfaces based on heterogeneous treatment effect estimates. "Marginal"
+#' in this context implies that all other covariates are marginalized.
+#' Thus, if two covariates are highly correlated, it is likely that their
+#' MCATE surfaces will be extremely similar.
 #' @importFrom R6 R6Class
 #' @export
 MCATE_cfg <- R6::R6Class("MCATE_cfg",
     public = list(
         #' @field cfgs Named list of covariates names to a `Model_cfg` object defining
-        #' how to present that covariate's CATE surface (while marginalizing over all other covariates).
+        #' how to present that covariate's CATE surface (while marginalizing
+        #' over all other covariates).
         cfgs = list(),
-        #' @field std_errors Boolean indicating whether the results should be returned with standard
-        #' errors or not.
+        #' @field std_errors Boolean indicating whether the results should be
+        #' returned with standard errors or not.
         std_errors = logical(),
         #' @field estimand String indicating the estimand to target.
         estimand = "MCATE",
 
         #' @description
         #' Create a new `MCATE_cfg` object with specified model name and hyperparameters.
-        #' @param cfgs Named list from moderator name to a `Model_cfg` object defining how to present
-        #' that covariate's CATE surface (while marginalizing over all other covariates)
+        #' @param cfgs Named list from moderator name to a `Model_cfg` object
+        #' defining how to present that covariate's CATE surface (while 
+        #' marginalizing over all other covariates)
         #' @param std_errors Boolean indicating whether the results should be returned with standard
         #' errors or not.
         #' @return A new `MCATE_cfg` object.
@@ -48,37 +52,42 @@ MCATE_cfg <- R6::R6Class("MCATE_cfg",
 #' Configuration of Partial CATEs
 #'
 #' @description
-#' `PCATE_cfg` is a configuration class for estimating marginal response surfaces based on heterogeneous
-#' treatment effect estimates. "Partial" in this context is used similarly to the use in partial dependence plots
-#' or in partial regression. In essence, a PCATE attempts to partial out the contribution to the CATE from all other
-#' covariates. Two highly correlated variables may have very different PCATE surfaces.
+#' `r lifecycle::badge("experimental")`
+#' `PCATE_cfg` is a configuration class for estimating marginal
+#' response surfaces based on heterogeneous treatment effect estimates.
+#' "Partial" in this context is used similarly to the use in partial
+#' dependence plots or in partial regression. In essence, a PCATE
+#' attempts to partial out the contribution to the CATE from all other
+#' covariates. Two highly correlated variables may have very different
+#' PCATE surfaces.
 #' @importFrom R6 R6Class
+#' @keywords internal
 #' @export
 PCATE_cfg <- R6::R6Class("PCATE_cfg",
     public = list(
         #' @field cfgs Named list of covariates names to a `Model_cfg` object defining
         #' how to present that covariate's CATE surface.
         cfgs = list(),
-        #' @field model_covariates A character vector of all the covariates to be included in the second-level
-        #' effect regression.
+        #' @field model_covariates A character vector of all the covariates
+        #' to be included in the second-level effect regression.
         model_covariates = character(),
-        #' @field num_mc_samples A named list from covariate name to the number of Monte Carlo samples to take to
-        #' calculate the double integral (See Details).
+        #' @field num_mc_samples A named list from covariate name to the number
+        #' of Monte Carlo samples to take to calculate the double integral (See Details).
         num_mc_samples = list(),
         #' @field estimand String indicating the estimand to target.
         estimand = "PCATE",
 
         #' @description
         #' Create a new `PCATE_cfg` object with specified model name and hyperparameters.
-        #' @param model_covariates A character vector of all the covariates to be included in the second-level
-        #' effect regression.
+        #' @param model_covariates A character vector of all the covariates to be
+        #' included in the second-level effect regression.
         #' @param effect_cfg A `Model_cfg` object indicating how to fit the second level effect
         #' regression (joint across all selected covariates).
-        #' @param cfgs Named list from moderator name to a `Model_cfg` object defining how to present
-        #' that covariate's CATE surface.
-        #' @param num_mc_samples A named list from covariate name to the number of Monte Carlo samples to take to
-        #' calculate the double integral (See Details). If all covariates should use the same number of samples,
-        #' simply pass the (integer) number of samples.
+        #' @param cfgs Named list from moderator name to a `Model_cfg` object defining how to
+        #' present that covariate's CATE surface.
+        #' @param num_mc_samples A named list from covariate name to the number of Monte Carlo
+        #' samples to take to calculate the double integral (See Details). If all covariates
+        #' should use the same number of samples, simply pass the (integer) number of samples.
         #' @return A new `PCATE_cfg` object.
         #' @examples
         #' PCATE_cfg$new(
@@ -119,28 +128,31 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
 #' Configuration of Variable Importance
 #'
 #' @description
-#' `VIMP_cfg` is a configuration class for estimating a variable importance measure across all moderators.
-#' This provides a meaningful measure of which moderators explain the most of the CATE surface.
+#' `VIMP_cfg` is a configuration class for estimating a variable importance measure
+#' across all moderators. This provides a meaningful measure of which moderators
+#' explain the most of the CATE surface.
 #' @importFrom R6 R6Class
 #' @export
 VIMP_cfg <- R6::R6Class("VIMP_cfg",
     public = list(
         #' @field estimand String indicating the estimand to target.
         estimand = "VIMP",
-        #' @field sample_splitting Logical indicating whether to use sample splitting in the calculation
-        #' of variable importance.
+        #' @field sample_splitting Logical indicating whether to use sample
+        #' splitting in the calculation of variable importance.
         sample_splitting = TRUE,
-        #' @field linear Logical indicating whether the variable importance assuming a linear model
-        #' should be estimated.
+        #' @field linear Logical indicating whether the variable importance
+        #' assuming a linear model should be estimated.
         linear = FALSE,
         #' @description
         #' Create a new `VIMP_cfg` object with specified model configuration.
-        #' @param sample_splitting Logical indicating whether to use sample splitting in the calculation
-        #' of variable importance. Choosing not to use sample splitting means that inference will only be
-        #' valid for moderators with non-null importance.
-        #' @param linear_only Logical indicating whether the variable importance should use only a single
-        #' linear-only model. Variable importance measure will only be consistent for the population
-        #' quantity if the true model of pseudo-outcomes is linear.
+        #' @param sample_splitting Logical indicating whether to use sample splitting
+        #' in the calculation of variable importance. Choosing not to use sample
+        #' splitting means that inference will only be valid for moderators with
+        #' non-null importance.
+        #' @param linear_only Logical indicating whether the variable importance
+        #' should use only a single linear-only model. Variable importance measure
+        #' will only be consistent for the population quantity if the true model
+        #' of pseudo-outcomes is linear.
         #' @return A new `VIMP_cfg` object.
         #' @examples
         #' VIMP_cfg$new()
@@ -156,8 +168,8 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
 #' Configuration of Model Diagnostics
 #'
 #' @description
-#' `Diagnostics_cfg` is a configuration class for estimating a variety of diagnostics for the models
-#' trained in the course of HTE estimation.
+#' `Diagnostics_cfg` is a configuration class for estimating a variety of 
+#' diagnostics for the models trained in the course of HTE estimation.
 #' @importFrom R6 R6Class
 #' @export
 Diagnostics_cfg <- R6::R6Class("Diagnostics_cfg",
@@ -217,27 +229,40 @@ Diagnostics_cfg <- R6::R6Class("Diagnostics_cfg",
 #' @export
 QoI_cfg <- R6::R6Class("QoI_cfg",
     public = list(
-        #' @field mcate A configuration object of type `MCATE_cfg` of marginal effects to calculate.
+        #' @field mcate A configuration object of type `MCATE_cfg` of
+        #' marginal effects to calculate.
         mcate = NULL,
-        #' @field pcate A configuration object of type `PCATE_cfg` of partial effects to calculate.
+        #' @field pcate A configuration object of type `PCATE_cfg` of
+        #' partial effects to calculate.
         pcate = NULL,
-        #' @field vimp A configuration object of type `VIMP_cfg` of variable importance to calculate.
+        #' @field vimp A configuration object of type `VIMP_cfg` of
+        #' variable importance to calculate.
         vimp = NULL,
-        #' @field diag A configuration object of type `Diagnostics_cfg` of model diagnostics to calculate.
+        #' @field diag A configuration object of type `Diagnostics_cfg` of
+        #' model diagnostics to calculate.
         diag = NULL,
-        #' @field ate Logical flag indicating whether an estimate of the ATE should be returned.
+        #' @field ate Logical flag indicating whether an estimate of the
+        #' ATE should be returned.
         ate = logical(),
-        #' @field predictions Logical flag indicating whether estimates of the CATE for every unit should be returned.
+        #' @field predictions Logical flag indicating whether estimates of
+        #' the CATE for every unit should be returned.
         predictions = logical(),
 
         #' @description
-        #' Create a new `QoI_cfg` object with specified Quantities of Interest to estimate.
-        #' @param mcate A configuration object of type `MCATE_cfg` of marginal effects to calculate.
-        #' @param pcate A configuration object of type `PCATE_cfg` of partial effects to calculate.
-        #' @param vimp A configuration object of type `VIMP_cfg` of variable importance to calculate.
-        #' @param diag A configuration object of type `Diagnostics_cfg` of model diagnostics to calculate.
-        #' @param ate A logical flag for whether to calculate the Average Treatment Effect (ATE) or not.
-        #' @param predictions A logical flag for whether to return predictions of the CATE for every unit or not.
+        #' Create a new `QoI_cfg` object with specified Quantities of Interest
+        #' to estimate.
+        #' @param mcate A configuration object of type `MCATE_cfg` of marginal
+        #' effects to calculate.
+        #' @param pcate A configuration object of type `PCATE_cfg` of partial
+        #' effects to calculate.
+        #' @param vimp A configuration object of type `VIMP_cfg` of variable
+        #' importance to calculate.
+        #' @param diag A configuration object of type `Diagnostics_cfg` of
+        #' model diagnostics to calculate.
+        #' @param ate A logical flag for whether to calculate the Average
+        #' Treatment Effect (ATE) or not.
+        #' @param predictions A logical flag for whether to return predictions
+        #' of the CATE for every unit or not.
         #' @return A new `Diagnostics_cfg` object.
         #' @examples
         #' mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
@@ -287,23 +312,30 @@ HTE_cfg <- R6::R6Class("HTE_cfg",
     public = list(
         #' @field outcome `Model_cfg` object indicating how outcome models should be estimated.
         outcome = list(),
-        #' @field treatment `Model_cfg` object indicating how the propensity score model should be estimated.
+        #' @field treatment `Model_cfg` object indicating how the propensity score
+        #' model should be estimated.
         treatment = list(),
-        #' @field effect `Model_cfg` object indicating how the joint effect model should be estimated.
+        #' @field effect `Model_cfg` object indicating how the joint effect model
+        #' should be estimated.
         effect = list(),
-        #' @field qoi `QoI_cfg` object indicating what the Quantities of Interest are and providing all
+        #' @field qoi `QoI_cfg` object indicating what the Quantities of Interest
+        #' are and providing all
         #' necessary detail on how they should be estimated.
         qoi = list(),
         #' @field verbose Logical indicating whether to print debugging information.
         verbose = logical(),
 
         #' @description
-        #' Create a new `HTE_cfg` object with all necessary information about how to carry out an HTE
-        #' analysis.
-        #' @param outcome `Model_cfg` object indicating how outcome models should be estimated.
-        #' @param treatment `Model_cfg` object indicating how the propensity score model should be estimated.
-        #' @param effect `Model_cfg` object indicating how the joint effect model should be estimated.
-        #' @param qoi `QoI_cfg` object indicating what the Quantities of Interest are and providing all
+        #' Create a new `HTE_cfg` object with all necessary information about how
+        #' to carry out an HTE analysis.
+        #' @param outcome `Model_cfg` object indicating how outcome models should
+        #' be estimated.
+        #' @param treatment `Model_cfg` object indicating how the propensity score
+        #' model should be estimated.
+        #' @param effect `Model_cfg` object indicating how the joint effect model
+        #' should be estimated.
+        #' @param qoi `QoI_cfg` object indicating what the Quantities of Interest
+        #' are and providing all
         #' necessary detail on how they should be estimated.
         #' @param verbose Logical indicating whether to print debugging information.
         #' @examples

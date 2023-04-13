@@ -1,3 +1,14 @@
+# tidyhte (dev)
+* Improved documentation.
+
+* Fix errors introduced by new release of VIMP.
+
+* Reduce lint warnings.
+
+* Removes unnecessary `.data$<var>` in tidyselect.
+
+* Miscellaneous fixes to unit-tests.
+
 # tidyhte 0.2.0
 
 * Add methods to configs which allow the addition of models and moderators after the initial instantiation. This is a first step towards the eventual recipe API.

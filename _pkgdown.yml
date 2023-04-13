@@ -2,7 +2,6 @@ template:
   params:
     ganalytics: G-R58XC167ZD
     bootswatch: yeti
-    noindex: true
 navbar:
   structure:
     left:  [home, reference, articles, news]

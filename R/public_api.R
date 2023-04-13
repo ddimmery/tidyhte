@@ -2,8 +2,17 @@
 #'
 #' This adds a configuration attribute to a dataframe for HTE estimation.
 #' This configuration details the full analysis of HTE that should be performed.
+#'
+#' For information about how to set up an `HTE_cfg` object, see the Recipe API
+#' documentation [basic_config()].
+#'
+#' To see an example analysis, read `vignette("experimental_analysis")` in the context
+#' of an experiment, `vignette("experimental_analysis")` for an observational study, or
+#' `vignette("methodological_details")` for a deeper dive under the hood.
 #' @param .data dataframe
 #' @param .HTE_cfg `HTE_cfg` object representing the full configuration of the HTE analysis.
+#' @seealso [basic_config()], [make_splits()], [produce_plugin_estimates()],
+#' [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @export
 attach_config <- function(.data, .HTE_cfg) {
     check_hte_cfg(.HTE_cfg)
@@ -26,7 +35,8 @@ attach_config <- function(.data, .HTE_cfg) {
 #' @param .num_splits number of splits to create. If VIMP is requested in `QoI_cfg`, this
 #' must be an even number.
 #' @return original dataframe with additional `.split_id` column
-#' @importFrom rlang .data
+#' @seealso [attach_config()], [produce_plugin_estimates()], [construct_pseudo_outcomes()],
+#' [estimate_QoI()]
 #' @importFrom magrittr %>%
 #' @importFrom stats model.matrix
 #' @importFrom tibble as_tibble
@@ -115,6 +125,7 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
 #' @param ... Unquoted names of covariates to include in the models of the nuisance functions.
 #' @param .weights Unquoted name of weights column. If NULL, all analysis will assume weights are all
 #' equal to one and sample-based quantities will be returned.
+#' @seealso [attach_config()], [make_splits()], [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @importFrom progress progress_bar
 #' @importFrom dplyr matches left_join select
 #' @export
@@ -237,6 +248,8 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .weights = 
 #' @param .data data frame (already prepared with `attach_config`, `make_splits`,
 #' `produce_plugin_estimates` and `construct_pseudo_outcomes`)
 #' @param ... Unquoted names of moderators to calculate QoIs for.
+#' @seealso [attach_config()], [make_splits()], [produce_plugin_estimates()],
+#' [construct_pseudo_outcomes()],
 #' @export
 #' @importFrom rlang .env
 estimate_QoI <- function(

@@ -4,7 +4,19 @@
 #' be extended by providing additional information about models
 #' to be estimated and what quantities of interest should be
 #' returned based on those models. This basic model includes
-#' only linear models for nuisance function estimation.
+#' only linear models for nuisance function estimation, and
+#' basic diagnostics.
+#'
+#' Additional models, diagnostics and quantities of interest should
+#' be added using their respective helper functions provided as part
+#' of the Recipe API.
+#'
+#' To see an example analysis, read `vignette("experimental_analysis")` in the context
+#' of an experiment, `vignette("experimental_analysis")` for an observational study, or
+#' `vignette("methodological_details")` for a deeper dive under the hood.
+#' @seealso [add_propensity_score_model()], [add_known_propensity_score()],
+#' [add_propensity_diagnostic()], [add_outcome_model()], [add_outcome_diagnostic()],
+#' [add_effect_model()], [add_effect_diagnostic()], [add_moderator()], [add_vimp()]
 #' @return `HTE_cfg` object
 #' @export
 basic_config <- function() {

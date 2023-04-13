@@ -12,6 +12,7 @@
 #' @param type String representing how to construct the pseudo-outcome. Valid
 #' values are "dr" (the default), "ipw" and "plugin". See "Details" for more
 #' discussion of these options.
+#' @seealso [attach_config()], [make_splits()], [produce_plugin_estimates()], [estimate_QoI()]
 #' @export
 construct_pseudo_outcomes <- function(.data, outcome, treatment, type = "dr") {
     outcome <- rlang::enexpr(outcome)
@@ -56,7 +57,6 @@ plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
 
 #' @importFrom dplyr summarize
 #' @importFrom stats weighted.mean
-#' @importFrom rlang .data
 calculate_ate <- function(.data) {
     id_col <- attr(.data, "identifier")
     w_col <- attr(.data, "weights")
@@ -105,13 +105,13 @@ calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cf
             result <- model$predict_se(data)
             result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, .data$term, .data$x, .data$estimate, .data$std_error
+                result, term, x, estimate, std_error
             )
         } else {
             result <- model$predict(data)
             result$term <- rlang::as_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, .data$term, .data$x, .data$estimate
+                result, term, x, estimate
             )
         }
         if (is.double(result$x) || is.integer(result$x) || is.character(result$x)) {
@@ -126,7 +126,11 @@ calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cf
     dplyr::bind_rows(!!!result_list)
 }
 
-#' @importFrom rlang .data
+#' Calculate "partial" CATE estimates
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#' @keywords internal
 calculate_pcate_quantities <- function(.data, .weights, .outcome, fx_model, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
@@ -140,14 +144,14 @@ calculate_pcate_quantities <- function(.data, .weights, .outcome, fx_model, ...,
     for (covariate in dots) {
         fx_data <- fx_model$predict(.data, covariate)
         .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_name(covariate)]]
-        data <- Model_data$new(fx_data, .data$.hte, .data$covariate_value)
+        data <- Model_data$new(fx_data, .hte, covariate_value)
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
         if (.MCATE_cfg$std_errors) {
             result <- model$predict_se(data)
             result$term <- rlang::as_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, .data$term, .data$x, .data$estimate, .data$std_error, .data$sample_size
+                result, term, x, estimate, std_error, sample_size
             )
             mse <- mean((.data$.pseudo_outcome_hat - .data$.pseudo_outcome) ^ 2)
             result$std_error <- sqrt(result$std_error ^ 2 + mse / result$sample_size)
@@ -155,7 +159,7 @@ calculate_pcate_quantities <- function(.data, .weights, .outcome, fx_model, ...,
             result <- model$predict(data)
             result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, .data$term, .data$x, .data$estimate, .data$sample_size
+                result, term, x, estimate, sample_size
             )
         }
         if (is.double(result$x) || is.integer(result$x)) {
