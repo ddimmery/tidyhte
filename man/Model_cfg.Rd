@@ -18,13 +18,13 @@ which inherit from \code{Model_cfg}.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Model_cfg$new()}}
-\item \href{#method-clone}{\code{Model_cfg$clone()}}
+\item \href{#method-Model_cfg-new}{\code{Model_cfg$new()}}
+\item \href{#method-Model_cfg-clone}{\code{Model_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Model_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Model_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{Model_cfg} object with any necessary parameters.
 \subsection{Usage}{
@@ -36,8 +36,8 @@ A new \code{Model_cfg} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Model_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Model_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

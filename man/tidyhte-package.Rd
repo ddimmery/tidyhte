@@ -9,13 +9,18 @@
 Tools for the estimation of heterogeneous treatment effects using tidy semantics. Methods are based on the doubly-robust learner of Kennedy (n.d.).
 }
 \details{
-The best places to get started with \code{tidyhte} is \code{vignette("example_analysis")} which
-walks through a full analysis of HTE on simulated data.
+The best place to get started with \code{tidyhte} is \code{vignette("experimental_analysis")} which
+walks through a full analysis of HTE on simulated data, or \code{vignette("methodological_details")}
+which gets into more of the details underlying the method.
+}
+\references{
+Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
+causal effects. \emph{arXiv preprint arXiv:2004.14497}.
 }
 \seealso{
 The core public-facing functions are \code{make_splits}, \code{produce_plugin_estimates},
 \code{construct_pseudo_outcomes} and \code{estimate_QoI}. Configuration is accomplished through \code{HTE_cfg}
-in addition to a variety of related classes.
+in addition to a variety of related classes (see \code{basic_config}).
 }
 \author{
 \strong{Maintainer}: Drew Dimmery \email{drew.dimmery@univie.ac.at} (\href{https://orcid.org/0000-0001-9602-6325}{ORCID})

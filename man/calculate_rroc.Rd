@@ -22,5 +22,11 @@ of Hernández-Orallo \href{https://doi.org/10.1016/j.patcog.2013.06.014}{doi:10.
 It provides estimates for the positive and negative
 errors when predictions are shifted by a variety
 of constants (which range across the domain of observed
-residuals).
+residuals). Curves closer to the axes are, in general, to be
+preferred. In general, this curve provides a simple way to
+visualize the error properties of a regression model.
+}
+\details{
+The dot shows the errors when no shift is applied, corresponding
+to the base model predictions.
 }

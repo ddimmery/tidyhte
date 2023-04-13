@@ -17,3 +17,7 @@ estimate_QoI(.data, ...)
 plugin estimates and pseudo-outcomes and calculates the requested
 quantities of interest (QoIs).
 }
+\seealso{
+\code{\link[=attach_config]{attach_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=produce_plugin_estimates]{produce_plugin_estimates()}},
+\code{\link[=construct_pseudo_outcomes]{construct_pseudo_outcomes()}},
+}

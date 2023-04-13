@@ -32,19 +32,13 @@ which corresponds to the covariate on which to stratify.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Stratified_cfg$new()}}
-\item \href{#method-clone}{\code{Stratified_cfg$clone()}}
+\item \href{#method-Stratified_cfg-new}{\code{Stratified_cfg$new()}}
+\item \href{#method-Stratified_cfg-clone}{\code{Stratified_cfg$clone()}}
 }
-}
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-}
-\out{</details>}
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Stratified_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Stratified_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{Stratified_cfg} object with specified number of evaluation points.
 \subsection{Usage}{
@@ -72,8 +66,8 @@ A new \code{Stratified_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Stratified_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Stratified_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

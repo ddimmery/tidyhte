@@ -4,10 +4,14 @@
 \alias{PCATE_cfg}
 \title{Configuration of Partial CATEs}
 \description{
-\code{PCATE_cfg} is a configuration class for estimating marginal response surfaces based on heterogeneous
-treatment effect estimates. "Partial" in this context is used similarly to the use in partial dependence plots
-or in partial regression. In essence, a PCATE attempts to partial out the contribution to the CATE from all other
-covariates. Two highly correlated variables may have very different PCATE surfaces.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\code{PCATE_cfg} is a configuration class for estimating marginal
+response surfaces based on heterogeneous treatment effect estimates.
+"Partial" in this context is used similarly to the use in partial
+dependence plots or in partial regression. In essence, a PCATE
+attempts to partial out the contribution to the CATE from all other
+covariates. Two highly correlated variables may have very different
+PCATE surfaces.
 }
 \examples{
 
@@ -21,17 +25,18 @@ PCATE_cfg$new(
    num_mc_samples = list(x1 = 100)
 )
 }
+\keyword{internal}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{cfgs}}{Named list of covariates names to a \code{Model_cfg} object defining
 how to present that covariate's CATE surface.}
 
-\item{\code{model_covariates}}{A character vector of all the covariates to be included in the second-level
-effect regression.}
+\item{\code{model_covariates}}{A character vector of all the covariates
+to be included in the second-level effect regression.}
 
-\item{\code{num_mc_samples}}{A named list from covariate name to the number of Monte Carlo samples to take to
-calculate the double integral (See Details).}
+\item{\code{num_mc_samples}}{A named list from covariate name to the number
+of Monte Carlo samples to take to calculate the double integral (See Details).}
 
 \item{\code{estimand}}{String indicating the estimand to target.}
 }
@@ -40,14 +45,14 @@ calculate the double integral (See Details).}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{PCATE_cfg$new()}}
-\item \href{#method-add_moderator}{\code{PCATE_cfg$add_moderator()}}
-\item \href{#method-clone}{\code{PCATE_cfg$clone()}}
+\item \href{#method-PCATE_cfg-new}{\code{PCATE_cfg$new()}}
+\item \href{#method-PCATE_cfg-add_moderator}{\code{PCATE_cfg$add_moderator()}}
+\item \href{#method-PCATE_cfg-clone}{\code{PCATE_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-PCATE_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-PCATE_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{PCATE_cfg} object with specified model name and hyperparameters.
 \subsection{Usage}{
@@ -57,15 +62,15 @@ Create a new \code{PCATE_cfg} object with specified model name and hyperparamete
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{model_covariates}}{A character vector of all the covariates to be included in the second-level
-effect regression.}
+\item{\code{model_covariates}}{A character vector of all the covariates to be
+included in the second-level effect regression.}
 
-\item{\code{cfgs}}{Named list from moderator name to a \code{Model_cfg} object defining how to present
-that covariate's CATE surface.}
+\item{\code{cfgs}}{Named list from moderator name to a \code{Model_cfg} object defining how to
+present that covariate's CATE surface.}
 
-\item{\code{num_mc_samples}}{A named list from covariate name to the number of Monte Carlo samples to take to
-calculate the double integral (See Details). If all covariates should use the same number of samples,
-simply pass the (integer) number of samples.}
+\item{\code{num_mc_samples}}{A named list from covariate name to the number of Monte Carlo
+samples to take to calculate the double integral (See Details). If all covariates
+should use the same number of samples, simply pass the (integer) number of samples.}
 
 \item{\code{effect_cfg}}{A \code{Model_cfg} object indicating how to fit the second level effect
 regression (joint across all selected covariates).}
@@ -89,8 +94,8 @@ A new \code{PCATE_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_moderator"></a>}}
-\if{latex}{\out{\hypertarget{method-add_moderator}{}}}
+\if{html}{\out{<a id="method-PCATE_cfg-add_moderator"></a>}}
+\if{latex}{\out{\hypertarget{method-PCATE_cfg-add_moderator}{}}}
 \subsection{Method \code{add_moderator()}}{
 Add a moderator to the \code{PCATE_cfg} object. This entails adding it to the joint
 model of effects and defines a configuration for displaying the effect surface
@@ -112,8 +117,8 @@ surface.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-PCATE_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-PCATE_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

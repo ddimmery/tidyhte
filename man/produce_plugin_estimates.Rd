@@ -25,3 +25,6 @@ to an estimate of the conditional expectation of treatment (\code{.pi_hat}), alo
 conditional expectation of the control and treatment potential outcome surfaces
 (\code{.mu0_hat} and \code{.mu1_hat} respectively).
 }
+\seealso{
+\code{\link[=attach_config]{attach_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=construct_pseudo_outcomes]{construct_pseudo_outcomes()}}, \code{\link[=estimate_QoI]{estimate_QoI()}}
+}

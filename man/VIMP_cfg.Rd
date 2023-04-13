@@ -4,8 +4,9 @@
 \alias{VIMP_cfg}
 \title{Configuration of Variable Importance}
 \description{
-\code{VIMP_cfg} is a configuration class for estimating a variable importance measure across all moderators.
-This provides a meaningful measure of which moderators explain the most of the CATE surface.
+\code{VIMP_cfg} is a configuration class for estimating a variable importance measure
+across all moderators. This provides a meaningful measure of which moderators
+explain the most of the CATE surface.
 }
 \examples{
 
@@ -20,24 +21,24 @@ VIMP_cfg$new()
 \describe{
 \item{\code{estimand}}{String indicating the estimand to target.}
 
-\item{\code{sample_splitting}}{Logical indicating whether to use sample splitting in the calculation
-of variable importance.}
+\item{\code{sample_splitting}}{Logical indicating whether to use sample
+splitting in the calculation of variable importance.}
 
-\item{\code{linear}}{Logical indicating whether the variable importance assuming a linear model
-should be estimated.}
+\item{\code{linear}}{Logical indicating whether the variable importance
+assuming a linear model should be estimated.}
 }
 \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{VIMP_cfg$new()}}
-\item \href{#method-clone}{\code{VIMP_cfg$clone()}}
+\item \href{#method-VIMP_cfg-new}{\code{VIMP_cfg$new()}}
+\item \href{#method-VIMP_cfg-clone}{\code{VIMP_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-VIMP_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-VIMP_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{VIMP_cfg} object with specified model configuration.
 \subsection{Usage}{
@@ -47,13 +48,15 @@ Create a new \code{VIMP_cfg} object with specified model configuration.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sample_splitting}}{Logical indicating whether to use sample splitting in the calculation
-of variable importance. Choosing not to use sample splitting means that inference will only be
-valid for moderators with non-null importance.}
+\item{\code{sample_splitting}}{Logical indicating whether to use sample splitting
+in the calculation of variable importance. Choosing not to use sample
+splitting means that inference will only be valid for moderators with
+non-null importance.}
 
-\item{\code{linear_only}}{Logical indicating whether the variable importance should use only a single
-linear-only model. Variable importance measure will only be consistent for the population
-quantity if the true model of pseudo-outcomes is linear.}
+\item{\code{linear_only}}{Logical indicating whether the variable importance
+should use only a single linear-only model. Variable importance measure
+will only be consistent for the population quantity if the true model
+of pseudo-outcomes is linear.}
 }
 \if{html}{\out{</div>}}
 }
@@ -70,8 +73,8 @@ A new \code{VIMP_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-VIMP_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-VIMP_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

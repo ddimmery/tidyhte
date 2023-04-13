@@ -47,11 +47,14 @@ HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, effect = fx_cfg, qoi = qoi_cfg)
 \describe{
 \item{\code{outcome}}{\code{Model_cfg} object indicating how outcome models should be estimated.}
 
-\item{\code{treatment}}{\code{Model_cfg} object indicating how the propensity score model should be estimated.}
+\item{\code{treatment}}{\code{Model_cfg} object indicating how the propensity score
+model should be estimated.}
 
-\item{\code{effect}}{\code{Model_cfg} object indicating how the joint effect model should be estimated.}
+\item{\code{effect}}{\code{Model_cfg} object indicating how the joint effect model
+should be estimated.}
 
-\item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest are and providing all
+\item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest
+are and providing all
 necessary detail on how they should be estimated.}
 
 \item{\code{verbose}}{Logical indicating whether to print debugging information.}
@@ -61,16 +64,16 @@ necessary detail on how they should be estimated.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{HTE_cfg$new()}}
-\item \href{#method-clone}{\code{HTE_cfg$clone()}}
+\item \href{#method-HTE_cfg-new}{\code{HTE_cfg$new()}}
+\item \href{#method-HTE_cfg-clone}{\code{HTE_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-HTE_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-HTE_cfg-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new \code{HTE_cfg} object with all necessary information about how to carry out an HTE
-analysis.
+Create a new \code{HTE_cfg} object with all necessary information about how
+to carry out an HTE analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{HTE_cfg$new(
   outcome = NULL,
@@ -84,13 +87,17 @@ analysis.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{outcome}}{\code{Model_cfg} object indicating how outcome models should be estimated.}
+\item{\code{outcome}}{\code{Model_cfg} object indicating how outcome models should
+be estimated.}
 
-\item{\code{treatment}}{\code{Model_cfg} object indicating how the propensity score model should be estimated.}
+\item{\code{treatment}}{\code{Model_cfg} object indicating how the propensity score
+model should be estimated.}
 
-\item{\code{effect}}{\code{Model_cfg} object indicating how the joint effect model should be estimated.}
+\item{\code{effect}}{\code{Model_cfg} object indicating how the joint effect model
+should be estimated.}
 
-\item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest are and providing all
+\item{\code{qoi}}{\code{QoI_cfg} object indicating what the Quantities of Interest
+are and providing all
 necessary detail on how they should be estimated.}
 
 \item{\code{verbose}}{Logical indicating whether to print debugging information.}
@@ -133,8 +140,8 @@ HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, effect = fx_cfg, qoi = qoi_cfg)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-HTE_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-HTE_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

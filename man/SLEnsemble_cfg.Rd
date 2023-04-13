@@ -13,7 +13,9 @@ using an ensemble of models using \code{SuperLearner}.
 ## Method `SLEnsemble_cfg$new`
 ## ------------------------------------------------
 
-SLEnsemble_cfg$new(learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam")))
+SLEnsemble_cfg$new(
+learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+)
 }
 \section{Super class}{
 \code{\link[tidyhte:Model_cfg]{tidyhte::Model_cfg}} -> \code{SLEnsemble_cfg}
@@ -21,14 +23,18 @@ SLEnsemble_cfg$new(learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cf
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{cvControl}}{A list of parameters for controlling the cross-validation used in SuperLearner.}
+\item{\code{cvControl}}{A list of parameters for controlling the
+cross-validation used in SuperLearner.}
 
-\item{\code{SL.library}}{A vector of the names of learners to include in the SuperLearner ensemble.}
+\item{\code{SL.library}}{A vector of the names of learners to
+include in the SuperLearner ensemble.}
 
-\item{\code{SL.env}}{An environment containing all of the programmatically generated learners to be included
+\item{\code{SL.env}}{An environment containing all of the programmatically
+generated learners to be included
 in the SuperLearner ensemble.}
 
-\item{\code{family}}{\code{stats::family} object to determine how SuperLearner should be fitted.}
+\item{\code{family}}{\code{stats::family} object to determine how SuperLearner
+should be fitted.}
 
 \item{\code{model_class}}{The class of the model, required for all classes
 which inherit from \code{Model_cfg}.}
@@ -38,20 +44,14 @@ which inherit from \code{Model_cfg}.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SLEnsemble_cfg$new()}}
-\item \href{#method-add_sublearner}{\code{SLEnsemble_cfg$add_sublearner()}}
-\item \href{#method-clone}{\code{SLEnsemble_cfg$clone()}}
+\item \href{#method-SLEnsemble_cfg-new}{\code{SLEnsemble_cfg$new()}}
+\item \href{#method-SLEnsemble_cfg-add_sublearner}{\code{SLEnsemble_cfg$add_sublearner()}}
+\item \href{#method-SLEnsemble_cfg-clone}{\code{SLEnsemble_cfg$clone()}}
 }
-}
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-}
-\out{</details>}
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SLEnsemble_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SLEnsemble_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{SLEnsemble_cfg} object with specified settings.
 \subsection{Usage}{
@@ -65,7 +65,8 @@ Create a new \code{SLEnsemble_cfg} object with specified settings.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{cvControl}}{A list of parameters for controlling the cross-validation used in SuperLearner.
+\item{\code{cvControl}}{A list of parameters for controlling the
+cross-validation used in SuperLearner.
 For more details, see \code{SuperLearner::SuperLearner.CV.control}.}
 
 \item{\code{learner_cfgs}}{A list of \code{SLLearner_cfg} objects.}
@@ -79,7 +80,9 @@ A new \code{SLEnsemble_cfg} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{SLEnsemble_cfg$new(learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam")))
+\preformatted{SLEnsemble_cfg$new(
+learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+)
 }
 \if{html}{\out{</div>}}
 
@@ -87,8 +90,8 @@ A new \code{SLEnsemble_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_sublearner"></a>}}
-\if{latex}{\out{\hypertarget{method-add_sublearner}{}}}
+\if{html}{\out{<a id="method-SLEnsemble_cfg-add_sublearner"></a>}}
+\if{latex}{\out{\hypertarget{method-SLEnsemble_cfg-add_sublearner}{}}}
 \subsection{Method \code{add_sublearner()}}{
 Adds a model (or class of models) to the SuperLearner ensemble.
 If hyperparameter values are specified, this method will
@@ -113,8 +116,8 @@ ensemble.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SLEnsemble_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SLEnsemble_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

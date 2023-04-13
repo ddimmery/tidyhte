@@ -4,9 +4,11 @@
 \alias{MCATE_cfg}
 \title{Configuration of Marginal CATEs}
 \description{
-\code{MCATE_cfg} is a configuration class for estimating marginal response surfaces based on heterogeneous
-treatment effect estimates. "Marginal" in this context implies that all other covariates are marginalized.
-Thus, if two covariates are highly correlated, it is likely that their MCATE surfaces will be extremely similar.
+\code{MCATE_cfg} is a configuration class for estimating marginal response
+surfaces based on heterogeneous treatment effect estimates. "Marginal"
+in this context implies that all other covariates are marginalized.
+Thus, if two covariates are highly correlated, it is likely that their
+MCATE surfaces will be extremely similar.
 }
 \examples{
 
@@ -20,10 +22,11 @@ MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{cfgs}}{Named list of covariates names to a \code{Model_cfg} object defining
-how to present that covariate's CATE surface (while marginalizing over all other covariates).}
+how to present that covariate's CATE surface (while marginalizing
+over all other covariates).}
 
-\item{\code{std_errors}}{Boolean indicating whether the results should be returned with standard
-errors or not.}
+\item{\code{std_errors}}{Boolean indicating whether the results should be
+returned with standard errors or not.}
 
 \item{\code{estimand}}{String indicating the estimand to target.}
 }
@@ -32,14 +35,14 @@ errors or not.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{MCATE_cfg$new()}}
-\item \href{#method-add_moderator}{\code{MCATE_cfg$add_moderator()}}
-\item \href{#method-clone}{\code{MCATE_cfg$clone()}}
+\item \href{#method-MCATE_cfg-new}{\code{MCATE_cfg$new()}}
+\item \href{#method-MCATE_cfg-add_moderator}{\code{MCATE_cfg$add_moderator()}}
+\item \href{#method-MCATE_cfg-clone}{\code{MCATE_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-MCATE_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-MCATE_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{MCATE_cfg} object with specified model name and hyperparameters.
 \subsection{Usage}{
@@ -49,8 +52,9 @@ Create a new \code{MCATE_cfg} object with specified model name and hyperparamete
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{cfgs}}{Named list from moderator name to a \code{Model_cfg} object defining how to present
-that covariate's CATE surface (while marginalizing over all other covariates)}
+\item{\code{cfgs}}{Named list from moderator name to a \code{Model_cfg} object
+defining how to present that covariate's CATE surface (while
+marginalizing over all other covariates)}
 
 \item{\code{std_errors}}{Boolean indicating whether the results should be returned with standard
 errors or not.}
@@ -70,8 +74,8 @@ A new \code{MCATE_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_moderator"></a>}}
-\if{latex}{\out{\hypertarget{method-add_moderator}{}}}
+\if{html}{\out{<a id="method-MCATE_cfg-add_moderator"></a>}}
+\if{latex}{\out{\hypertarget{method-MCATE_cfg-add_moderator}{}}}
 \subsection{Method \code{add_moderator()}}{
 Add a moderator to the \code{MCATE_cfg} object. This entails defining a configuration
 for displaying the effect surface for that moderator.
@@ -92,8 +96,8 @@ surface.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-MCATE_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-MCATE_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

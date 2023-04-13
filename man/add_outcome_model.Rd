@@ -23,3 +23,7 @@ Updated \code{HTE_cfg} object
 This adds a learner to the ensemble used for estimating a model
 of the conditional expectation of the outcome.
 }
+\examples{
+basic_config() \%>\%
+   add_outcome_model("SL.glm.interaction") -> hte_cfg
+}

@@ -25,3 +25,8 @@ Updated \code{HTE_cfg} object
 This adds a definition about how to display a moderators to
 the MCATE config.
 }
+\examples{
+basic_config() \%>\%
+   add_moderator("Stratified", x2, x3) \%>\%
+   add_moderator("KernelSmooth", x1, x4, x5) -> hte_cfg
+}

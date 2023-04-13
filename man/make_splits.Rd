@@ -25,3 +25,7 @@ arbitrary number of covariates on which to stratify the splits.
 It returns the original dataset with an additional column \code{.split_id}
 corresponding to an identifier for the split.
 }
+\seealso{
+\code{\link[=attach_config]{attach_config()}}, \code{\link[=produce_plugin_estimates]{produce_plugin_estimates()}}, \code{\link[=construct_pseudo_outcomes]{construct_pseudo_outcomes()}},
+\code{\link[=estimate_QoI]{estimate_QoI()}}
+}

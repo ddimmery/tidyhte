@@ -37,19 +37,13 @@ of somewhat higher computation.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{KernelSmooth_cfg$new()}}
-\item \href{#method-clone}{\code{KernelSmooth_cfg$clone()}}
+\item \href{#method-KernelSmooth_cfg-new}{\code{KernelSmooth_cfg$new()}}
+\item \href{#method-KernelSmooth_cfg-clone}{\code{KernelSmooth_cfg$clone()}}
 }
-}
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-}
-\out{</details>}
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-KernelSmooth_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-KernelSmooth_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{KernelSmooth_cfg} object with specified number of evaluation points.
 \subsection{Usage}{
@@ -64,8 +58,9 @@ regression. More points will provide a smoother line at the cost
 of somewhat higher computation.}
 
 \item{\code{eval_min_quantile}}{Minimum quantile at which to evaluate the smoother.
-A value of zero will do no clipping. Clipping is performed from both the top and the bottom
-of the empirical distribution. A value of alpha would evaluate over [alpha, 1 - alpha].}
+A value of zero will do no clipping. Clipping is performed from both the
+top and the bottom of the empirical distribution. A value of alpha would
+evaluate over [alpha, 1 - alpha].}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,8 +77,8 @@ A new \code{KernelSmooth_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-KernelSmooth_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-KernelSmooth_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

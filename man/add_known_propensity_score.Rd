@@ -19,3 +19,7 @@ Updated \code{HTE_cfg} object
 This replaces the propensity score model with a known value
 of the propensity score.
 }
+\examples{
+basic_config() \%>\%
+   add_known_propensity_score("ps") -> hte_cfg
+}

@@ -19,3 +19,7 @@ Updated \code{HTE_cfg} object
 \description{
 This adds a diagnostic to the propensity score.
 }
+\examples{
+basic_config() \%>\%
+   add_propensity_diagnostic(c("AUC", "MSE")) -> hte_cfg
+}

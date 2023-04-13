@@ -34,19 +34,13 @@ which inherit from \code{Model_cfg}.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Known_cfg$new()}}
-\item \href{#method-clone}{\code{Known_cfg$clone()}}
+\item \href{#method-Known_cfg-new}{\code{Known_cfg$new()}}
+\item \href{#method-Known_cfg-clone}{\code{Known_cfg$clone()}}
 }
-}
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-}
-\out{</details>}
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Known_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Known_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{Known_cfg} object with specified covariate column.
 \subsection{Usage}{
@@ -74,8 +68,8 @@ A new \code{Known_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Known_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Known_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

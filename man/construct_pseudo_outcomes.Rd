@@ -24,3 +24,10 @@ with plugin estimators of nuisance parameters and transforms these into
 a "pseudo-outcome": an unbiased estimator of the conditional average
 treatment effect under exogeneity.
 }
+\details{
+Taking averages of these pseudo-outcomes (or fitting a model to them)
+will approximate averages (or models) of the underlying treatment effect.
+}
+\seealso{
+\code{\link[=attach_config]{attach_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=produce_plugin_estimates]{produce_plugin_estimates()}}, \code{\link[=estimate_QoI]{estimate_QoI()}}
+}

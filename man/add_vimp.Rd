@@ -23,3 +23,7 @@ Updated \code{HTE_cfg} object
 \description{
 This adds a variable importance quantity of interest to the outputs.
 }
+\examples{
+basic_config() \%>\%
+   add_vimp(sample_splitting = FALSE) -> hte_cfg
+}

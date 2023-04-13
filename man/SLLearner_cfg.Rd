@@ -32,13 +32,13 @@ values that should be swept over.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SLLearner_cfg$new()}}
-\item \href{#method-clone}{\code{SLLearner_cfg$clone()}}
+\item \href{#method-SLLearner_cfg-new}{\code{SLLearner_cfg$new()}}
+\item \href{#method-SLLearner_cfg-clone}{\code{SLLearner_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SLLearner_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SLLearner_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{SLLearner_cfg} object with specified model name and hyperparameters.
 \subsection{Usage}{
@@ -71,8 +71,8 @@ SLLearner_cfg$new("SL.gam", list(deg.gam = c(2, 3)))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SLLearner_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SLLearner_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

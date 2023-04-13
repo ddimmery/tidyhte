@@ -15,3 +15,15 @@ attach_config(.data, .HTE_cfg)
 This adds a configuration attribute to a dataframe for HTE estimation.
 This configuration details the full analysis of HTE that should be performed.
 }
+\details{
+For information about how to set up an \code{HTE_cfg} object, see the Recipe API
+documentation \code{\link[=basic_config]{basic_config()}}.
+
+To see an example analysis, read \code{vignette("experimental_analysis")} in the context
+of an experiment, \code{vignette("experimental_analysis")} for an observational study, or
+\code{vignette("methodological_details")} for a deeper dive under the hood.
+}
+\seealso{
+\code{\link[=basic_config]{basic_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=produce_plugin_estimates]{produce_plugin_estimates()}},
+\code{\link[=construct_pseudo_outcomes]{construct_pseudo_outcomes()}}, \code{\link[=estimate_QoI]{estimate_QoI()}}
+}

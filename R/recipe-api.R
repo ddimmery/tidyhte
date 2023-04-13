@@ -17,6 +17,20 @@
 #' @seealso [add_propensity_score_model()], [add_known_propensity_score()],
 #' [add_propensity_diagnostic()], [add_outcome_model()], [add_outcome_diagnostic()],
 #' [add_effect_model()], [add_effect_diagnostic()], [add_moderator()], [add_vimp()]
+#' @examples
+#' basic_config() %>%
+#'    add_known_propensity_score("ps") %>%
+#'    add_outcome_model("SL.glm.interaction") %>%
+#'    add_outcome_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+#'    add_outcome_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+#'    add_outcome_diagnostic("RROC") %>%
+#'    add_effect_model("SL.glm.interaction") %>%
+#'    add_effect_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+#'    add_effect_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+#'    add_effect_diagnostic("RROC") %>%
+#'    add_moderator("Stratified", x2, x3) %>%
+#'    add_moderator("KernelSmooth", x1, x4, x5) %>%
+#'    add_vimp(sample_splitting = FALSE) -> hte_cfg
 #' @return `HTE_cfg` object
 #' @export
 basic_config <- function() {
@@ -52,6 +66,9 @@ basic_config <- function() {
 #' with `SuperLearner::listWrappers("SL")`
 #' @param ... Parameters over which to grid-search for this model class.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_propensity_score_model("SL.glmnet", alpha = c(0, 0.5, 1)) -> hte_cfg
 #' @export
 add_propensity_score_model <- function(hte_cfg, model_name, ...) {
     hps <- rlang::dots_list(..., .named = TRUE)
@@ -71,6 +88,9 @@ add_propensity_score_model <- function(hte_cfg, model_name, ...) {
 #' @param covariate_name Character indicating the name of the covariate
 #' name in the dataframe corresponding to the known propensity score.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_known_propensity_score("ps") -> hte_cfg
 #' @export
 add_known_propensity_score <- function(hte_cfg, covariate_name) {
     hte_cfg$treatment <- Known_cfg$new(covariate_name)
@@ -85,6 +105,9 @@ add_known_propensity_score <- function(hte_cfg, covariate_name) {
 #' to include. Possible values are `"MSE"`, `"AUC"` and, for
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_propensity_diagnostic(c("AUC", "MSE")) -> hte_cfg
 #' @export
 add_propensity_diagnostic <- function(hte_cfg, diag) {
     hte_cfg$qoi$diag$add(ps = diag)
@@ -102,6 +125,9 @@ add_propensity_diagnostic <- function(hte_cfg, diag) {
 #' with `SuperLearner::listWrappers("SL")`
 #' @param ... Parameters over which to grid-search for this model class.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_outcome_model("SL.glm.interaction") -> hte_cfg
 #' @export
 add_outcome_model <- function(hte_cfg, model_name, ...) {
     hps <- rlang::dots_list(..., .named = TRUE)
@@ -121,6 +147,9 @@ add_outcome_model <- function(hte_cfg, model_name, ...) {
 #' to include. Possible values are `"MSE"`, `"RROC"` and, for
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_outcome_diagnostic("RROC") -> hte_cfg
 #' @export
 add_outcome_diagnostic <- function(hte_cfg, diag) {
     hte_cfg$qoi$diag$add(outcome = diag)
@@ -138,6 +167,9 @@ add_outcome_diagnostic <- function(hte_cfg, diag) {
 #' with `SuperLearner::listWrappers("SL")`
 #' @param ... Parameters over which to grid-search for this model class.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_effect_model("SL.glm.interaction") -> hte_cfg
 #' @export
 add_effect_model <- function(hte_cfg, model_name, ...) {
     hps <- rlang::dots_list(..., .named = TRUE)
@@ -154,6 +186,9 @@ add_effect_model <- function(hte_cfg, model_name, ...) {
 #' to include. Possible values are `"MSE"`, `"RROC"` and, for
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_effect_diagnostic("RROC") -> hte_cfg
 #' @export
 add_effect_diagnostic <- function(hte_cfg, diag) {
     hte_cfg$qoi$diag$add(effect = diag)
@@ -172,6 +207,10 @@ add_effect_diagnostic <- function(hte_cfg, diag) {
 #' @param .model_arguments A named list from argument name to value to pass into the
 #' constructor for the model. See `Stratified_cfg` and `KernelSmooth_cfg` for more details.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_moderator("Stratified", x2, x3) %>%
+#'    add_moderator("KernelSmooth", x1, x4, x5) -> hte_cfg
 #' @export
 add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
     moderators <- rlang::enexprs(...)
@@ -217,6 +256,9 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' linear-only model. Variable importance measure will only be consistent for the population
 #' quantity if the true model of pseudo-outcomes is linear.
 #' @return Updated `HTE_cfg` object
+#' @examples
+#' basic_config() %>%
+#'    add_vimp(sample_splitting = FALSE) -> hte_cfg
 #' @export
 add_vimp <- function(hte_cfg, sample_splitting = TRUE, linear_only = FALSE) {
     hte_cfg$qoi$vimp <- VIMP_cfg$new(

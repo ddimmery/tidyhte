@@ -19,3 +19,7 @@ Updated \code{HTE_cfg} object
 \description{
 This adds a diagnostic to the effect model.
 }
+\examples{
+basic_config() \%>\%
+   add_effect_diagnostic("RROC") -> hte_cfg
+}

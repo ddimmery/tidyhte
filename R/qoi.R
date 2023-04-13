@@ -5,6 +5,9 @@
 #' with plugin estimators of nuisance parameters and transforms these into
 #' a "pseudo-outcome": an unbiased estimator of the conditional average
 #' treatment effect under exogeneity.
+#'
+#' Taking averages of these pseudo-outcomes (or fitting a model to them)
+#' will approximate averages (or models) of the underlying treatment effect.
 #' @param .data dataframe (already prepared with `attach_config`, `make_splits`,
 #' and `produce_plugin_estimates`)
 #' @param outcome Unquoted name of outcome variable.
@@ -74,7 +77,9 @@ calculate_ate <- function(.data) {
                 .data,
                 estimand = "PATE",
                 estimate = stats::weighted.mean(.data$.pseudo_outcome, .data[[w_col]]),
-                std_error = clustered_se_of_mean(.data$.pseudo_outcome, .data[[id_col]], .data[[w_col]]),
+                std_error = clustered_se_of_mean(
+                    .data$.pseudo_outcome, .data[[id_col]], .data[[w_col]]
+                ),
                 sample_size = sum(.data[[w_col]])
             )
         )

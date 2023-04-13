@@ -4,8 +4,8 @@
 \alias{Diagnostics_cfg}
 \title{Configuration of Model Diagnostics}
 \description{
-\code{Diagnostics_cfg} is a configuration class for estimating a variety of diagnostics for the models
-trained in the course of HTE estimation.
+\code{Diagnostics_cfg} is a configuration class for estimating a variety of
+diagnostics for the models trained in the course of HTE estimation.
 }
 \examples{
 
@@ -34,14 +34,14 @@ Diagnostics_cfg$new(
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Diagnostics_cfg$new()}}
-\item \href{#method-add}{\code{Diagnostics_cfg$add()}}
-\item \href{#method-clone}{\code{Diagnostics_cfg$clone()}}
+\item \href{#method-Diagnostics_cfg-new}{\code{Diagnostics_cfg$new()}}
+\item \href{#method-Diagnostics_cfg-add}{\code{Diagnostics_cfg$add()}}
+\item \href{#method-Diagnostics_cfg-clone}{\code{Diagnostics_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Diagnostics_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Diagnostics_cfg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{Diagnostics_cfg} object with specified diagnostics to estimate.
 \subsection{Usage}{
@@ -77,8 +77,8 @@ A new \code{Diagnostics_cfg} object.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add"></a>}}
-\if{latex}{\out{\hypertarget{method-add}{}}}
+\if{html}{\out{<a id="method-Diagnostics_cfg-add"></a>}}
+\if{latex}{\out{\hypertarget{method-Diagnostics_cfg-add}{}}}
 \subsection{Method \code{add()}}{
 Add diagnostics to the \code{Diagnostics_cfg} object.
 \subsection{Usage}{
@@ -98,8 +98,8 @@ Add diagnostics to the \code{Diagnostics_cfg} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Diagnostics_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Diagnostics_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

@@ -34,32 +34,39 @@ QoI_cfg$new(
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{mcate}}{A configuration object of type \code{MCATE_cfg} of marginal effects to calculate.}
+\item{\code{mcate}}{A configuration object of type \code{MCATE_cfg} of
+marginal effects to calculate.}
 
-\item{\code{pcate}}{A configuration object of type \code{PCATE_cfg} of partial effects to calculate.}
+\item{\code{pcate}}{A configuration object of type \code{PCATE_cfg} of
+partial effects to calculate.}
 
-\item{\code{vimp}}{A configuration object of type \code{VIMP_cfg} of variable importance to calculate.}
+\item{\code{vimp}}{A configuration object of type \code{VIMP_cfg} of
+variable importance to calculate.}
 
-\item{\code{diag}}{A configuration object of type \code{Diagnostics_cfg} of model diagnostics to calculate.}
+\item{\code{diag}}{A configuration object of type \code{Diagnostics_cfg} of
+model diagnostics to calculate.}
 
-\item{\code{ate}}{Logical flag indicating whether an estimate of the ATE should be returned.}
+\item{\code{ate}}{Logical flag indicating whether an estimate of the
+ATE should be returned.}
 
-\item{\code{predictions}}{Logical flag indicating whether estimates of the CATE for every unit should be returned.}
+\item{\code{predictions}}{Logical flag indicating whether estimates of
+the CATE for every unit should be returned.}
 }
 \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{QoI_cfg$new()}}
-\item \href{#method-clone}{\code{QoI_cfg$clone()}}
+\item \href{#method-QoI_cfg-new}{\code{QoI_cfg$new()}}
+\item \href{#method-QoI_cfg-clone}{\code{QoI_cfg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-QoI_cfg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-QoI_cfg-new}{}}}
 \subsection{Method \code{new()}}{
-Create a new \code{QoI_cfg} object with specified Quantities of Interest to estimate.
+Create a new \code{QoI_cfg} object with specified Quantities of Interest
+to estimate.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{QoI_cfg$new(
   mcate = NULL,
@@ -74,17 +81,23 @@ Create a new \code{QoI_cfg} object with specified Quantities of Interest to esti
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{mcate}}{A configuration object of type \code{MCATE_cfg} of marginal effects to calculate.}
+\item{\code{mcate}}{A configuration object of type \code{MCATE_cfg} of marginal
+effects to calculate.}
 
-\item{\code{pcate}}{A configuration object of type \code{PCATE_cfg} of partial effects to calculate.}
+\item{\code{pcate}}{A configuration object of type \code{PCATE_cfg} of partial
+effects to calculate.}
 
-\item{\code{vimp}}{A configuration object of type \code{VIMP_cfg} of variable importance to calculate.}
+\item{\code{vimp}}{A configuration object of type \code{VIMP_cfg} of variable
+importance to calculate.}
 
-\item{\code{diag}}{A configuration object of type \code{Diagnostics_cfg} of model diagnostics to calculate.}
+\item{\code{diag}}{A configuration object of type \code{Diagnostics_cfg} of
+model diagnostics to calculate.}
 
-\item{\code{ate}}{A logical flag for whether to calculate the Average Treatment Effect (ATE) or not.}
+\item{\code{ate}}{A logical flag for whether to calculate the Average
+Treatment Effect (ATE) or not.}
 
-\item{\code{predictions}}{A logical flag for whether to return predictions of the CATE for every unit or not.}
+\item{\code{predictions}}{A logical flag for whether to return predictions
+of the CATE for every unit or not.}
 }
 \if{html}{\out{</div>}}
 }
@@ -117,8 +130,8 @@ QoI_cfg$new(
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-QoI_cfg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-QoI_cfg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
