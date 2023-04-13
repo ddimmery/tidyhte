@@ -88,7 +88,7 @@ SLPredictor <- R6::R6Class("SLPredictor",
         SL.library = character(),
         SL.env = NULL,
         family = list(),
-        initialize = function(SL.library, SL.env, family=stats::gaussian()) {
+        initialize = function(SL.library, SL.env, family = stats::gaussian()) {
             self$SL.library <- SL.library
             self$SL.env <- SL.env
             self$family <- family
@@ -162,8 +162,7 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
                     self$label,
                     self$covariates,
                     eval = eval_pts,
-                    #cluster = data$cluster,
-                    #cluster = factor(self$covariates), # data$cluster
+                    # cluster = data$cluster, # no-lint
                     h = bws$bws[, "h"]
                 )
             }

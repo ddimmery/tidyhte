@@ -23,14 +23,14 @@ MCATE_cfg <- R6::R6Class("MCATE_cfg",
         #' @description
         #' Create a new `MCATE_cfg` object with specified model name and hyperparameters.
         #' @param cfgs Named list from moderator name to a `Model_cfg` object
-        #' defining how to present that covariate's CATE surface (while 
+        #' defining how to present that covariate's CATE surface (while
         #' marginalizing over all other covariates)
         #' @param std_errors Boolean indicating whether the results should be returned with standard
         #' errors or not.
         #' @return A new `MCATE_cfg` object.
         #' @examples
         #' MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
-        initialize = function(cfgs, std_errors=TRUE) {
+        initialize = function(cfgs, std_errors = TRUE) {
             self$cfgs <- cfgs
             self$std_errors <- std_errors
             invisible(self)
@@ -168,7 +168,7 @@ VIMP_cfg <- R6::R6Class("VIMP_cfg",
 #' Configuration of Model Diagnostics
 #'
 #' @description
-#' `Diagnostics_cfg` is a configuration class for estimating a variety of 
+#' `Diagnostics_cfg` is a configuration class for estimating a variety of
 #' diagnostics for the models trained in the course of HTE estimation.
 #' @importFrom R6 R6Class
 #' @export

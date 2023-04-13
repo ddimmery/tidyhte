@@ -36,7 +36,7 @@ vignettes which runs through example analyses from start to finish:
 `vignette("experimental_analysis")` and
 `vignette("observational_analysis")`. There is also a writeup
 summarizing the method and implementation in
-`vignette("methodological-details")`.
+`vignette("methodological_details")`.
 
 # Installation
 
@@ -141,3 +141,27 @@ foreach(outcome = list_of_outcomes, .combine = "bind_rows") %do% {
 
 The function `estimate_QoI` returns results in a tibble format which
 makes it easy to manipulate or plot results.
+
+# Getting help
+
+There are two main ways to get help:
+
+## GitHub Issues
+
+If you have a problem, feel free to [open an issue on
+GitHub](https://github.com/ddimmery/tidyhte/issues/new/choose). Please
+try to provide a [minimal reproducible
+example](https://stackoverflow.com/help/minimal-reproducible-example).
+If that isn’t possible, explain as clearly and simply why that is, along
+with all of the relevant debugging steps you’ve already taken.
+
+## Discord
+
+Support for the package will also be provided in the Experimentation
+Community Discord:
+[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?theme=clean&compact=true)](https://discord.gg/MrxjbHc3jD)
+
+You are welcome to come in and get support for your usage in the
+`tidyhte` channel. Keep in mind that everyone is volunteering their time
+to help, so try to come prepared with the debugging steps you’ve already
+taken.

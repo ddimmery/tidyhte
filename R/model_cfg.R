@@ -205,14 +205,18 @@ Stratified_cfg <- R6::R6Class("Stratified_cfg",
 SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
     inherit = Model_cfg,
     public = list(
-        #' @field cvControl A list of parameters for controlling the cross-validation used in SuperLearner.
+        #' @field cvControl A list of parameters for controlling the
+        #' cross-validation used in SuperLearner.
         cvControl = list(V = 10),
-        #' @field SL.library A vector of the names of learners to include in the SuperLearner ensemble.
+        #' @field SL.library A vector of the names of learners to
+        #' include in the SuperLearner ensemble.
         SL.library = character(),
-        #' @field SL.env An environment containing all of the programmatically generated learners to be included
+        #' @field SL.env An environment containing all of the programmatically
+        #' generated learners to be included
         #' in the SuperLearner ensemble.
         SL.env = NULL,
-        #' @field family `stats::family` object to determine how SuperLearner should be fitted.
+        #' @field family `stats::family` object to determine how SuperLearner
+        #' should be fitted.
         family = list(),
         #' @field model_class The class of the model, required for all classes
         #' which inherit from `Model_cfg`.
@@ -220,13 +224,16 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
 
         #' @description
         #' Create a new `SLEnsemble_cfg` object with specified settings.
-        #' @param cvControl A list of parameters for controlling the cross-validation used in SuperLearner.
+        #' @param cvControl A list of parameters for controlling the
+        #' cross-validation used in SuperLearner.
         #' For more details, see `SuperLearner::SuperLearner.CV.control`.
         #' @param learner_cfgs A list of `SLLearner_cfg` objects.
         #' @param family `stats::family` object to determine how SuperLearner should be fitted.
         #' @return A new `SLEnsemble_cfg` object.
         #' @examples
-        #' SLEnsemble_cfg$new(learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam")))
+        #' SLEnsemble_cfg$new(
+        #' learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+        #' )
         initialize = function(cvControl = NULL, learner_cfgs = NULL, family = stats::gaussian()) {
             soft_require("SuperLearner", load = TRUE)
 
