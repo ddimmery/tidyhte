@@ -84,20 +84,24 @@ using an ensemble of models using <code>SuperLearner</code>.</p>
     <div id="public-fields">
     <h2>Public fields</h2>
     <p></p><div class="r6-fields"><dl><dt><code>cvControl</code></dt>
-<dd><p>A list of parameters for controlling the cross-validation used in SuperLearner.</p></dd>
+<dd><p>A list of parameters for controlling the
+cross-validation used in SuperLearner.</p></dd>
 
 
 <dt><code>SL.library</code></dt>
-<dd><p>A vector of the names of learners to include in the SuperLearner ensemble.</p></dd>
+<dd><p>A vector of the names of learners to
+include in the SuperLearner ensemble.</p></dd>
 
 
 <dt><code>SL.env</code></dt>
-<dd><p>An environment containing all of the programmatically generated learners to be included
+<dd><p>An environment containing all of the programmatically
+generated learners to be included
 in the SuperLearner ensemble.</p></dd>
 
 
 <dt><code>family</code></dt>
-<dd><p><code><a href="https://rdrr.io/r/stats/family.html" class="external-link">stats::family</a></code> object to determine how SuperLearner should be fitted.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/stats/family.html" class="external-link">stats::family</a></code> object to determine how SuperLearner
+should be fitted.</p></dd>
 
 
 <dt><code>model_class</code></dt>
@@ -113,10 +117,10 @@ which inherit from <code>Model_cfg</code>.</p></dd>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>SLEnsemble_cfg$new()</code></a></p></li>
-<li><p><a href="#method-add_sublearner"><code>SLEnsemble_cfg$add_sublearner()</code></a></p></li>
-<li><p><a href="#method-clone"><code>SLEnsemble_cfg$clone()</code></a></p></li>
-</ul></div><p><details open><summary>Inherited methods</summary><ul></ul></details></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-SLEnsemble_cfg-new"><code>SLEnsemble_cfg$new()</code></a></p></li>
+<li><p><a href="#method-SLEnsemble_cfg-add_sublearner"><code>SLEnsemble_cfg$add_sublearner()</code></a></p></li>
+<li><p><a href="#method-SLEnsemble_cfg-clone"><code>SLEnsemble_cfg$clone()</code></a></p></li>
+</ul></div><p></p><hr><a id="method-SLEnsemble_cfg-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Create a new <code>SLEnsemble_cfg</code> object with specified settings.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -130,7 +134,8 @@ which inherit from <code>Model_cfg</code>.</p></dd>
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>cvControl</code></dt>
-<dd><p>A list of parameters for controlling the cross-validation used in SuperLearner.
+<dd><p>A list of parameters for controlling the
+cross-validation used in SuperLearner.
 For more details, see <code><a href="https://rdrr.io/pkg/SuperLearner/man/SuperLearner.CV.control.html" class="external-link">SuperLearner::SuperLearner.CV.control</a></code>.</p></dd>
 
 
@@ -150,11 +155,13 @@ For more details, see <code><a href="https://rdrr.io/pkg/SuperLearner/man/SuperL
 </div>
 <div class="section">
 <h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/SLEnsemble_cfg.html">SLEnsemble_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.glm"</span><span class="op">)</span>, <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.gam"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/SLEnsemble_cfg.html">SLEnsemble_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.glm"</span><span class="op">)</span>, <span class="va"><a href="../reference/SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.gam"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 
-</div><p></p><hr><a id="method-add_sublearner"></a><div class="section">
+</div><p></p><hr><a id="method-SLEnsemble_cfg-add_sublearner"></a><div class="section">
 <h3 id="method-add-sublearner-">Method <code>add_sublearner()</code><a class="anchor" aria-label="anchor" href="#method-add-sublearner-"></a></h3>
 <p>Adds a model (or class of models) to the SuperLearner ensemble.
 If hyperparameter values are specified, this method will
@@ -181,7 +188,7 @@ ensemble.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-SLEnsemble_cfg-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
@@ -208,7 +215,9 @@ ensemble.</p></dd>
 <span class="r-in"><span><span class="co">## Method `SLEnsemble_cfg$new`</span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">SLEnsemble_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va"><a href="SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.glm"</span><span class="op">)</span>, <span class="va"><a href="SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.gam"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">SLEnsemble_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va"><a href="SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.glm"</span><span class="op">)</span>, <span class="va"><a href="SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.gam"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;SLEnsemble_cfg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Inherits from: &lt;Model_cfg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Public:</span>
