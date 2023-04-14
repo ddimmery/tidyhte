@@ -91,7 +91,20 @@ reference:
 - contents:
   - SL.glmnet.interaction
   - "predict.SL.glmnet.interaction"
-  - calculate_linear_vimp
+  - calculate_ate
+  - calculate_diagnostics
   - calculate_rroc
+  - calculate_linear_vimp
   - calculate_vimp
   - split_data
+  - Model_data
+  - check_data_has_hte_cfg
+  - check_identifier
+  - check_nuisance_models
+  - check_splits
+  - check_weights
+  - fit_plugin
+  - fit_plugin_A
+  - fit_plugin_Y
+  - fit_effect
+  - listwise_deletion
