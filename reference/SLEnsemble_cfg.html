@@ -182,7 +182,11 @@ with <code>SuperLearner::listWrappers("SL")</code></p></dd>
 <dt><code>hps</code></dt>
 <dd><p>A named list of hyper-parameters. Every element of the
 cross-product of these hyper-parameters will be included in the
-ensemble.</p></dd>
+ensemble.
+cfg &lt;- SLEnsemble_cfg$new(
+learner_cfgs = list(SLLearner_cfg$new("SL.glm"))
+)
+cfg &lt;- cfg$add_sublearner("SL.gam", list(deg.gam = c(2, 3)))</p></dd>
 
 
 </dl><p></p></div>
@@ -210,7 +214,21 @@ ensemble.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">SLEnsemble_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>learner_cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va"><a href="SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.glm"</span><span class="op">)</span>, <span class="va"><a href="SLLearner_cfg.html">SLLearner_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"SL.gam"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;SLEnsemble_cfg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Inherits from: &lt;Model_cfg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Public:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     SL.env: environment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     SL.library: SL.glm SL.gam</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     add_sublearner: function (learner_name, hps = NULL) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clone: function (deep = FALSE) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cvControl: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     family: family</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     initialize: function (cvControl = NULL, learner_cfgs = NULL, family = stats::gaussian()) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     model_class: SL</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Method `SLEnsemble_cfg$new`</span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>

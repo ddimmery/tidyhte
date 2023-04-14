@@ -190,6 +190,20 @@ surface.</p></dd>
 
 </dl><p></p></div>
 </div>
+<div class="section">
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<p>An updated <code>PCATE_cfg</code> object.</p>
+</div>
+<div class="section">
+<h4 id="examples-1">Examples<a class="anchor" aria-label="anchor" href="#examples-1"></a></h4>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PCATE_cfg.html">PCATE_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>   cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va"><a href="../reference/KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>   model_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span><span class="op">)</span>,</span>
+<span>   num_mc_samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="va">cfg</span><span class="op">$</span><span class="fu">add_moderator</span><span class="op">(</span><span class="st">"x2"</span>, <span class="va"><a href="../reference/KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
 
 </div><p></p><hr><a id="method-PCATE_cfg-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
@@ -213,7 +227,21 @@ surface.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">PCATE_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va"><a href="KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   model_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   num_mc_samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;PCATE_cfg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Public:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     add_moderator: function (var_name, cfg) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cfgs: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clone: function (deep = FALSE) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     estimand: PCATE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     initialize: function (model_covariates, cfgs, num_mc_samples = 100) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     model_covariates: x1 x2 x3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     num_mc_samples: list</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Method `PCATE_cfg$new`</span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
@@ -232,6 +260,17 @@ surface.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     initialize: function (model_covariates, cfgs, num_mc_samples = 100) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     model_covariates: x1 x2 x3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     num_mc_samples: list</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span><span class="co">## Method `PCATE_cfg$add_moderator`</span></span></span>
+<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="va">PCATE_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va"><a href="KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   model_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   num_mc_samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="va">cfg</span><span class="op">$</span><span class="fu">add_moderator</span><span class="op">(</span><span class="st">"x2"</span>, <span class="va"><a href="KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>

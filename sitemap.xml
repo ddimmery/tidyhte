@@ -37,6 +37,12 @@
     <loc>/reference/Diagnostics_cfg.html</loc>
   </url>
   <url>
+    <loc>/reference/FX.Predictor.html</loc>
+  </url>
+  <url>
+    <loc>/reference/HTEFold.html</loc>
+  </url>
+  <url>
     <loc>/reference/HTE_cfg.html</loc>
   </url>
   <url>
@@ -50,6 +56,9 @@
   </url>
   <url>
     <loc>/reference/Model_cfg.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Model_data.html</loc>
   </url>
   <url>
     <loc>/reference/PCATE_cfg.html</loc>
@@ -106,6 +115,12 @@
     <loc>/reference/basic_config.html</loc>
   </url>
   <url>
+    <loc>/reference/calculate_ate.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calculate_diagnostics.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_linear_vimp.html</loc>
   </url>
   <url>
@@ -118,13 +133,49 @@
     <loc>/reference/calculate_vimp.html</loc>
   </url>
   <url>
+    <loc>/reference/check_data_has_hte_cfg.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_identifier.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_nuisance_models.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_splits.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_weights.html</loc>
+  </url>
+  <url>
     <loc>/reference/construct_pseudo_outcomes.html</loc>
   </url>
   <url>
     <loc>/reference/estimate_QoI.html</loc>
   </url>
   <url>
+    <loc>/reference/estimate_diagnostic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fit_effect.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fit_fx_predictor.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fit_plugin.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fit_plugin_A.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fit_plugin_Y.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/listwise_deletion.html</loc>
   </url>
   <url>
     <loc>/reference/make_splits.html</loc>

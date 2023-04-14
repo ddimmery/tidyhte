@@ -216,7 +216,34 @@ of the CATE for every unit or not.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mcate_cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="MCATE_cfg.html">MCATE_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va"><a href="KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pcate_cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="PCATE_cfg.html">PCATE_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   cfgs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va"><a href="KernelSmooth_cfg.html">KernelSmooth_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>neval <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   model_covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   num_mc_samples <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vimp_cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="VIMP_cfg.html">VIMP_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">diag_cfg</span> <span class="op">&lt;-</span> <span class="va"><a href="Diagnostics_cfg.html">Diagnostics_cfg</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span>, <span class="st">"MSE"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   ps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SL_risk"</span>, <span class="st">"SL_coefs"</span>, <span class="st">"AUC"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">QoI_cfg</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    mcate <span class="op">=</span> <span class="va">mcate_cfg</span>,</span></span>
+<span class="r-in"><span>    pcate <span class="op">=</span> <span class="va">pcate_cfg</span>,</span></span>
+<span class="r-in"><span>    vimp <span class="op">=</span> <span class="va">vimp_cfg</span>,</span></span>
+<span class="r-in"><span>    diag <span class="op">=</span> <span class="va">diag_cfg</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;QoI_cfg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Public:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ate: TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clone: function (deep = FALSE) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     diag: Diagnostics_cfg, R6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     initialize: function (mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     mcate: MCATE_cfg, R6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     pcate: PCATE_cfg, R6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     predictions: FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     vimp: VIMP_cfg, R6</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co">## Method `QoI_cfg$new`</span></span></span>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
