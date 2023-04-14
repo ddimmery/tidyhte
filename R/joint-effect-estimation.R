@@ -1,10 +1,34 @@
+#' Predictor class for the cross-fit predictor of "partial" CATEs
+#' 
+#' The class makes it easier to manage the K predictors for retrieving K-fold
+#' cross-validated estimates, as well as to measure how treatment effects change
+#' when only a single covariate is changed from its "natural" levels (in the sense
+#' "natural" used by the direct / indirect effects literature).
+#' @keywords internal
 FX.Predictor <- R6::R6Class("FX.Predictor",
     public = list(
+        #' @field models A list of the K model fits
         models = list(),
+        #' @field num_splits The number of folds used in cross-fitting.
         num_splits = integer(),
+        #' @field num_mc_samples The number of samples to retrieve across the covariate space.
+        #' If num_mc_samples is larger than the sample size, then the entire dataset will be used.
         num_mc_samples = integer(),
+        #' @field covariates The unquoted names of the covariates used in the second-stage model.
         covariates = environment(),
+        #' @field model_class The model class (in the sense of `Model_cfg`). For instance,
+        #' a SuperLearner model will have model class "SL".
         model_class = character(),
+        #' @description
+        #' `FX.predictor` is a class which simplifies the management of a set of cross-fit
+        #' prediction models of treatment effects and provides the ability to get the "partial"
+        #' effects of particular covariates.
+        #' @param models A list of the K model fits.
+        #' @param num_splits Integer number of cross-fitting folds.
+        #' @param num_mc_samples Integer number of Monte-Carlo samples across the covariate
+        #' space. If this is larger than the sample size, then the whole dataset will be used.
+        #' @param covariates The unquoted names of the covariates.
+        #' @param model_class The model class (in the sense of `Model_cfg`).
         initialize = function(models, num_splits, num_mc_samples, covariates, model_class) {
             self$models <- models
             self$num_splits <- num_splits
@@ -12,6 +36,17 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
             self$covariates <- covariates
             self$model_class <- model_class
         },
+        #' @description
+        #' Predicts the PCATE surface over a particular covariate, returning a tibble with
+        #' the predicted HTE for every Monte-Carlo sample.
+        #' @param data The full dataset
+        #' @param covariate The unquoted covariate name for which to calculate predicted
+        #' treatment effects.
+        #' @return A tibble with columns:
+        #' * `covariate_value` - The value of the covariate of interest
+        #' * `.hte` - An estimated HTE
+        #' * `.id` - The identifier for the original row (which had 
+        #' `covariate` modified to `covariate_value`).
         predict = function(data, covariate) {
             sample_size <- pmin(self$num_mc_samples[[rlang::as_string(covariate)]], nrow(data))
             unq_values <- unique(data[[rlang::as_string(covariate)]])
@@ -42,7 +77,21 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
     )
 )
 
-
+#' Fit a predictor for treatment effects
+#' 
+#' This function predicts treatment effects in a second stage model.
+#' @param .data The full original data with all auxilliary columns.
+#' @param weights Weights to be used in the analysis.
+#' @param psi_col The unquoted column name of the calculated pseudo-outcome.
+#' @param ... Covariate data, passed in as the unquoted names of columns in `.data`
+#' @param .pcate.cfg A `PCATE_cfg` object describing what PCATEs to calculate (and how)
+#' @param .Model_cfg A `Model_cfg` object describing how the effect model should be estimated.
+#' @return A list with two items:
+#' * `model` - The `FX.Predictor` model object used internally for PCATE estimation.
+#' * `data` - The data augmented with column `.pseudo_outcome_hat` for the cross-fit predictions
+#' of the HTE for each unit.
+#' @seealso [Model_cfg], [PCATE_cfg]
+#' @keywords internal
 fit_fx_predictor <- function(.data, weights, psi_col, ...,
     .pcate.cfg, .Model_cfg
 ) {

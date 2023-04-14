@@ -27,6 +27,7 @@ of an experiment, \code{vignette("experimental_analysis")} for an observational 
 \code{vignette("methodological_details")} for a deeper dive under the hood.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_known_propensity_score("ps") \%>\%
    add_outcome_model("SL.glm.interaction") \%>\%

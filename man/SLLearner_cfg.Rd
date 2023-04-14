@@ -7,7 +7,9 @@
 \code{SLLearner_cfg} is a configuration class for a single
 sublearner to be included in SuperLearner. By constructing with a named list
 of hyperparameters, this configuration allows distinct submodels
-for each unique combination of hyperparameters.
+for each unique combination of hyperparameters. To understand what models
+and hyperparameters are available, examine the methods listed in
+\code{SuperLearner::listWrappers("SL")}.
 }
 \examples{
 

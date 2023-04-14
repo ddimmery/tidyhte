@@ -24,6 +24,17 @@ Updated \code{HTE_cfg} object
 This adds a variable importance quantity of interest to the outputs.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_vimp(sample_splitting = FALSE) -> hte_cfg
+}
+\references{
+\itemize{
+\item Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
+Nonparametric variable importance assessment using machine learning techniques.
+Biometrics, 77(1), 9-22.
+\item Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
+A general framework for inference on algorithm-agnostic variable importance.
+Journal of the American Statistical Association, 1-14.
+}
 }

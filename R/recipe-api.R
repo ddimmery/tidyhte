@@ -18,6 +18,7 @@
 #' [add_propensity_diagnostic()], [add_outcome_model()], [add_outcome_diagnostic()],
 #' [add_effect_model()], [add_effect_diagnostic()], [add_moderator()], [add_vimp()]
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_known_propensity_score("ps") %>%
 #'    add_outcome_model("SL.glm.interaction") %>%
@@ -67,6 +68,7 @@ basic_config <- function() {
 #' @param ... Parameters over which to grid-search for this model class.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_propensity_score_model("SL.glmnet", alpha = c(0, 0.5, 1)) -> hte_cfg
 #' @export
@@ -89,6 +91,7 @@ add_propensity_score_model <- function(hte_cfg, model_name, ...) {
 #' name in the dataframe corresponding to the known propensity score.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_known_propensity_score("ps") -> hte_cfg
 #' @export
@@ -106,6 +109,7 @@ add_known_propensity_score <- function(hte_cfg, covariate_name) {
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_propensity_diagnostic(c("AUC", "MSE")) -> hte_cfg
 #' @export
@@ -126,6 +130,7 @@ add_propensity_diagnostic <- function(hte_cfg, diag) {
 #' @param ... Parameters over which to grid-search for this model class.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_outcome_model("SL.glm.interaction") -> hte_cfg
 #' @export
@@ -148,6 +153,7 @@ add_outcome_model <- function(hte_cfg, model_name, ...) {
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_outcome_diagnostic("RROC") -> hte_cfg
 #' @export
@@ -168,6 +174,7 @@ add_outcome_diagnostic <- function(hte_cfg, diag) {
 #' @param ... Parameters over which to grid-search for this model class.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_effect_model("SL.glm.interaction") -> hte_cfg
 #' @export
@@ -187,6 +194,7 @@ add_effect_model <- function(hte_cfg, model_name, ...) {
 #' `SuperLearner` ensembles, `"SL_risk"` and `"SL_coefs"`.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_effect_diagnostic("RROC") -> hte_cfg
 #' @export
@@ -198,7 +206,8 @@ add_effect_diagnostic <- function(hte_cfg, diag) {
 #' Adds moderators to the configuration
 #'
 #' This adds a definition about how to display a moderators to
-#' the MCATE config.
+#' the MCATE config. A moderator is any variable that you want to view information
+#' about CATEs with respect to.
 #' @param hte_cfg `HTE_cfg` object to update.
 #' @param model_type Character indicating the model type for these moderators.
 #' Currently two model types are supported: `"Stratified"` for discrete moderators
@@ -208,6 +217,7 @@ add_effect_diagnostic <- function(hte_cfg, diag) {
 #' constructor for the model. See `Stratified_cfg` and `KernelSmooth_cfg` for more details.
 #' @return Updated `HTE_cfg` object
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_moderator("Stratified", x2, x3) %>%
 #'    add_moderator("KernelSmooth", x1, x4, x5) -> hte_cfg
@@ -256,7 +266,15 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' linear-only model. Variable importance measure will only be consistent for the population
 #' quantity if the true model of pseudo-outcomes is linear.
 #' @return Updated `HTE_cfg` object
+#' @references 
+#' * Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
+#' Nonparametric variable importance assessment using machine learning techniques.
+#' Biometrics, 77(1), 9-22.
+#' * Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
+#' A general framework for inference on algorithm-agnostic variable importance.
+#' Journal of the American Statistical Association, 1-14.
 #' @examples
+#' library("dplyr")
 #' basic_config() %>%
 #'    add_vimp(sample_splitting = FALSE) -> hte_cfg
 #' @export

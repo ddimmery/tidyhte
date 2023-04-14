@@ -8,6 +8,9 @@
 using an ensemble of models using \code{SuperLearner}.
 }
 \examples{
+SLEnsemble_cfg$new(
+learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+)
 
 ## ------------------------------------------------
 ## Method `SLEnsemble_cfg$new`
@@ -110,7 +113,11 @@ with \code{SuperLearner::listWrappers("SL")}}
 
 \item{\code{hps}}{A named list of hyper-parameters. Every element of the
 cross-product of these hyper-parameters will be included in the
-ensemble.}
+ensemble.
+cfg <- SLEnsemble_cfg$new(
+learner_cfgs = list(SLLearner_cfg$new("SL.glm"))
+)
+cfg <- cfg$add_sublearner("SL.gam", list(deg.gam = c(2, 3)))}
 }
 \if{html}{\out{</div>}}
 }

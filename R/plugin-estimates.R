@@ -1,3 +1,15 @@
+#' Fits a plugin model using the appropriate settings
+#' 
+#' This function prepares data, fits the appropriate models and returns the
+#' resulting estimates in a standardized format.
+#' @param .data The full dataset of interest for the modelling problem.
+#' @param weight_col The unquoted weighting variable name to use in model fitting.
+#' @param outcome_col The unquoted column name to use as a label for the supervised
+#' learning problem.
+#' @param ... The unquoted names of covariates to use in the model.
+#' @param .Model_cfg A `Model_cfg` object configuring the appropriate model type to use.
+#' @return A new `Predictor` object of the appropriate subclass corresponding to the
+#' `Model_cfg` fit to the data.
 fit_plugin <- function(.data, weight_col, outcome_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
     predictor <- predictor_factory(.Model_cfg)
@@ -7,7 +19,17 @@ fit_plugin <- function(.data, weight_col, outcome_col, ..., .Model_cfg) {
     muffle_warnings(predictor$fit(data), "rank-deficient fit", "grouped=FALSE")
 }
 
-
+#' Fits a propensity score model using the appropriate settings
+#' 
+#' This function prepares data, fits the appropriate model and returns the
+#' resulting estimates in a standardized format.
+#' @param .data The full dataset of interest for the modelling problem.
+#' @param weight_col The unquoted weighting variable name to use in model fitting.
+#' @param a_col The unquoted column name of the treatment.
+#' @param ... The unquoted names of covariates to use in the model.
+#' @param .Model_cfg A `Model_cfg` object configuring the appropriate model type to use.
+#' @return A list with one element, `ps`. This element contains a `Predictor` object of
+#' the appropriate subclass corresponding to the `Model_cfg` fit to the data.
 fit_plugin_A <- function(.data, weight_col, a_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
     if (.Model_cfg$model_class == "known") {
@@ -21,6 +43,19 @@ fit_plugin_A <- function(.data, weight_col, a_col, ..., .Model_cfg) {
 }
 
 
+#' Fits a T-learner using the appropriate settings
+#' 
+#' This function prepares data, fits the appropriate model and returns the
+#' resulting estimates in a standardized format.
+#' @param .data The full dataset of interest for the modelling problem.
+#' @param weight_col The unquoted weighting variable name to use in model fitting.
+#' @param y_col The unquoted column name of the outcome.
+#' @param a_col The unquoted column name of the treatment.
+#' @param ... The unquoted names of covariates to use in the model.
+#' @param .Model_cfg A `Model_cfg` object configuring the appropriate model type to use.
+#' @return A list with two elements, `mu1` and `mu0` corresponding to the models fit to
+#' the treatment and control potential outcomes, respectively. Each is a new `Predictor`
+#' object of the appropriate subclass corresponding to the the `Model_cfg` fit to the data.
 fit_plugin_Y <- function(.data, weight_col, y_col, a_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
 
@@ -34,6 +69,17 @@ fit_plugin_Y <- function(.data, weight_col, y_col, a_col, ..., .Model_cfg) {
 }
 
 
+#' Fits a treatment effect model using the appropriate settings
+#' 
+#' This function prepares data, fits the appropriate model and returns the
+#' resulting estimates in a standardized format.
+#' @param .data The full dataset of interest for the modelling problem.
+#' @param weight_col The unquoted weighting variable name to use in model fitting.
+#' @param fx_col The unquoted column name of the pseudo-outcome.
+#' @param ... The unquoted names of covariates to use in the model.
+#' @param .Model_cfg A `Model_cfg` object configuring the appropriate model type to use.
+#' @return A list with one element, `fx`. This element contains a `Predictor` object of
+#' the appropriate subclass corresponding to the `Model_cfg` fit to the data.
 fit_effect <- function(.data, weight_col, fx_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
 

@@ -4,7 +4,9 @@
 #' `SLLearner_cfg` is a configuration class for a single
 #' sublearner to be included in SuperLearner. By constructing with a named list
 #' of hyperparameters, this configuration allows distinct submodels
-#' for each unique combination of hyperparameters.
+#' for each unique combination of hyperparameters. To understand what models
+#' and hyperparameters are available, examine the methods listed in 
+#' `SuperLearner::listWrappers("SL")`.
 #' @importFrom R6 R6Class
 #' @export
 SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
@@ -12,10 +14,9 @@ SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
         #' @field model_name The name of the model as passed to `SuperLearner`
         #' through the `SL.library` parameter.
         model_name = character(),
-
         #' @field hyperparameters Named list from hyperparameter name to a vector of
         #' values that should be swept over.
-
+        hyperparameters = NULL,
         #' @description
         #' Create a new `SLLearner_cfg` object with specified model name and hyperparameters.
         #' @param model_name The name of the model as passed to `SuperLearner`
@@ -27,7 +28,6 @@ SLLearner_cfg <- R6::R6Class("SLLearner_cfg",
         #' @examples
         #' SLLearner_cfg$new("SL.glm")
         #' SLLearner_cfg$new("SL.gam", list(deg.gam = c(2, 3)))
-        hyperparameters = NULL,
         initialize = function(model_name, hp = NULL) {
             self$model_name <- model_name
             self$hyperparameters <- hp
@@ -124,6 +124,9 @@ Constant_cfg <- R6::R6Class("Constant_cfg",
 #' regression to construct a smooth representation of the relationship between
 #' two variables. This is typically used for displaying a surface of the conditional
 #' average treatment effect over a continuous covariate.
+#' 
+#' Kernel smoothing is handled by the `nprobust` package.
+#' @seealso [nprobust::lprobust]
 #' @importFrom R6 R6Class
 #' @export
 KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
@@ -201,6 +204,10 @@ Stratified_cfg <- R6::R6Class("Stratified_cfg",
 #' using an ensemble of models using `SuperLearner`.
 #' @import SuperLearner
 #' @importFrom R6 R6Class
+#' @examples
+#' SLEnsemble_cfg$new(
+#' learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+#' )
 #' @export
 SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
     inherit = Model_cfg,
@@ -266,6 +273,10 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
         #' @param hps A named list of hyper-parameters. Every element of the
         #' cross-product of these hyper-parameters will be included in the
         #' ensemble.
+        #' cfg <- SLEnsemble_cfg$new(
+        #'  learner_cfgs = list(SLLearner_cfg$new("SL.glm"))
+        #' )
+        #' cfg <- cfg$add_sublearner("SL.gam", list(deg.gam = c(2, 3)))
         add_sublearner = function(learner_name, hps = NULL) {
             sl_lib <- character()
             if (is.null(hps)) {

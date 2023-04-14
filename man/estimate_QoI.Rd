@@ -17,6 +17,16 @@ estimate_QoI(.data, ...)
 plugin estimates and pseudo-outcomes and calculates the requested
 quantities of interest (QoIs).
 }
+\examples{
+\dontrun{
+cfg <- basic_config()
+attach_config(data, cfg) \%>\%
+make_splits(unitid, .num_splits = 10) \%>\%
+produce_plugin_estimates(outcome, treatment, covariate1, covariate2) \%>\%
+construct_pseudo_outcomes(outcome, treatment) \%>\%
+estimate_QoI(covariate1, covariate2)
+}
+}
 \seealso{
 \code{\link[=attach_config]{attach_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=produce_plugin_estimates]{produce_plugin_estimates()}},
 \code{\link[=construct_pseudo_outcomes]{construct_pseudo_outcomes()}},

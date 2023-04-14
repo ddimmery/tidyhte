@@ -32,6 +32,8 @@ construct_pseudo_outcomes <- function(.data, outcome, treatment, type = "dr") {
     .data
 }
 
+
+#' @keywords internal
 pseudo_outcome_factory <- function(type) {
     type <- tolower(type)
     if (type == "dr") {
@@ -45,19 +47,36 @@ pseudo_outcome_factory <- function(type) {
     }
 }
 
+#' @keywords internal
 dr_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
     muA <- muA <- A * mu1 + (1 - A) * mu0
     (A - pi) / (pi * (1 - pi)) * (YA - muA) + mu1 - mu0
 }
 
+#' @keywords internal
 ipw_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
     (A - pi) / (pi * (1 - pi)) * YA
 }
 
+#' @keywords internal
 plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
     mu1 - mu0
 }
 
+
+#' Calculates a SATE and a PATE using AIPW
+#' 
+#' This function takes fully prepared data (with all auxilliary columns from the
+#' necessary models) and estimates average treatment effects using AIPW.
+#' @param .data The dataset of interest after it has been prepared fully.
+#' @seealso [basic_config()], [attach_config()], [make_splits()], [produce_plugin_estimates()],
+#' [construct_pseudo_outcomes()], [estimate_QoI()]
+#' @references 
+#' * Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
+#' causal effects. *arXiv preprint arXiv:2004.14497*.
+#' * Tsiatis, A. A., Davidian, M., Zhang, M., & Lu, X. (2008). Covariate adjustment
+#' for two‐sample treatment comparisons in randomized clinical trials: a principled
+#' yet flexible approach. *Statistics in medicine*, 27(23), 4658-4677.
 #' @importFrom dplyr summarize
 #' @importFrom stats weighted.mean
 calculate_ate <- function(.data) {
@@ -88,6 +107,7 @@ calculate_ate <- function(.data) {
 }
 
 
+#' @keywords internal
 calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     .outcome <- rlang::enexpr(.outcome)

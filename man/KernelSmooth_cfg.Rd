@@ -8,6 +8,8 @@
 regression to construct a smooth representation of the relationship between
 two variables. This is typically used for displaying a surface of the conditional
 average treatment effect over a continuous covariate.
+
+Kernel smoothing is handled by the \code{nprobust} package.
 }
 \examples{
 
@@ -16,6 +18,9 @@ average treatment effect over a continuous covariate.
 ## ------------------------------------------------
 
 KernelSmooth_cfg$new(neval = 100)
+}
+\seealso{
+\link[nprobust:lprobust]{nprobust::lprobust}
 }
 \section{Super class}{
 \code{\link[tidyhte:Model_cfg]{tidyhte::Model_cfg}} -> \code{KernelSmooth_cfg}

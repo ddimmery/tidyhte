@@ -23,9 +23,11 @@ Updated \code{HTE_cfg} object
 }
 \description{
 This adds a definition about how to display a moderators to
-the MCATE config.
+the MCATE config. A moderator is any variable that you want to view information
+about CATEs with respect to.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_moderator("Stratified", x2, x3) \%>\%
    add_moderator("KernelSmooth", x1, x4, x5) -> hte_cfg

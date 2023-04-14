@@ -13,6 +13,15 @@
 #' @param .HTE_cfg `HTE_cfg` object representing the full configuration of the HTE analysis.
 #' @seealso [basic_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()], [estimate_QoI()]
+#' @examples
+#' \dontrun{
+#' cfg <- basic_config()
+#' attach_config(data, cfg) %>%
+#' make_splits(unitid, .num_splits = 10) %>%
+#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
+#' construct_pseudo_outcomes(outcome, treatment) %>%
+#' estimate_QoI(covariate1, covariate2)
+#' }
 #' @export
 attach_config <- function(.data, .HTE_cfg) {
     check_hte_cfg(.HTE_cfg)
@@ -37,6 +46,15 @@ attach_config <- function(.data, .HTE_cfg) {
 #' @return original dataframe with additional `.split_id` column
 #' @seealso [attach_config()], [produce_plugin_estimates()], [construct_pseudo_outcomes()],
 #' [estimate_QoI()]
+#' @examples
+#' \dontrun{
+#' cfg <- basic_config()
+#' attach_config(data, cfg) %>%
+#' make_splits(unitid, .num_splits = 10) %>%
+#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
+#' construct_pseudo_outcomes(outcome, treatment) %>%
+#' estimate_QoI(covariate1, covariate2)
+#' }
 #' @importFrom magrittr %>%
 #' @importFrom stats model.matrix
 #' @importFrom tibble as_tibble
@@ -126,6 +144,15 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
 #' @param .weights Unquoted name of weights column. If NULL, all analysis will assume weights are all
 #' equal to one and sample-based quantities will be returned.
 #' @seealso [attach_config()], [make_splits()], [construct_pseudo_outcomes()], [estimate_QoI()]
+#' @examples
+#' \dontrun{
+#' cfg <- basic_config()
+#' attach_config(data, cfg) %>%
+#' make_splits(unitid, .num_splits = 10) %>%
+#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
+#' construct_pseudo_outcomes(outcome, treatment) %>%
+#' estimate_QoI(covariate1, covariate2)
+#' }
 #' @importFrom progress progress_bar
 #' @importFrom dplyr matches left_join select
 #' @export
@@ -250,6 +277,15 @@ produce_plugin_estimates <- function(.data, outcome, treatment, ..., .weights = 
 #' @param ... Unquoted names of moderators to calculate QoIs for.
 #' @seealso [attach_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()],
+#' @examples
+#' \dontrun{
+#' cfg <- basic_config()
+#' attach_config(data, cfg) %>%
+#' make_splits(unitid, .num_splits = 10) %>%
+#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
+#' construct_pseudo_outcomes(outcome, treatment) %>%
+#' estimate_QoI(covariate1, covariate2)
+#' }
 #' @export
 #' @importFrom rlang .env
 estimate_QoI <- function(

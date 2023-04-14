@@ -18,7 +18,8 @@ A tibble with \code{nbins} rows.
 }
 \description{
 This function calculates the RegressionROC Curve of
-of Hernández-Orallo \href{https://doi.org/10.1016/j.patcog.2013.06.014}{doi:10.1016/j.patcog.2013.06.014}.
+of Hernández-Orallo
+\href{https://doi.org/10.1016/j.patcog.2013.06.014}{doi:10.1016/j.patcog.2013.06.014}.
 It provides estimates for the positive and negative
 errors when predictions are shifted by a variety
 of constants (which range across the domain of observed
@@ -29,4 +30,8 @@ visualize the error properties of a regression model.
 \details{
 The dot shows the errors when no shift is applied, corresponding
 to the base model predictions.
+}
+\references{
+Hernández-Orallo, J. (2013). ROC curves for regression.
+Pattern Recognition, 46(12), 3395-3411.
 }

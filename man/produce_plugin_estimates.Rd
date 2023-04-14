@@ -25,6 +25,16 @@ to an estimate of the conditional expectation of treatment (\code{.pi_hat}), alo
 conditional expectation of the control and treatment potential outcome surfaces
 (\code{.mu0_hat} and \code{.mu1_hat} respectively).
 }
+\examples{
+\dontrun{
+cfg <- basic_config()
+attach_config(data, cfg) \%>\%
+make_splits(unitid, .num_splits = 10) \%>\%
+produce_plugin_estimates(outcome, treatment, covariate1, covariate2) \%>\%
+construct_pseudo_outcomes(outcome, treatment) \%>\%
+estimate_QoI(covariate1, covariate2)
+}
+}
 \seealso{
 \code{\link[=attach_config]{attach_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=construct_pseudo_outcomes]{construct_pseudo_outcomes()}}, \code{\link[=estimate_QoI]{estimate_QoI()}}
 }

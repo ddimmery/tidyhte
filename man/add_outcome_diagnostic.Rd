@@ -20,6 +20,7 @@ Updated \code{HTE_cfg} object
 This adds a diagnostic to the outcome model.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_outcome_diagnostic("RROC") -> hte_cfg
 }

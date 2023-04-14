@@ -9,12 +9,23 @@ across all moderators. This provides a meaningful measure of which moderators
 explain the most of the CATE surface.
 }
 \examples{
+VIMP_cfg$new()
 
 ## ------------------------------------------------
 ## Method `VIMP_cfg$new`
 ## ------------------------------------------------
 
 VIMP_cfg$new()
+}
+\references{
+\itemize{
+\item Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
+Nonparametric variable importance assessment using machine learning techniques.
+Biometrics, 77(1), 9-22.
+\item Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
+A general framework for inference on algorithm-agnostic variable importance.
+Journal of the American Statistical Association, 1-14.
+}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

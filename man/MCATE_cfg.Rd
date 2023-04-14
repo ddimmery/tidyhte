@@ -11,12 +11,20 @@ Thus, if two covariates are highly correlated, it is likely that their
 MCATE surfaces will be extremely similar.
 }
 \examples{
+MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
 
 ## ------------------------------------------------
 ## Method `MCATE_cfg$new`
 ## ------------------------------------------------
 
 MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
+
+## ------------------------------------------------
+## Method `MCATE_cfg$add_moderator`
+## ------------------------------------------------
+
+cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
+cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -94,6 +102,18 @@ surface.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+An updated \code{MCATE_cfg} object.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
+cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MCATE_cfg-clone"></a>}}

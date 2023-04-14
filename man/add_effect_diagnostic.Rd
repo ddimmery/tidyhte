@@ -20,6 +20,7 @@ Updated \code{HTE_cfg} object
 This adds a diagnostic to the effect model.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_effect_diagnostic("RROC") -> hte_cfg
 }

@@ -1,3 +1,4 @@
+#' @keywords internal
 SL_model_slot <- function(prediction) {
     if (prediction == ".pi_hat") "pi"
     else if (prediction == ".mu1_hat") "mu1"
@@ -6,7 +7,20 @@ SL_model_slot <- function(prediction) {
     else stop("Unknown model slot.")
 }
 
-
+#' Function to calculate diagnostics based on model outputs
+#' 
+#' This function defines the calculations of common model diagnostics
+#' which are available.
+#' @param .data The full data frame with all auxilliary columns.
+#' @param label The (string) column name for the labels to evaluate against.
+#' @param prediction The (string) column name of predictions from the model to diagnose.
+#' @param diag_name The (string) name of the diagnostic to calculate. Currently 
+#' available are "AUC", "MSE", "SL_coefs", "SL_risk", "RROC"
+#' @param params Any other necessary options to pass to the given diagnostic.
+#' @examples
+#' df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100))
+#' estimate_diagnostic(df, "y", "p", "AUC")
+#' @keywords internal
 #' @importFrom stats sd weighted.mean
 estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
     w_col <- attr(.data, "weights")
@@ -92,7 +106,22 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
     result
 }
 
-
+#' Calculate diagnostics
+#'
+#' This function calculates the diagnostics requested by the `Diagnostics_cfg` object.
+#' @param .data Data frame with all additional columns (such as model predictions) included.
+#' @param treatment Unquoted treatment variable name
+#' @param outcome Unquoted outcome variable name
+#' @param diag.cfg `Diagnostics_cfg` object
+#' @return Returns a tibble with columns:
+#' * `estimand` - Character indicating the diagnostic that was calculated
+#' * `level` - Indicates the scope of this diagnostic (e.g. does it apply
+#' only to the model of the outcome under treatment).
+#' * `term` - Indicates a more granular descriptor of what the value is for,
+#' such as the specific model within the SuperLearner ensemble.
+#' * `estimate` - Point estimate of the diagnostic.
+#' * `std_error` - Standard error of the diagnostic.
+#' @seealso [Diagnostics_cfg]
 calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
     ps_cfg <- .diag.cfg$ps
     y_cfg <- .diag.cfg$outcome

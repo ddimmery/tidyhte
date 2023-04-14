@@ -14,6 +14,11 @@ covariates. Two highly correlated variables may have very different
 PCATE surfaces.
 }
 \examples{
+PCATE_cfg$new(
+   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   model_covariates = c("x1", "x2", "x3"),
+   num_mc_samples = list(x1 = 100)
+)
 
 ## ------------------------------------------------
 ## Method `PCATE_cfg$new`
@@ -24,6 +29,17 @@ PCATE_cfg$new(
    model_covariates = c("x1", "x2", "x3"),
    num_mc_samples = list(x1 = 100)
 )
+
+## ------------------------------------------------
+## Method `PCATE_cfg$add_moderator`
+## ------------------------------------------------
+
+cfg <- PCATE_cfg$new(
+   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   model_covariates = c("x1", "x2", "x3"),
+   num_mc_samples = list(x1 = 100)
+)
+cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
 }
 \keyword{internal}
 \section{Public fields}{
@@ -115,6 +131,22 @@ surface.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+An updated \code{PCATE_cfg} object.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{cfg <- PCATE_cfg$new(
+   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   model_covariates = c("x1", "x2", "x3"),
+   num_mc_samples = list(x1 = 100)
+)
+cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PCATE_cfg-clone"></a>}}

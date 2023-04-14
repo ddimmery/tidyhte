@@ -8,6 +8,10 @@
 diagnostics for the models trained in the course of HTE estimation.
 }
 \examples{
+Diagnostics_cfg$new(
+   outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
+   ps = c("SL_risk", "SL_coefs", "AUC")
+)
 
 ## ------------------------------------------------
 ## Method `Diagnostics_cfg$new`
@@ -17,6 +21,16 @@ Diagnostics_cfg$new(
    outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
    ps = c("SL_risk", "SL_coefs", "AUC")
 )
+
+## ------------------------------------------------
+## Method `Diagnostics_cfg$add`
+## ------------------------------------------------
+
+cfg <- Diagnostics_cfg$new(
+   outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
+   ps = c("SL_risk", "SL_coefs")
+)
+cfg <- cfg$add(ps = "AUC")
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -96,6 +110,21 @@ Add diagnostics to the \code{Diagnostics_cfg} object.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+An updated \code{Diagnostics_cfg} object.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{cfg <- Diagnostics_cfg$new(
+   outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
+   ps = c("SL_risk", "SL_coefs")
+)
+cfg <- cfg$add(ps = "AUC")
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Diagnostics_cfg-clone"></a>}}

@@ -20,8 +20,8 @@ calculate_linear_vimp(
 
 \item{pseudo_outcome}{Unquoted name of the pseudo-outcome.}
 
-\item{...}{Unquoted names of covariates to include in the joint effect model. The variable importance
-will be calculated for each of these covariates.}
+\item{...}{Unquoted names of covariates to include in the joint effect model.
+The variable importance will be calculated for each of these covariates.}
 
 \item{.VIMP_cfg}{A \code{VIMP_cfg} object defining how VIMP should be estimated.}
 
@@ -29,10 +29,20 @@ will be calculated for each of these covariates.}
 }
 \description{
 \code{calculate_linear_vimp} estimates the linear hypothesis test of removing a particular moderator
-from a linear model containing all moderators.
+from a linear model containing all moderators. Unlike \code{calculate_vimp}, this will only be
+unbiased and have correct asymptotic coverage rates if the true model is linear. This linear
+approach is also substantially faster, so may be useful when prototyping an analysis.
 }
 \references{
-Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
-assessment using machine learning techniques. \emph{Biometrics}. 2021; 77: 9-- 22.
-\doi{10.1111/biom.13392}
+\itemize{
+\item Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
+Nonparametric variable importance assessment using machine learning techniques.
+Biometrics, 77(1), 9-22.
+\item Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
+A general framework for inference on algorithm-agnostic variable importance.
+Journal of the American Statistical Association, 1-14.
+}
+}
+\seealso{
+\code{\link[=calculate_vimp]{calculate_vimp()}}
 }

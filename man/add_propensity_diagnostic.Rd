@@ -20,6 +20,7 @@ Updated \code{HTE_cfg} object
 This adds a diagnostic to the propensity score.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_propensity_diagnostic(c("AUC", "MSE")) -> hte_cfg
 }

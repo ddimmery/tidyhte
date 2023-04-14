@@ -1,17 +1,22 @@
 #' Calculate Variable Importance of HTEs
 #'
-#' `calculate_vimp` estimates the reduction in (population) $R^2$ from removing a particular moderator
-#' from a model containing all moderators.
+#' `calculate_vimp` estimates the reduction in (population) $R^2$ from
+#' removing a particular moderator from a model containing all moderators.
 #' @param .data dataframe
 #' @param weight_col Unquoted name of the weight column.
 #' @param pseudo_outcome Unquoted name of the pseudo-outcome.
-#' @param ... Unquoted names of covariates to include in the joint effect model. The variable importance
-#' will be calculated for each of these covariates.
+#' @param ... Unquoted names of covariates to include in the joint effect model.
+#' The variable importance will be calculated for each of these covariates.
 #' @param .VIMP_cfg A `VIMP_cfg` object defining how VIMP should be estimated.
 #' @param .Model_cfg A `Model_cfg` object defining how the joint effect model should be estimated.
-#' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
-#' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
-#' \doi{10.1111/biom.13392}
+#' @references
+#' * Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
+#' Nonparametric variable importance assessment using machine learning techniques.
+#' Biometrics, 77(1), 9-22.
+#' * Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
+#' A general framework for inference on algorithm-agnostic variable importance.
+#' Journal of the American Statistical Association, 1-14.
+#' @seealso [calculate_linear_vimp()]
 #' @importFrom progress progress_bar
 #' @import SuperLearner
 calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
@@ -134,17 +139,24 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 #' Calculate Linear Variable Importance of HTEs
 #'
 #' `calculate_linear_vimp` estimates the linear hypothesis test of removing a particular moderator
-#' from a linear model containing all moderators.
+#' from a linear model containing all moderators. Unlike `calculate_vimp`, this will only be
+#' unbiased and have correct asymptotic coverage rates if the true model is linear. This linear
+#' approach is also substantially faster, so may be useful when prototyping an analysis.
 #' @param .data dataframe
 #' @param weight_col Unquoted name of the weight column.
 #' @param pseudo_outcome Unquoted name of the pseudo-outcome.
-#' @param ... Unquoted names of covariates to include in the joint effect model. The variable importance
-#' will be calculated for each of these covariates.
+#' @param ... Unquoted names of covariates to include in the joint effect model.
+#' The variable importance will be calculated for each of these covariates.
 #' @param .VIMP_cfg A `VIMP_cfg` object defining how VIMP should be estimated.
 #' @param .Model_cfg A `Model_cfg` object defining how the joint effect model should be estimated.
-#' @references Williamson, BD, Gilbert, PB, Carone, M, Simon, N. Nonparametric variable importance
-#' assessment using machine learning techniques. *Biometrics*. 2021; 77: 9-- 22.
-#' \doi{10.1111/biom.13392}
+#' @references
+#' * Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
+#' Nonparametric variable importance assessment using machine learning techniques.
+#' Biometrics, 77(1), 9-22.
+#' * Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
+#' A general framework for inference on algorithm-agnostic variable importance.
+#' Journal of the American Statistical Association, 1-14.
+#' @seealso [calculate_vimp()]
 #' @importFrom progress progress_bar
 #' @importFrom stats lm residuals weighted.mean
 #' @importFrom dplyr select %>% tibble

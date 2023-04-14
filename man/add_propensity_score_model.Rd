@@ -24,6 +24,7 @@ This adds a learner to the ensemble used for estimating propensity
 scores.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_propensity_score_model("SL.glmnet", alpha = c(0, 0.5, 1)) -> hte_cfg
 }

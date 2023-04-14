@@ -1,3 +1,4 @@
+#' @keywords internal
 predictor_factory <- function(cfg, ...) {
     if (!("model_class" %in% names(cfg))) {
         stop("Unknown model class.")
@@ -16,7 +17,9 @@ predictor_factory <- function(cfg, ...) {
     }
 }
 
-
+#' @seealso [KnownPredictor], [ConstantPredictor], [SLPredictor], [KernelSmoothPredictor],
+#' [StratifiedPredictor], [Model_cfg]
+#' @keywords internal
 Predictor <- R6::R6Class("Predictor",
     list(
         initialize = function(...) {
@@ -35,6 +38,7 @@ Predictor <- R6::R6Class("Predictor",
 )
 
 
+#' @keywords internal
 KnownPredictor <- R6::R6Class("KnownPredictor",
     inherit = Predictor,
     public = list(
@@ -57,6 +61,7 @@ KnownPredictor <- R6::R6Class("KnownPredictor",
 )
 
 
+#' @keywords internal
 ConstantPredictor <- R6::R6Class("ConstantPredictor",
     inherit = Predictor,
     public = list(
@@ -80,6 +85,7 @@ ConstantPredictor <- R6::R6Class("ConstantPredictor",
 
 
 #' @import SuperLearner
+#' @keywords internal
 SLPredictor <- R6::R6Class("SLPredictor",
     inherit = Predictor,
     public = list(
@@ -125,6 +131,7 @@ SLPredictor <- R6::R6Class("SLPredictor",
 )
 
 
+#' @keywords internal
 KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
     inherit = Predictor,
     list(
@@ -190,6 +197,7 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
 
 #' @importFrom stats sd
 #' @importFrom magrittr %>%
+#' @keywords internal
 StratifiedPredictor <- R6::R6Class("StratifiedPredictor",
     inherit = Predictor,
     list(

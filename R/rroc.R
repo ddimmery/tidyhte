@@ -1,7 +1,8 @@
 #' Regression ROC Curve calculation
 #'
 #' This function calculates the RegressionROC Curve of
-#' of Hernández-Orallo [doi:10.1016/j.patcog.2013.06.014](https://doi.org/10.1016/j.patcog.2013.06.014).
+#' of Hernández-Orallo
+#' [doi:10.1016/j.patcog.2013.06.014](https://doi.org/10.1016/j.patcog.2013.06.014).
 #' It provides estimates for the positive and negative
 #' errors when predictions are shifted by a variety
 #' of constants (which range across the domain of observed
@@ -14,6 +15,8 @@
 #' @param label True label
 #' @param prediction Model prediction of the label (out of sample)
 #' @param nbins Number of shift values to sweep over
+#' @references Hernández-Orallo, J. (2013). ROC curves for regression.
+#' Pattern Recognition, 46(12), 3395-3411.
 #' @return A tibble with `nbins` rows.
 #' @importFrom dplyr tibble bind_rows
 #' @importFrom stats quantile

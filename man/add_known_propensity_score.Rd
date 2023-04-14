@@ -20,6 +20,7 @@ This replaces the propensity score model with a known value
 of the propensity score.
 }
 \examples{
+library("dplyr")
 basic_config() \%>\%
    add_known_propensity_score("ps") -> hte_cfg
 }
