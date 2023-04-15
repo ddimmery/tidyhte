@@ -91,7 +91,9 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
 
     if (length(dots) > 0 && qb_present) {
         soft_require("quickblock")
-        block_data <-  tibble::as_tibble(stats::model.matrix(~. + 0, dplyr::select(ok_data, !!!dots)))
+        block_data <-  tibble::as_tibble(
+            stats::model.matrix(~. + 0, dplyr::select(ok_data, !!!dots))
+        )
         block_data$id_col <- ok_data[[rlang::as_name(identifier)]]
         block_data %>%
             dplyr::group_by(id_col) %>%
@@ -105,7 +107,9 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
         split_data <- dplyr::tibble(ids = ids, .split_id = splits)
         names(split_data)[1] <- rlang::as_name(identifier)
     } else {
-        num_per_split <- as.integer(floor(length(unique(ok_data[[rlang::as_name(identifier)]])) / .num_splits))
+        num_per_split <- as.integer(
+            floor(length(unique(ok_data[[rlang::as_name(identifier)]])) / .num_splits)
+        )
         ok_data %>%
         dplyr::group_by({{ identifier }}) %>%
         dplyr::tally() %>%
@@ -141,8 +145,8 @@ make_splits <- function(.data, identifier, ..., .num_splits) {
 #' @param outcome Unquoted name of the outcome variable.
 #' @param treatment Unquoted name of the treatment variable.
 #' @param ... Unquoted names of covariates to include in the models of the nuisance functions.
-#' @param .weights Unquoted name of weights column. If NULL, all analysis will assume weights are all
-#' equal to one and sample-based quantities will be returned.
+#' @param .weights Unquoted name of weights column. If NULL, all analysis will assume weights
+#' are all equal to one and sample-based quantities will be returned.
 #' @seealso [attach_config()], [make_splits()], [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @examples
 #' \dontrun{
@@ -336,7 +340,7 @@ estimate_QoI <- function(
         result_list <- c(result_list, list(dplyr::mutate(result, estimand = "MCATE")))
     }
 
-    if (!is.null(.QoI_cfg$pcate) | .QoI_cfg$predictions) {
+    if (!is.null(.QoI_cfg$pcate) || .QoI_cfg$predictions) {
         covs <- rlang::syms(.QoI_cfg$pcate$model_covariates)
         fx_mod <- fit_fx_predictor(
             .data,

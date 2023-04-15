@@ -266,14 +266,14 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' linear-only model. Variable importance measure will only be consistent for the population
 #' quantity if the true model of pseudo-outcomes is linear.
 #' @return Updated `HTE_cfg` object
-#' @references 
+#' @references
 #' * Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
 #' Nonparametric variable importance assessment using machine learning techniques.
 #' Biometrics, 77(1), 9-22.
 #' * Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
 #' A general framework for inference on algorithm-agnostic variable importance.
 #' Journal of the American Statistical Association, 1-14.
-#' @examples
+#' @example
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_vimp(sample_splitting = FALSE) -> hte_cfg

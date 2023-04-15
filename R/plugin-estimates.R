@@ -1,5 +1,5 @@
 #' Fits a plugin model using the appropriate settings
-#' 
+#'
 #' This function prepares data, fits the appropriate models and returns the
 #' resulting estimates in a standardized format.
 #' @param .data The full dataset of interest for the modelling problem.
@@ -20,7 +20,7 @@ fit_plugin <- function(.data, weight_col, outcome_col, ..., .Model_cfg) {
 }
 
 #' Fits a propensity score model using the appropriate settings
-#' 
+#'
 #' This function prepares data, fits the appropriate model and returns the
 #' resulting estimates in a standardized format.
 #' @param .data The full dataset of interest for the modelling problem.
@@ -44,7 +44,7 @@ fit_plugin_A <- function(.data, weight_col, a_col, ..., .Model_cfg) {
 
 
 #' Fits a T-learner using the appropriate settings
-#' 
+#'
 #' This function prepares data, fits the appropriate model and returns the
 #' resulting estimates in a standardized format.
 #' @param .data The full dataset of interest for the modelling problem.
@@ -70,7 +70,7 @@ fit_plugin_Y <- function(.data, weight_col, y_col, a_col, ..., .Model_cfg) {
 
 
 #' Fits a treatment effect model using the appropriate settings
-#' 
+#'
 #' This function prepares data, fits the appropriate model and returns the
 #' resulting estimates in a standardized format.
 #' @param .data The full dataset of interest for the modelling problem.

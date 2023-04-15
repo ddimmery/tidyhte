@@ -8,13 +8,13 @@ SL_model_slot <- function(prediction) {
 }
 
 #' Function to calculate diagnostics based on model outputs
-#' 
+#'
 #' This function defines the calculations of common model diagnostics
 #' which are available.
 #' @param .data The full data frame with all auxilliary columns.
 #' @param label The (string) column name for the labels to evaluate against.
 #' @param prediction The (string) column name of predictions from the model to diagnose.
-#' @param diag_name The (string) name of the diagnostic to calculate. Currently 
+#' @param diag_name The (string) name of the diagnostic to calculate. Currently
 #' available are "AUC", "MSE", "SL_coefs", "SL_risk", "RROC"
 #' @param params Any other necessary options to pass to the given diagnostic.
 #' @examples

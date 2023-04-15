@@ -1,5 +1,5 @@
 #' Predictor class for the cross-fit predictor of "partial" CATEs
-#' 
+#'
 #' The class makes it easier to manage the K predictors for retrieving K-fold
 #' cross-validated estimates, as well as to measure how treatment effects change
 #' when only a single covariate is changed from its "natural" levels (in the sense
@@ -45,7 +45,7 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
         #' @return A tibble with columns:
         #' * `covariate_value` - The value of the covariate of interest
         #' * `.hte` - An estimated HTE
-        #' * `.id` - The identifier for the original row (which had 
+        #' * `.id` - The identifier for the original row (which had
         #' `covariate` modified to `covariate_value`).
         predict = function(data, covariate) {
             sample_size <- pmin(self$num_mc_samples[[rlang::as_string(covariate)]], nrow(data))
@@ -78,7 +78,7 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
 )
 
 #' Fit a predictor for treatment effects
-#' 
+#'
 #' This function predicts treatment effects in a second stage model.
 #' @param .data The full original data with all auxilliary columns.
 #' @param weights Weights to be used in the analysis.

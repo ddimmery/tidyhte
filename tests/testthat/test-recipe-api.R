@@ -28,7 +28,10 @@ test_that("recipe manipulations on moderators", {
 
     expect_error(add_moderator(cfg, "unknown", x1), "Unknown `model_type`.")
 
-    checkmate::expect_r6(add_moderator(cfg, "KernelSmooth", x2, .model_arguments = rlang::list2(neval = 50)), "HTE_cfg")
+    checkmate::expect_r6(
+        add_moderator(cfg, "KernelSmooth", x2, .model_arguments = rlang::list2(neval = 50)),
+        "HTE_cfg"
+    )
 
     checkmate::expect_r6(add_moderator(cfg, "KernelSmooth", x2), "HTE_cfg")
 })

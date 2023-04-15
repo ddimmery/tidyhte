@@ -107,7 +107,11 @@ test_that("Estimate Plugin Models", {
 })
 
 test_that("Construct Pseudo-outcomes", {
-    suppressMessages(data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }}))
+    suppressMessages(
+        data4 <<- construct_pseudo_outcomes(
+            data3, {{ outcome_variable }}, {{ treatment_variable }}
+        )
+    )
     checkmate::expect_data_frame(data4)
 })
 

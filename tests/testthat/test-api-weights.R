@@ -103,7 +103,10 @@ test_that("Construct Pseudo-outcomes", {
 })
 
 test_that("Estimate QoIs (continuous)", {
-    expect_error(estimate_QoI(data4, !!!continuous_moderators), "`nprobust` does not support the use of weights.")
+    expect_error(
+        estimate_QoI(data4, !!!continuous_moderators),
+        "`nprobust` does not support the use of weights."
+    )
 })
 
 test_that("Estimate QoIs (discrete)", {

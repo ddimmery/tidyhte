@@ -5,7 +5,7 @@
 #' sublearner to be included in SuperLearner. By constructing with a named list
 #' of hyperparameters, this configuration allows distinct submodels
 #' for each unique combination of hyperparameters. To understand what models
-#' and hyperparameters are available, examine the methods listed in 
+#' and hyperparameters are available, examine the methods listed in
 #' `SuperLearner::listWrappers("SL")`.
 #' @importFrom R6 R6Class
 #' @export
@@ -124,7 +124,7 @@ Constant_cfg <- R6::R6Class("Constant_cfg",
 #' regression to construct a smooth representation of the relationship between
 #' two variables. This is typically used for displaying a surface of the conditional
 #' average treatment effect over a continuous covariate.
-#' 
+#'
 #' Kernel smoothing is handled by the `nprobust` package.
 #' @seealso [nprobust::lprobust]
 #' @importFrom R6 R6Class

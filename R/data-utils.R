@@ -119,7 +119,7 @@ Model_data <- R6::R6Class("Model_data", list(
 ))
 
 #' Checks that splits have been properly created.
-#' 
+#'
 #' This helper function makes a few simple checks to identify obvious
 #' issues with the way that splits have been made in the supplied data.
 #' @param data Dataframe which should have appropriate `.split_id` column.
@@ -135,7 +135,7 @@ check_splits <- function(data) {
 }
 
 #' Checks that nuisance models have been estimated and exist in the supplied dataset.
-#' 
+#'
 #' This helper function makes a few simple checks to identify obvious
 #' issues with the way that nuisance functions are created and prepared.
 #' @param data Dataframe which should have appropriate columns of nuisance function
@@ -152,7 +152,7 @@ check_nuisance_models <- function(data) {
 }
 
 #' Removes rows which have missing data on any of the supplied columns.
-#' 
+#'
 #' This function removes rows with missingness based on the columns provided.
 #' If rows are dropped, a message is displayed to the user to inform them of this
 #' fact.
@@ -185,7 +185,7 @@ listwise_deletion <- function(data, ...) {
 }
 
 #' Checks that an appropriate identifier has been provided
-#' 
+#'
 #' This helper function makes a few simple checks to identify obvious
 #' issues with the way provided column of unit identifiers.
 #' @param data Dataframe of interest.
@@ -213,7 +213,7 @@ check_identifier <- function(data, id_col) {
 }
 
 #' Checks that an appropriate weighting variable has been provided
-#' 
+#'
 #' This helper function makes a few simple checks to identify obvious
 #' issues with the weights provided.
 #' @param data Dataframe of interest.
@@ -241,7 +241,7 @@ check_weights <- function(data, weight_col) {
 }
 
 #' Checks that a dataframe has an attached configuration for HTEs
-#' 
+#'
 #' This helper function ensures that the provided dataframe has
 #' the necessary auxilliary configuration information for HTE
 #' estimation.

@@ -179,7 +179,11 @@ calculate_linear_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_
 
     result_list <- list()
     for (moderator in names(data$model_frame)) {
-        reduced_mod <- stats::lm(".label ~ .", df %>% dplyr::select(-!!moderator), weights = data$weights)
+        reduced_mod <- stats::lm(
+            ".label ~ .",
+            df %>% dplyr::select(-!!moderator),
+            weights = data$weights
+        )
         r_1 <- stats::residuals(reduced_mod) ^ 2
 
         diff <- r_1 - r_0

@@ -85,8 +85,8 @@ SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
 #' @importFrom stats model.matrix
 #' @import SuperLearner
 predict.SL.glmnet.interaction <- function(object, newdata,
-                              remove_extra_cols = T,
-                              add_missing_cols = T,
+                              remove_extra_cols = TRUE,
+                              add_missing_cols = TRUE,
                               ...) {
   soft_require("glmnet")
 

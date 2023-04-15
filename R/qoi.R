@@ -65,13 +65,13 @@ plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
 
 
 #' Calculates a SATE and a PATE using AIPW
-#' 
+#'
 #' This function takes fully prepared data (with all auxilliary columns from the
 #' necessary models) and estimates average treatment effects using AIPW.
 #' @param .data The dataset of interest after it has been prepared fully.
 #' @seealso [basic_config()], [attach_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()], [estimate_QoI()]
-#' @references 
+#' @references
 #' * Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
 #' causal effects. *arXiv preprint arXiv:2004.14497*.
 #' * Tsiatis, A. A., Davidian, M., Zhang, M., & Lu, X. (2008). Covariate adjustment

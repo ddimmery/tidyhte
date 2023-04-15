@@ -94,16 +94,22 @@ test_that("Estimate Plugin Models", {
 })
 
 test_that("Construct DR Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }})
+    data4 <<- construct_pseudo_outcomes(
+        data3, {{ outcome_variable }}, {{ treatment_variable }}
+    )
     checkmate::expect_data_frame(data4)
 })
 
 test_that("Construct IPW Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }}, "ipw")
+    data4 <<- construct_pseudo_outcomes(
+        data3, {{ outcome_variable }}, {{ treatment_variable }}, "ipw"
+    )
     checkmate::expect_data_frame(data4)
 })
 
 test_that("Construct Plugin Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }}, "plugin")
+    data4 <<- construct_pseudo_outcomes(
+        data3, {{ outcome_variable }}, {{ treatment_variable }}, "plugin"
+    )
     checkmate::expect_data_frame(data4)
 })
