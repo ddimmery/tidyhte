@@ -49,6 +49,7 @@ split_data <- function(.data, split_id) {
 #' be used in a supervised regression / classification model.
 #' @importFrom stats model.matrix model.frame
 #' @importFrom purrr map
+#' @export
 Model_data <- R6::R6Class("Model_data", list(
     #' @field label The labels for the eventual model as a vector.
     label = NULL,

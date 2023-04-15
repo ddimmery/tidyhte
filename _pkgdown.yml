@@ -87,7 +87,10 @@ reference:
 - contents:
   - MCATE_cfg
   - PCATE_cfg
-- title: internal
+- title: Internal Functions
+  desc: >
+    The remaining functions are not really useful for end-users. Documentation is provided
+    in order to provide additional details about the internal workings of the methods.
 - contents:
   - SL.glmnet.interaction
   - "predict.SL.glmnet.interaction"
