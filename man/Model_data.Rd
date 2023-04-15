@@ -20,6 +20,16 @@ be used in a supervised regression / classification model.
 
 library("dplyr")
 df <- dplyr::tibble(
+    uid = 1:100,
+    x1 = rnorm(100),
+    x2 = rnorm(100),
+    x3 = sample(4, 100, replace = TRUE)
+) \%>\% dplyr::mutate(
+    y = x1 + x2 + x3 + rnorm(100),
+    x3 = factor(x3)
+)
+df <- make_splits(df, uid, .num_splits = 5)
+data <- Model_data$new(df, y, x1, x2, x3)
 }
 \seealso{
 \link[SuperLearner:SuperLearner.CV.control]{SuperLearner::SuperLearner.CV.control}
@@ -84,6 +94,16 @@ A \code{Model_data} object.
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{library("dplyr")
 df <- dplyr::tibble(
+    uid = 1:100,
+    x1 = rnorm(100),
+    x2 = rnorm(100),
+    x3 = sample(4, 100, replace = TRUE)
+) \%>\% dplyr::mutate(
+    y = x1 + x2 + x3 + rnorm(100),
+    x3 = factor(x3)
+)
+df <- make_splits(df, uid, .num_splits = 5)
+data <- Model_data$new(df, y, x1, x2, x3)
 }
 \if{html}{\out{</div>}}
 

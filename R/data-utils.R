@@ -1,5 +1,5 @@
 #' R6 class to represent partitions of the data between training and held-out
-#' 
+#'
 #' This takes a set of folds calculated elsewhere and represents
 #' these folds in a consistent format.
 #' @keywords internal
@@ -44,7 +44,7 @@ split_data <- function(.data, split_id) {
 }
 
 #' R6 class to represent data to be used in estimating a model
-#' 
+#'
 #' This class provides consistent names and interfaces to data which will
 #' be used in a supervised regression / classification model.
 #' @importFrom stats model.matrix model.frame
@@ -55,7 +55,7 @@ Model_data <- R6::R6Class("Model_data", list(
     #' @field features The matrix representation of the data to be used for model fitting.
     #' Constructed using `stats::model.matrix`.
     features = NULL,
-    #' @field model_frame The data-frame representation of the data as constructed by 
+    #' @field model_frame The data-frame representation of the data as constructed by
     #' `stats::model.frame`.
     model_frame = NULL,
     #' @field split_id The split identifiers as a vector.
@@ -78,16 +78,16 @@ Model_data <- R6::R6Class("Model_data", list(
     #' @examples
     #' library("dplyr")
     #' df <- dplyr::tibble(
-    #     uid = 1:100,
-    #     x1 = rnorm(100),
-    #     x2 = rnorm(100),
-    #     x3 = sample(4, 100, replace = TRUE)
-    # ) %>% dplyr::mutate(
-    #     y = x1 + x2 + x3 + rnorm(100),
-    #     x3 = factor(x3)
-    # )
-    # df <- make_splits(df, uid, .num_splits = 5)
-    # data <- Model_data$new(df, y, x1, x2, x3)
+    #'     uid = 1:100,
+    #'     x1 = rnorm(100),
+    #'     x2 = rnorm(100),
+    #'     x3 = sample(4, 100, replace = TRUE)
+    #' ) %>% dplyr::mutate(
+    #'     y = x1 + x2 + x3 + rnorm(100),
+    #'     x3 = factor(x3)
+    #' )
+    #' df <- make_splits(df, uid, .num_splits = 5)
+    #' data <- Model_data$new(df, y, x1, x2, x3)
     initialize = function(.data, label_col, ..., .weight_col = NULL) {
         label_col <- rlang::enexpr(label_col)
         .weight_col <- rlang::enexpr(.weight_col)

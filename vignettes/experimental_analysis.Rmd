@@ -21,7 +21,8 @@ div.main-container {
 
 # Introduction
 
-In this example analysis, I will demonstrate how to run an analysis of heterogeneous treatment effects in a randomized control trial using the methods of Kennedy (2020). This implies that propensity scores are _known_, so estimates will generally be unbiased.
+In this example analysis, I will demonstrate how to run an analysis of heterogeneous treatment effects in a randomized control trial using the methods of Kennedy (2020).
+This implies that propensity scores are _known_, so estimates will generally be unbiased.
 
 This analysis will focus on using machine learning ensembles (through SuperLearner) to estimate nuisance functions and then provide a tibble of estimates of conditional treatment effects along with their associated standard errors.
 
@@ -90,7 +91,7 @@ An additional quantity of interest provided is the variable importance of a lear
 
 ```{r recipe}
 basic_config() %>%
-    add_known_propensity_score("ps") %>% 
+    add_known_propensity_score("ps") %>%
     add_outcome_model("SL.glm.interaction") %>%
     add_outcome_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
     add_outcome_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
@@ -164,7 +165,9 @@ ggplot(aes(
 ## Plot risk for each submodel
 ```{r sl_risk}
 filter(results, grepl("SL risk", estimand)) %>%
-mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
+mutate(
+    level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))
+) %>%
 ggplot() +
     geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
     geom_pointrange(
@@ -187,7 +190,9 @@ ggplot() +
 
 ```{r rroc}
 filter(results, grepl("RROC", estimand)) %>%
-mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
+mutate(
+    level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))
+) %>%
 ggplot() +
     geom_line(
         aes(
@@ -214,7 +219,13 @@ ggplot() +
 ggplot(filter(results, estimand == "VIMP")) +
     geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
     geom_pointrange(
-        aes(x = term, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+        aes(
+            x = term,
+            y = estimate,
+            ymin = estimate - 1.96 * std_error,
+            ymax = estimate + 1.96 * std_error
+        )
+    ) +
     expand_limits(y = 0) +
     scale_x_discrete("Covariate") +
     scale_y_continuous("Reduction in R² from full model") +
@@ -229,7 +240,12 @@ for (cov in c("x1", "x4", "x5")) {
     ggplot(filter(results, estimand == "MCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_ribbon(
-            aes(x = value, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.75
+            aes(
+                x = value,
+                ymin = estimate - 1.96 * std_error,
+                ymax = estimate + 1.96 * std_error
+            ),
+            alpha = 0.75
         ) +
         geom_line(
             aes(x = value, y = estimate)
@@ -249,7 +265,13 @@ for (cov in c("x2", "x3")) {
     ggplot(filter(results, estimand == "MCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_pointrange(
-            aes(x = level, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+            aes(
+                x = level,
+                y = estimate,
+                ymin = estimate - 1.96 * std_error,
+                ymax = estimate + 1.96 * std_error
+            )
+        ) +
         expand_limits(y = 0) +
         scale_x_discrete("Covariate level") +
         scale_y_continuous("CATE") +

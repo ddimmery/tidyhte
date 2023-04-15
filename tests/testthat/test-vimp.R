@@ -22,14 +22,16 @@ test_that("VIMP ensures even number of splits", {
     attr(d, "HTE_cfg") <- HTE_cfg$new(qoi = QoI_cfg$new(vimp = VIMP_cfg$new()))
     expect_error(
         calculate_vimp(
-            d, w, y, cov1, cov2, .VIMP_cfg = attr(d, "HTE_cfg")$qoi$vimp, .Model_cfg = SLEnsemble_cfg$new()
+            d, w, y, cov1, cov2, .VIMP_cfg = attr(d, "HTE_cfg")$qoi$vimp,
+            .Model_cfg = SLEnsemble_cfg$new()
         ),
         "Number of splits must be even to calculate VIMP."
     )
     attr(d, "num_splits") <- 4
     expect_error(
         calculate_vimp(
-            d, w, y, cov1, cov2, .VIMP_cfg = attr(d, "HTE_cfg")$qoi$vimp, .Model_cfg = SLEnsemble_cfg$new()
+            d, w, y, cov1, cov2, .VIMP_cfg = attr(d, "HTE_cfg")$qoi$vimp,
+            .Model_cfg = SLEnsemble_cfg$new()
         ),
         "Number of splits is inconsistent."
     )

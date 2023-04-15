@@ -86,13 +86,13 @@ An additional quantity of interest provided is the variable importance of a lear
 hte_cfg <- basic_config() %>%
     add_propensity_score_model("SL.glm.interaction") %>%
     add_propensity_score_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
-    add_propensity_score_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_propensity_score_model(
+        "SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)
+    ) %>%
     add_outcome_model("SL.glm.interaction") %>%
     add_outcome_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
     add_outcome_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
     add_outcome_diagnostic("RROC") %>%
-    # add_outcome_model("SL.ranger", num.trees = c(25, 50, 100, 250), splitrule = c("variance", "extratrees")) %>%
-    # add_outcome_model("SL.xgboost", ntrees = c(50, 100, 250, 500), maxdepth = c(1, 3, 5), shrinkage = c(0.1, 0.01)) %>%
     add_effect_model("SL.glm.interaction") %>%
     add_effect_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
     add_effect_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
@@ -159,7 +159,9 @@ ggplot(aes(
 ## Plot risk for each submodel
 ```{r sl_risk}
 filter(results, grepl("SL risk", estimand)) %>%
-mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
+mutate(
+    level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))
+) %>%
 ggplot() +
     geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
     geom_pointrange(
@@ -182,7 +184,9 @@ ggplot() +
 
 ```{r rroc}
 filter(results, grepl("RROC", estimand)) %>%
-mutate(level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))) %>%
+mutate(
+    level = factor(level, levels = c("Control Response", "Treatment Response", "Effect Surface"))
+) %>%
 ggplot() +
     geom_line(
         aes(
@@ -209,7 +213,13 @@ ggplot() +
 ggplot(filter(results, estimand == "VIMP")) +
     geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
     geom_pointrange(
-        aes(x = term, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+        aes(
+            x = term,
+            y = estimate,
+            ymin = estimate - 1.96 * std_error,
+            ymax = estimate + 1.96 * std_error
+        )
+    ) +
     expand_limits(y = 0) +
     scale_x_discrete("Covariate") +
     scale_y_continuous("Reduction in R² from full model") +
@@ -224,7 +234,12 @@ for (cov in c("x1", "x4", "x5")) {
     ggplot(filter(results, estimand == "MCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_ribbon(
-            aes(x = value, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.75
+            aes(
+                x = value,
+                ymin = estimate - 1.96 * std_error,
+                ymax = estimate + 1.96 * std_error
+            ),
+            alpha = 0.75
         ) +
         geom_line(
             aes(x = value, y = estimate)
@@ -244,7 +259,13 @@ for (cov in c("x2", "x3")) {
     ggplot(filter(results, estimand == "MCATE", term == cov)) +
         geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
         geom_pointrange(
-            aes(x = level, y = estimate, ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+            aes(
+                x = level,
+                y = estimate,
+                ymin = estimate - 1.96 * std_error,
+                ymax = estimate + 1.96 * std_error
+            )
+        ) +
         expand_limits(y = 0) +
         scale_x_discrete("Covariate level") +
         scale_y_continuous("CATE") +

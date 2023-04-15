@@ -271,19 +271,22 @@ geom_point() +
 geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
 geom_hline(yintercept = 0, linetype = "dashed") +
 coord_flip() +
-facet_wrap(~term, scales="free_y")
+facet_wrap(~term, scales = "free_y")
 ```
 
 ```{r cts_mcate, fig.height = 6, fig.width = 8}
 filter(results, estimand == "MCATE", is.na(level)) %>%
 ggplot(aes(value, estimate)) +
 geom_line() +
-geom_ribbon(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_ribbon(
+  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+  alpha = 0.5
+) +
 geom_hline(yintercept = 0, linetype = "dashed") +
 scale_x_continuous("Covariate value") +
 scale_y_continuous("CATE") +
 coord_flip() +
-facet_wrap(~term, scales="free_y")
+facet_wrap(~term, scales = "free_y")
 ```
 
 ## Plotting diagnostics
@@ -294,7 +297,10 @@ Similarly, it's easy to plot diagnostic information:
 filter(results, estimand == "SL risk") %>%
 ggplot(aes(reorder(term, estimate), estimate)) +
 geom_point() +
-geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_linerange(
+  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+  alpha = 0.5
+) +
 geom_hline(yintercept = 0, linetype = "dashed") +
 scale_x_discrete("") +
 scale_y_continuous("Risk") +
@@ -307,7 +313,10 @@ coord_flip()
 filter(results, estimand == "SL coefficient") %>%
 ggplot(aes(reorder(term, estimate), estimate)) +
 geom_point() +
-geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_linerange(
+  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+  alpha = 0.5
+) +
 geom_hline(yintercept = 0, linetype = "dashed") +
 scale_x_discrete("") +
 scale_y_continuous("Coefficient") +
@@ -324,7 +333,10 @@ And finally, we can examine the variable importance measure of @williamson2021no
 filter(results, estimand == "VIMP") %>%
 ggplot(aes(reorder(term, estimate), estimate)) +
 geom_point() +
-geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error), alpha = 0.5) +
+geom_linerange(
+  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+  alpha = 0.5
+) +
 geom_hline(yintercept = 0, linetype = "dashed") +
 scale_x_discrete("") +
 scale_y_continuous("Reduction in R²") +
@@ -341,14 +353,16 @@ As an example, to perform the same analysis used above on a different outcome wo
 ```{r repeat, message=FALSE,warning=FALSE}
 penguins %<>% produce_plugin_estimates(
   # outcome
-  body_mass_g, 
+  body_mass_g,
   # treatment
-  treatment, 
+  treatment,
   # covariates
   species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm
 ) %>%
 construct_pseudo_outcomes(body_mass_g, treatment) %>%
-estimate_QoI(species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm) -> results_mass
+estimate_QoI(
+  species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm
+) -> results_mass
 ```
 
 All the same quantities can be easily plotted for this outcome as well, and results may be joined together conveniently.
