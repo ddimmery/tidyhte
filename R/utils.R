@@ -54,7 +54,7 @@ clustered_se_of_mean <- function(y, cluster, weights = rep(1, length(y))) {
         dplyr::tibble(r = y - yhat, w = weights, cl = cluster) %>%
         dplyr::group_by(.data$cl) %>%
         dplyr::summarize(r = sum(tcrossprod(.data$w) * tcrossprod(.data$r))) %>%
-        dplyr::select(.data$r) %>%
+        dplyr::select("r") %>%
         unlist() -> cl_resids
     } else {
         cl_resids <- weights ^ 2 * (y - yhat) ^ 2
