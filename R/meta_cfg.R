@@ -108,6 +108,7 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
         #'    num_mc_samples = list(x1 = 100)
         #' )
         initialize = function(model_covariates, cfgs, num_mc_samples = 100) {
+            lifecycle::signal_stage("experimental", "PCATE_cfg$initialize()")
             self$cfgs <- cfgs
             self$model_covariates <- model_covariates
             if (checkmate::test_integerish(num_mc_samples, len = 1)) {

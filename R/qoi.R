@@ -159,6 +159,7 @@ calculate_mcate_quantities <- function(full_data, .weights, .outcome, ..., .MCAT
 #' `r lifecycle::badge("experimental")`
 #' @keywords internal
 calculate_pcate_quantities <- function(full_data, .weights, .outcome, fx_model, ..., .MCATE_cfg) {
+    lifecycle::signal_stage("experimental", "calculate_pcate_quantities()")
     dots <- rlang::enexprs(...)
     result_list <- list()
     pb <- progress::progress_bar$new(

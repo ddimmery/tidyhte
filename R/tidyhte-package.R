@@ -8,6 +8,9 @@
 #' @references Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
 #' causal effects. *arXiv preprint arXiv:2004.14497*.
 #' @keywords internal
+## usethis namespace: start
+#' @importFrom lifecycle experimental
+## usethis namespace: end
 "_PACKAGE"
 
 if (getRversion() >= "2.15.1") utils::globalVariables(".data")

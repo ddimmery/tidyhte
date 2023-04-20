@@ -42,5 +42,6 @@ Imports:
     purrr,
     tibble,
     SuperLearner,
-    progress
+    progress,
+    lifecycle
 VignetteBuilder: knitr
