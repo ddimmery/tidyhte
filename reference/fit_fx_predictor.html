@@ -75,12 +75,12 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fit_fx_predictor</span><span class="op">(</span><span class="va">.data</span>, <span class="va">weights</span>, <span class="va">psi_col</span>, <span class="va">...</span>, <span class="va">.pcate.cfg</span>, <span class="va">.Model_cfg</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fit_fx_predictor</span><span class="op">(</span><span class="va">full_data</span>, <span class="va">weights</span>, <span class="va">psi_col</span>, <span class="va">...</span>, <span class="va">.pcate.cfg</span>, <span class="va">.Model_cfg</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>.data</dt>
+    <dl><dt>full_data</dt>
 <dd><p>The full original data with all auxilliary columns.</p></dd>
 
 
@@ -93,7 +93,7 @@
 
 
 <dt>...</dt>
-<dd><p>Covariate data, passed in as the unquoted names of columns in <code>.data</code></p></dd>
+<dd><p>Covariate data, passed in as the unquoted names of columns in <code>full_data</code></p></dd>
 
 
 <dt>.pcate.cfg</dt>
