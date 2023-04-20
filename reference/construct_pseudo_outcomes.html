@@ -81,12 +81,17 @@ treatment effect under exogeneity.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">construct_pseudo_outcomes</span><span class="op">(</span><span class="va">full_data</span>, <span class="va">outcome</span>, <span class="va">treatment</span>, type <span class="op">=</span> <span class="st">"dr"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">construct_pseudo_outcomes</span><span class="op">(</span><span class="va">data</span>, <span class="va">outcome</span>, <span class="va">treatment</span>, type <span class="op">=</span> <span class="st">"dr"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>outcome</dt>
+    <dl><dt>data</dt>
+<dd><p>dataframe (already prepared with <code>attach_config</code>, <code>make_splits</code>,
+and <code>produce_plugin_estimates</code>)</p></dd>
+
+
+<dt>outcome</dt>
 <dd><p>Unquoted name of outcome variable.</p></dd>
 
 
@@ -98,11 +103,6 @@ treatment effect under exogeneity.</p>
 <dd><p>String representing how to construct the pseudo-outcome. Valid
 values are "dr" (the default), "ipw" and "plugin". See "Details" for more
 discussion of these options.</p></dd>
-
-
-<dt>data</dt>
-<dd><p>dataframe (already prepared with <code>attach_config</code>, <code>make_splits</code>,
-and <code>produce_plugin_estimates</code>)</p></dd>
 
 </dl></div>
     <div id="details">
