@@ -333,7 +333,7 @@ estimate_QoI <- function(
         result <- calculate_mcate_quantities(
             data,
             {{ weights }},
-            .pseudo_outcome,
+            ".pseudo_outcome",
             !!!dots,
             .MCATE_cfg = .QoI_cfg$mcate
         )
@@ -345,7 +345,7 @@ estimate_QoI <- function(
         fx_mod <- fit_fx_predictor(
             data,
             {{ weights }},
-            .pseudo_outcome,
+            ".pseudo_outcome",
             !!!covs,
             .pcate.cfg = .QoI_cfg$pcate,
             .Model_cfg = .HTE_cfg$effect
@@ -370,7 +370,7 @@ estimate_QoI <- function(
         result <- calculate_pcate_quantities(
             data,
             {{ weights }},
-            .pseudo_outcome,
+            ".pseudo_outcome",
             fx_mod$model,
             !!!dots,
             .MCATE_cfg = .QoI_cfg$mcate
@@ -383,7 +383,7 @@ estimate_QoI <- function(
             result <- calculate_vimp(
                 data,
                 {{ weights }},
-                .pseudo_outcome,
+                ".pseudo_outcome",
                 !!!dots,
                 .VIMP_cfg = .QoI_cfg$vimp,
                 .Model_cfg = .HTE_cfg$effect
@@ -392,7 +392,7 @@ estimate_QoI <- function(
             result <- calculate_linear_vimp(
                 data,
                 {{ weights }},
-                .pseudo_outcome,
+                ".pseudo_outcome",
                 !!!dots,
                 .VIMP_cfg = .QoI_cfg$vimp,
                 .Model_cfg = .HTE_cfg$effect

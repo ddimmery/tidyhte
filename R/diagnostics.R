@@ -18,7 +18,9 @@ SL_model_slot <- function(prediction) {
 #' available are "AUC", "MSE", "SL_coefs", "SL_risk", "RROC"
 #' @param params Any other necessary options to pass to the given diagnostic.
 #' @examples
-#' df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100))
+#' df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100), w = rexp(100), u = 1:100)
+#' attr(df, "weights") <- "w"
+#' attr(df, "identifier") <- "u"
 #' tidyhte:::estimate_diagnostic(df, "y", "p", "AUC")
 #' @keywords internal
 #' @importFrom stats sd weighted.mean
@@ -70,7 +72,7 @@ estimate_diagnostic <- function(data, label, prediction, diag_name, params) {
                 std_error = stats::sd(.data$coef) / sqrt(dplyr::n()),
                 estimand = "SL coefficient"
             ) %>%
-            dplyr::rename(term = model_name)
+            dplyr::rename(term = "model_name")
         } else {
             result <- NULL
             message("Cannot calculate SL_coefs because the model is not SuperLearner.")
@@ -89,7 +91,7 @@ estimate_diagnostic <- function(data, label, prediction, diag_name, params) {
                 std_error = stats::sd(.data$cvRisk) / sqrt(dplyr::n()),
                 estimand = "SL risk"
             ) %>%
-            dplyr::rename(term = model_name)
+            dplyr::rename(term = "model_name")
         } else {
             result <- NULL
             message("Cannot calculate SL_risk because the model is not SuperLearner.")
