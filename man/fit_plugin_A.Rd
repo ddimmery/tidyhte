@@ -4,10 +4,10 @@
 \alias{fit_plugin_A}
 \title{Fits a propensity score model using the appropriate settings}
 \usage{
-fit_plugin_A(.data, weight_col, a_col, ..., .Model_cfg)
+fit_plugin_A(full_data, weight_col, a_col, ..., .Model_cfg)
 }
 \arguments{
-\item{.data}{The full dataset of interest for the modelling problem.}
+\item{full_data}{The full dataset of interest for the modelling problem.}
 
 \item{weight_col}{The unquoted weighting variable name to use in model fitting.}
 

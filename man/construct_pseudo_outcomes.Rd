@@ -4,12 +4,9 @@
 \alias{construct_pseudo_outcomes}
 \title{Construct Pseudo-outcomes}
 \usage{
-construct_pseudo_outcomes(.data, outcome, treatment, type = "dr")
+construct_pseudo_outcomes(full_data, outcome, treatment, type = "dr")
 }
 \arguments{
-\item{.data}{dataframe (already prepared with \code{attach_config}, \code{make_splits},
-and \code{produce_plugin_estimates})}
-
 \item{outcome}{Unquoted name of outcome variable.}
 
 \item{treatment}{Unquoted name of treatment variable.}
@@ -17,6 +14,9 @@ and \code{produce_plugin_estimates})}
 \item{type}{String representing how to construct the pseudo-outcome. Valid
 values are "dr" (the default), "ipw" and "plugin". See "Details" for more
 discussion of these options.}
+
+\item{data}{dataframe (already prepared with \code{attach_config}, \code{make_splits},
+and \code{produce_plugin_estimates})}
 }
 \description{
 \code{construct_pseudo_outcomes} takes a dataset which has been prepared

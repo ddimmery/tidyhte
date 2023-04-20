@@ -13,18 +13,18 @@ HTEFold <- R6::R6Class("HTEFold", list(
     in_holdout = NULL,
     #' @description
     #' Creates an R6 object of the data split between training and test set.
-    #' @param .data The dataset to be split
+    #' @param data The dataset to be split
     #' @param split_id An identifier indicating which data should lie in the holdout set.
     #' @return Returns an object of class `HTEFold`
-    initialize = function(.data, split_id) {
-        if (!(".split_id" %in% names(.data))) {
+    initialize = function(data, split_id) {
+        if (!(".split_id" %in% names(data))) {
             stop("Must construct split identifiers before splitting.")
         }
-        num_splits <- length(unique(.data$.split_id))
+        num_splits <- length(unique(data$.split_id))
         # check that the split_id is valid
-        self$train <-  dplyr::filter(.data, .split_id != split_id)
-        self$holdout <- dplyr::filter(.data, .split_id == split_id)
-        self$in_holdout <- .data$.split_id == split_id
+        self$train <-  dplyr::filter(data, .split_id != split_id)
+        self$holdout <- dplyr::filter(data, .split_id == split_id)
+        self$in_holdout <- data$.split_id == split_id
     }
 ))
 
@@ -32,15 +32,15 @@ HTEFold <- R6::R6Class("HTEFold", list(
 #'
 #' This takes a dataset and a split ID and generates two subsets of the
 #' data corresponding to a training set and a holdout.
-#' @param .data dataframe
+#' @param data dataframe
 #' @param split_id integer representing the split to construct
 #' @return Returns an R6 object `HTEFold` with three public fields:
 #' * `train` - The split to be used for training the plugin estimates
 #' * `holdout` - The split not used for training
 #' * `in_holdout` - A logical vector indicating for each unit whether they lie in the holdout.
 #' @keywords internal
-split_data <- function(.data, split_id) {
-    HTEFold$new(.data, split_id)
+split_data <- function(data, split_id) {
+    HTEFold$new(data, split_id)
 }
 
 #' R6 class to represent data to be used in estimating a model
@@ -69,7 +69,7 @@ Model_data <- R6::R6Class("Model_data", list(
     weights = NULL,
     #' @description
     #' Creates an R6 object to represent data to be used in a prediction model.
-    #' @param .data The full dataset to populate the class with.
+    #' @param data The full dataset to populate the class with.
     #' @param label_col  The unquoted name of the column to use as the label in
     #' supervised learning models.
     #' @param ... The unquoted names of features to use in the model.
@@ -89,24 +89,24 @@ Model_data <- R6::R6Class("Model_data", list(
     #' )
     #' df <- make_splits(df, uid, .num_splits = 5)
     #' data <- Model_data$new(df, y, x1, x2, x3)
-    initialize = function(.data, label_col, ..., .weight_col = NULL) {
+    initialize = function(data, label_col, ..., .weight_col = NULL) {
         label_col <- rlang::enexpr(label_col)
         .weight_col <- rlang::enexpr(.weight_col)
         dots <- rlang::enexprs(...)
 
-        self$label <- unlist(dplyr::select(.data, {{ label_col }}))
-        self$features <- model.matrix(~. + 0, data = dplyr::select(.data, !!!dots))
+        self$label <- unlist(dplyr::select(data, {{ label_col }}))
+        self$features <- model.matrix(~. + 0, data = dplyr::select(data, !!!dots))
         if (is.null(.weight_col)) {
             self$weights <- rep(1, length(self$label))
         } else {
-            self$weights <- unlist(dplyr::select(.data, {{ .weight_col }}))
+            self$weights <- unlist(dplyr::select(data, {{ .weight_col }}))
             self$weights <- self$weights / sum(self$weights) * length(self$weights)
         }
-        self$model_frame <- model.frame(~. + 0, data = dplyr::select(.data, !!!dots))
-        self$cluster <- .data[[attr(.data, "identifier")]]
-        if (".split_id" %in% names(.data)) {
-            self$split_id <- .data$.split_id
-            self$num_splits <- attr(.data, "num_splits")
+        self$model_frame <- model.frame(~. + 0, data = dplyr::select(data, !!!dots))
+        self$cluster <- data[[attr(data, "identifier")]]
+        if (".split_id" %in% names(data)) {
+            self$split_id <- data$.split_id
+            self$num_splits <- attr(data, "num_splits")
         }
     },
     #' @description
@@ -217,7 +217,7 @@ check_identifier <- function(data, id_col) {
 #' This helper function makes a few simple checks to identify obvious
 #' issues with the weights provided.
 #' @param data Dataframe of interest.
-#' @param id_col Quoted name of weights column.
+#' @param weight_col Quoted name of weights column.
 #' @return Returns NULL. Errors if a problem is discovered.
 check_weights <- function(data, weight_col) {
     if (!(weight_col %in% names(data))) {

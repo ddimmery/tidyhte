@@ -4,10 +4,17 @@
 \alias{calculate_vimp}
 \title{Calculate Variable Importance of HTEs}
 \usage{
-calculate_vimp(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg)
+calculate_vimp(
+  full_data,
+  weight_col,
+  pseudo_outcome,
+  ...,
+  .VIMP_cfg,
+  .Model_cfg
+)
 }
 \arguments{
-\item{.data}{dataframe}
+\item{full_data}{dataframe}
 
 \item{weight_col}{Unquoted name of the weight column.}
 

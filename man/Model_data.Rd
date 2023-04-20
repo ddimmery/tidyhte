@@ -69,13 +69,13 @@ Constructed using \code{stats::model.matrix}.}
 \subsection{Method \code{new()}}{
 Creates an R6 object to represent data to be used in a prediction model.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Model_data$new(.data, label_col, ..., .weight_col = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Model_data$new(data, label_col, ..., .weight_col = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{The full dataset to populate the class with.}
+\item{\code{data}}{The full dataset to populate the class with.}
 
 \item{\code{label_col}}{The unquoted name of the column to use as the label in
 supervised learning models.}

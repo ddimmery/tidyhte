@@ -4,10 +4,10 @@
 \alias{make_splits}
 \title{Define splits for cross-fitting}
 \usage{
-make_splits(.data, identifier, ..., .num_splits)
+make_splits(data, identifier, ..., .num_splits)
 }
 \arguments{
-\item{.data}{dataframe}
+\item{data}{dataframe}
 
 \item{identifier}{Unquoted name of unique identifier column}
 

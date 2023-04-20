@@ -4,10 +4,10 @@
 \alias{fit_plugin_Y}
 \title{Fits a T-learner using the appropriate settings}
 \usage{
-fit_plugin_Y(.data, weight_col, y_col, a_col, ..., .Model_cfg)
+fit_plugin_Y(full_data, weight_col, y_col, a_col, ..., .Model_cfg)
 }
 \arguments{
-\item{.data}{The full dataset of interest for the modelling problem.}
+\item{full_data}{The full dataset of interest for the modelling problem.}
 
 \item{weight_col}{The unquoted weighting variable name to use in model fitting.}
 

@@ -4,16 +4,16 @@
 \alias{fit_fx_predictor}
 \title{Fit a predictor for treatment effects}
 \usage{
-fit_fx_predictor(.data, weights, psi_col, ..., .pcate.cfg, .Model_cfg)
+fit_fx_predictor(full_data, weights, psi_col, ..., .pcate.cfg, .Model_cfg)
 }
 \arguments{
-\item{.data}{The full original data with all auxilliary columns.}
+\item{full_data}{The full original data with all auxilliary columns.}
 
 \item{weights}{Weights to be used in the analysis.}
 
 \item{psi_col}{The unquoted column name of the calculated pseudo-outcome.}
 
-\item{...}{Covariate data, passed in as the unquoted names of columns in \code{.data}}
+\item{...}{Covariate data, passed in as the unquoted names of columns in \code{full_data}}
 
 \item{.pcate.cfg}{A \code{PCATE_cfg} object describing what PCATEs to calculate (and how)}
 

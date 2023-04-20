@@ -19,7 +19,7 @@ A tibble with \code{nbins} rows.
 \description{
 This function calculates the RegressionROC Curve of
 of Hernández-Orallo
-\href{https://doi.org/10.1016/j.patcog.2013.06.014}{doi:10.1016/j.patcog.2013.06.014}.
+\doi{doi:10.1016/j.patcog.2013.06.014}.
 It provides estimates for the positive and negative
 errors when predictions are shifted by a variety
 of constants (which range across the domain of observed

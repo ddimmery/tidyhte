@@ -4,10 +4,10 @@
 \alias{attach_config}
 \title{Attach an \code{HTE_cfg} to a dataframe}
 \usage{
-attach_config(.data, .HTE_cfg)
+attach_config(data, .HTE_cfg)
 }
 \arguments{
-\item{.data}{dataframe}
+\item{data}{dataframe}
 
 \item{.HTE_cfg}{\code{HTE_cfg} object representing the full configuration of the HTE analysis.}
 }

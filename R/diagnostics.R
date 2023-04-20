@@ -11,7 +11,7 @@ SL_model_slot <- function(prediction) {
 #'
 #' This function defines the calculations of common model diagnostics
 #' which are available.
-#' @param .data The full data frame with all auxilliary columns.
+#' @param data The full data frame with all auxilliary columns.
 #' @param label The (string) column name for the labels to evaluate against.
 #' @param prediction The (string) column name of predictions from the model to diagnose.
 #' @param diag_name The (string) name of the diagnostic to calculate. Currently
@@ -19,21 +19,21 @@ SL_model_slot <- function(prediction) {
 #' @param params Any other necessary options to pass to the given diagnostic.
 #' @examples
 #' df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100))
-#' estimate_diagnostic(df, "y", "p", "AUC")
+#' tidyhte:::estimate_diagnostic(df, "y", "p", "AUC")
 #' @keywords internal
 #' @importFrom stats sd weighted.mean
-estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
-    w_col <- attr(.data, "weights")
-    id_col <- attr(.data, "identifier")
+estimate_diagnostic <- function(data, label, prediction, diag_name, params) {
+    w_col <- attr(data, "weights")
+    id_col <- attr(data, "identifier")
 
     if (tolower(diag_name) == "auc") {
         soft_require("WeightedROC")
-        labels <- .data[[label]]
+        labels <- data[[label]]
         if (checkmate::test_integerish(labels, lower = 0, upper = 1)) {
-            predictions <- .data[[prediction]]
-            n1 <- sum(.data[[label]] * .data[[w_col]])
-            n <- sum(.data[[w_col]])
-            wroc <- WeightedROC::WeightedROC(predictions, labels, .data[[w_col]])
+            predictions <- data[[prediction]]
+            n1 <- sum(data[[label]] * data[[w_col]])
+            n <- sum(data[[w_col]])
+            wroc <- WeightedROC::WeightedROC(predictions, labels, data[[w_col]])
             auc <- WeightedROC::WeightedAUC(wroc)
             result <- dplyr::tibble(
                 estimand = "AUC",
@@ -47,9 +47,9 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
             message("Cannot calculate AUC because labels are not binary.")
         }
     } else if (tolower(diag_name) == "mse") {
-        sqerr <- (.data[[label]] - .data[[prediction]]) ^ 2
-        result <- stats::weighted.mean(sqerr, .data[[w_col]])
-        stderr <- clustered_se_of_mean(sqerr, .data[[id_col]], .data[[w_col]])
+        sqerr <- (data[[label]] - data[[prediction]]) ^ 2
+        result <- stats::weighted.mean(sqerr, data[[w_col]])
+        stderr <- clustered_se_of_mean(sqerr, data[[id_col]], data[[w_col]])
         result <- dplyr::tibble(
             estimand = "MSE",
             term = label,
@@ -58,16 +58,16 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
         )
     } else if (tolower(diag_name) == "sl_coefs") {
         if (
-            ("SL_coefs" %in% names(attributes(.data))) &&
-            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs"))) &&
-            length(attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
+            ("SL_coefs" %in% names(attributes(data))) &&
+            (SL_model_slot(prediction) %in% names(attr(data, "SL_coefs"))) &&
+            length(attr(data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
         ) {
-        result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
+        result_list <- attr(data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(model_name) %>% # nolint
+            dplyr::group_by(.data$model_name) %>%
             dplyr::summarize(
-                estimate = mean(coef),
-                std_error = stats::sd(coef) / sqrt(dplyr::n()),
+                estimate = mean(.data$coef),
+                std_error = stats::sd(.data$coef) / sqrt(dplyr::n()),
                 estimand = "SL coefficient"
             ) %>%
             dplyr::rename(term = model_name)
@@ -77,16 +77,16 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
         }
     } else if (tolower(diag_name) == "sl_risk") {
         if (
-            ("SL_coefs" %in% names(attributes(.data))) &&
-            (SL_model_slot(prediction) %in% names(attr(.data, "SL_coefs"))) &&
-            length(attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
+            ("SL_coefs" %in% names(attributes(data))) &&
+            (SL_model_slot(prediction) %in% names(attr(data, "SL_coefs"))) &&
+            length(attr(data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
         ) {
-        result_list <- attr(.data, "SL_coefs")[[SL_model_slot(prediction)]]
+        result_list <- attr(data, "SL_coefs")[[SL_model_slot(prediction)]]
         result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(model_name) %>% # nolint
+            dplyr::group_by(.data$model_name) %>%
             dplyr::summarize(
-                estimate = mean(cvRisk), # nolint
-                std_error = stats::sd(cvRisk) / sqrt(dplyr::n()), # nolint
+                estimate = mean(.data$cvRisk),
+                std_error = stats::sd(.data$cvRisk) / sqrt(dplyr::n()),
                 estimand = "SL risk"
             ) %>%
             dplyr::rename(term = model_name)
@@ -98,9 +98,9 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
         if ("num_bins" %in% names(params)) {
             nbins <- params$num_bins
         } else {
-            nbins <- nrow(.data)
+            nbins <- nrow(data)
         }
-        result <- calculate_rroc(.data[[label]], .data[[prediction]], nbins = nbins)
+        result <- calculate_rroc(data[[label]], data[[prediction]], nbins = nbins)
         result$term <- label
     }
     result
@@ -109,10 +109,10 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
 #' Calculate diagnostics
 #'
 #' This function calculates the diagnostics requested by the `Diagnostics_cfg` object.
-#' @param .data Data frame with all additional columns (such as model predictions) included.
+#' @param data Data frame with all additional columns (such as model predictions) included.
 #' @param treatment Unquoted treatment variable name
 #' @param outcome Unquoted outcome variable name
-#' @param diag.cfg `Diagnostics_cfg` object
+#' @param .diag.cfg `Diagnostics_cfg` object
 #' @return Returns a tibble with columns:
 #' * `estimand` - Character indicating the diagnostic that was calculated
 #' * `level` - Indicates the scope of this diagnostic (e.g. does it apply
@@ -122,24 +122,24 @@ estimate_diagnostic <- function(.data, label, prediction, diag_name, params) {
 #' * `estimate` - Point estimate of the diagnostic.
 #' * `std_error` - Standard error of the diagnostic.
 #' @seealso [Diagnostics_cfg]
-calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
+calculate_diagnostics <- function(data, treatment, outcome, .diag.cfg) {
     ps_cfg <- .diag.cfg$ps
     y_cfg <- .diag.cfg$outcome
     fx_cfg <- .diag.cfg$effect
     params <- .diag.cfg$params
-    treatment_name <- attr(.data, "treatment")
-    outcome_name <- attr(.data, "outcome")
+    treatment_name <- attr(data, "treatment")
+    outcome_name <- attr(data, "outcome")
 
     result_list <- list()
     for (diag in ps_cfg) {
-        result <- estimate_diagnostic(.data, treatment_name, ".pi_hat", diag, params)
+        result <- estimate_diagnostic(data, treatment_name, ".pi_hat", diag, params)
         result$level <- "Propensity Score"
         result_list <- c(result_list, list(result))
     }
 
     for (diag in y_cfg) {
         result1 <- estimate_diagnostic(
-            dplyr::filter(.data, .data[[treatment_name]] == 1),
+            dplyr::filter(data, data[[treatment_name]] == 1),
             outcome_name,
             ".mu1_hat",
             diag,
@@ -147,7 +147,7 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
         )
         result1$level <- "Treatment Response"
         result0 <- estimate_diagnostic(
-            dplyr::filter(.data, .data[[treatment_name]] == 0),
+            dplyr::filter(data, data[[treatment_name]] == 0),
             outcome_name,
             ".mu0_hat",
             diag,
@@ -158,11 +158,11 @@ calculate_diagnostics <- function(.data, treatment, outcome, .diag.cfg) {
     }
 
     for (diag in fx_cfg) {
-        if (!(".pseudo_outcome_hat" %in% names(.data))) {
+        if (!(".pseudo_outcome_hat" %in% names(data))) {
             message(paste("Skipping diagnostic on .pseudo_outcome due to lack of model."))
             break
         }
-        result <- estimate_diagnostic(.data, ".pseudo_outcome", ".pseudo_outcome_hat", diag, params)
+        result <- estimate_diagnostic(data, ".pseudo_outcome", ".pseudo_outcome_hat", diag, params)
         result$level <- "Effect Surface"
         result_list <- c(result_list, list(result))
     }

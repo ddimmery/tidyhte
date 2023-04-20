@@ -4,10 +4,10 @@
 \alias{calculate_ate}
 \title{Calculates a SATE and a PATE using AIPW}
 \usage{
-calculate_ate(.data)
+calculate_ate(data)
 }
 \arguments{
-\item{.data}{The dataset of interest after it has been prepared fully.}
+\item{data}{The dataset of interest after it has been prepared fully.}
 }
 \description{
 This function takes fully prepared data (with all auxilliary columns from the

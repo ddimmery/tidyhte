@@ -51,25 +51,25 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
             sample_size <- pmin(self$num_mc_samples[[rlang::as_string(covariate)]], nrow(data))
             unq_values <- unique(data[[rlang::as_string(covariate)]])
 
-            .data_modified <- data
+            data_modified <- data
             data_list <- list()
             for (idx in seq_along(unq_values)) {
                 unq_value <- unq_values[idx]
-                .data_modified[[rlang::as_string(covariate)]] <- unq_value
-                data_list <- c(data_list, list(dplyr::sample_n(.data_modified, sample_size)))
+                data_modified[[rlang::as_string(covariate)]] <- unq_value
+                data_list <- c(data_list, list(dplyr::sample_n(data_modified, sample_size)))
             }
-            .data_aggregated <- dplyr::bind_rows(!!!data_list)
+            data_aggregated <- dplyr::bind_rows(!!!data_list)
 
-            result <- rep(NA_real_, nrow(.data_aggregated))
+            result <- rep(NA_real_, nrow(data_aggregated))
             for (split_id in seq(self$num_splits)) {
-                folds <- split_data(.data_aggregated, split_id)
+                folds <- split_data(data_aggregated, split_id)
                 pred_data <- Model_data$new(folds$holdout, NULL, !!!self$covariates)
                 result[folds$in_holdout] <- self$models[[split_id]]$predict(pred_data)$estimate
             }
             o <- dplyr::tibble(
                 covariate_value = rep(unq_values, rep(sample_size, length(unq_values))),
                 .hte = result,
-                .id = .data_aggregated[[attr(data, "identifier")]]
+                .id = data_aggregated[[attr(data, "identifier")]]
             )
             attr(o, "identifier") <- ".id"
             o
@@ -80,10 +80,10 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
 #' Fit a predictor for treatment effects
 #'
 #' This function predicts treatment effects in a second stage model.
-#' @param .data The full original data with all auxilliary columns.
+#' @param full_data The full original data with all auxilliary columns.
 #' @param weights Weights to be used in the analysis.
 #' @param psi_col The unquoted column name of the calculated pseudo-outcome.
-#' @param ... Covariate data, passed in as the unquoted names of columns in `.data`
+#' @param ... Covariate data, passed in as the unquoted names of columns in `full_data`
 #' @param .pcate.cfg A `PCATE_cfg` object describing what PCATEs to calculate (and how)
 #' @param .Model_cfg A `Model_cfg` object describing how the effect model should be estimated.
 #' @return A list with two items:
@@ -92,17 +92,17 @@ FX.Predictor <- R6::R6Class("FX.Predictor",
 #' of the HTE for each unit.
 #' @seealso [Model_cfg], [PCATE_cfg]
 #' @keywords internal
-fit_fx_predictor <- function(.data, weights, psi_col, ...,
+fit_fx_predictor <- function(full_data, weights, psi_col, ...,
     .pcate.cfg, .Model_cfg
 ) {
     dots <- rlang::enexprs(...)
 
-    num_splits <- max(.data$.split_id)
+    num_splits <- max(full_data$.split_id)
     fx_models <- list()
     SL_coefs <- list(
         fx = list()
     )
-    fx_hat <- rep(NA_real_, nrow(.data))
+    fx_hat <- rep(NA_real_, nrow(full_data))
 
     pb <- progress::progress_bar$new(
         total = num_splits,
@@ -112,7 +112,7 @@ fit_fx_predictor <- function(.data, weights, psi_col, ...,
     )
     pb$tick(0)
     for (split_id in seq(num_splits)) {
-        folds <- split_data(.data, split_id)
+        folds <- split_data(full_data, split_id)
         fx_model <- fit_effect(
             folds$train, {{ weights }}, {{ psi_col }}, !!!dots,
             .Model_cfg = .Model_cfg
@@ -133,7 +133,7 @@ fit_fx_predictor <- function(.data, weights, psi_col, ...,
         pb$tick()
     }
 
-    .data$.pseudo_outcome_hat <- fx_hat
+    full_data$.pseudo_outcome_hat <- fx_hat
 
     predictor <- FX.Predictor$new(
         models = fx_models,
@@ -144,11 +144,11 @@ fit_fx_predictor <- function(.data, weights, psi_col, ...,
     )
 
     if (.Model_cfg$model_class == "SL") {
-        attr(.data, "SL_coefs")[["fx"]] <- SL_coefs[["fx"]]
+        attr(full_data, "SL_coefs")[["fx"]] <- SL_coefs[["fx"]]
     }
 
     list(
         model = predictor,
-        data = .data
+        data = full_data
     )
 }

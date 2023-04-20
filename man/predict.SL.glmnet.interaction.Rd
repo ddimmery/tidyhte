@@ -4,7 +4,13 @@
 \alias{predict.SL.glmnet.interaction}
 \title{Prediction for an SL.glmnet object}
 \usage{
-\method{predict}{SL.glmnet.interaction}(object, newdata, remove_extra_cols = T, add_missing_cols = T, ...)
+\method{predict}{SL.glmnet.interaction}(
+  object,
+  newdata,
+  remove_extra_cols = TRUE,
+  add_missing_cols = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{Result object from SL.glmnet}

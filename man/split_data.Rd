@@ -4,10 +4,10 @@
 \alias{split_data}
 \title{Partition the data into folds}
 \usage{
-split_data(.data, split_id)
+split_data(data, split_id)
 }
 \arguments{
-\item{.data}{dataframe}
+\item{data}{dataframe}
 
 \item{split_id}{integer representing the split to construct}
 }

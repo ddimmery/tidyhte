@@ -38,13 +38,13 @@ lies in the holdout set.}
 \subsection{Method \code{new()}}{
 Creates an R6 object of the data split between training and test set.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{HTEFold$new(.data, split_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{HTEFold$new(data, split_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{.data}}{The dataset to be split}
+\item{\code{data}}{The dataset to be split}
 
 \item{\code{split_id}}{An identifier indicating which data should lie in the holdout set.}
 }

@@ -273,7 +273,7 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' * Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
 #' A general framework for inference on algorithm-agnostic variable importance.
 #' Journal of the American Statistical Association, 1-14.
-#' @example
+#' @examples
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_vimp(sample_splitting = FALSE) -> hte_cfg

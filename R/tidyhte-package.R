@@ -9,3 +9,5 @@
 #' causal effects. *arXiv preprint arXiv:2004.14497*.
 #' @keywords internal
 "_PACKAGE"
+
+if(getRversion() >= "2.15.1") utils::globalVariables(".data")

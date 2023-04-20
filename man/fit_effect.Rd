@@ -4,10 +4,10 @@
 \alias{fit_effect}
 \title{Fits a treatment effect model using the appropriate settings}
 \usage{
-fit_effect(.data, weight_col, fx_col, ..., .Model_cfg)
+fit_effect(full_data, weight_col, fx_col, ..., .Model_cfg)
 }
 \arguments{
-\item{.data}{The full dataset of interest for the modelling problem.}
+\item{full_data}{The full dataset of interest for the modelling problem.}
 
 \item{weight_col}{The unquoted weighting variable name to use in model fitting.}
 

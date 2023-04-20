@@ -4,16 +4,16 @@
 \alias{calculate_diagnostics}
 \title{Calculate diagnostics}
 \usage{
-calculate_diagnostics(.data, treatment, outcome, .diag.cfg)
+calculate_diagnostics(data, treatment, outcome, .diag.cfg)
 }
 \arguments{
-\item{.data}{Data frame with all additional columns (such as model predictions) included.}
+\item{data}{Data frame with all additional columns (such as model predictions) included.}
 
 \item{treatment}{Unquoted treatment variable name}
 
 \item{outcome}{Unquoted outcome variable name}
 
-\item{diag.cfg}{\code{Diagnostics_cfg} object}
+\item{.diag.cfg}{\code{Diagnostics_cfg} object}
 }
 \value{
 Returns a tibble with columns:

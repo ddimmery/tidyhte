@@ -8,7 +8,7 @@
 #'
 #' Taking averages of these pseudo-outcomes (or fitting a model to them)
 #' will approximate averages (or models) of the underlying treatment effect.
-#' @param .data dataframe (already prepared with `attach_config`, `make_splits`,
+#' @param data dataframe (already prepared with `attach_config`, `make_splits`,
 #' and `produce_plugin_estimates`)
 #' @param outcome Unquoted name of outcome variable.
 #' @param treatment Unquoted name of treatment variable.
@@ -17,19 +17,19 @@
 #' discussion of these options.
 #' @seealso [attach_config()], [make_splits()], [produce_plugin_estimates()], [estimate_QoI()]
 #' @export
-construct_pseudo_outcomes <- function(.data, outcome, treatment, type = "dr") {
+construct_pseudo_outcomes <- function(full_data, outcome, treatment, type = "dr") {
     outcome <- rlang::enexpr(outcome)
     treatment <- rlang::enexpr(treatment)
 
-    YA <- unlist(dplyr::select(.data, {{ outcome }}))
-    A <- unlist(dplyr::select(.data, {{ treatment }}))
-    mu0 <- .data[[".mu0_hat"]]
-    mu1 <- .data[[".mu1_hat"]]
-    pi <- .data[[".pi_hat"]]
-    .data$.pseudo_outcome <- pseudo_outcome_factory(type)(A, YA, pi, mu1, mu0)
-    attr(.data, "treatment") <- rlang::as_name(treatment)
-    attr(.data, "outcome") <- rlang::as_name(outcome)
-    .data
+    YA <- unlist(dplyr::select(data, {{ outcome }}))
+    A <- unlist(dplyr::select(data, {{ treatment }}))
+    mu0 <- data[[".mu0_hat"]]
+    mu1 <- data[[".mu1_hat"]]
+    pi <- data[[".pi_hat"]]
+    data$.pseudo_outcome <- pseudo_outcome_factory(type)(A, YA, pi, mu1, mu0)
+    attr(data, "treatment") <- rlang::as_name(treatment)
+    attr(data, "outcome") <- rlang::as_name(outcome)
+    data
 }
 
 
@@ -68,7 +68,7 @@ plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
 #'
 #' This function takes fully prepared data (with all auxilliary columns from the
 #' necessary models) and estimates average treatment effects using AIPW.
-#' @param .data The dataset of interest after it has been prepared fully.
+#' @param data The dataset of interest after it has been prepared fully.
 #' @seealso [basic_config()], [attach_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @references
@@ -79,27 +79,27 @@ plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
 #' yet flexible approach. *Statistics in medicine*, 27(23), 4658-4677.
 #' @importFrom dplyr summarize
 #' @importFrom stats weighted.mean
-calculate_ate <- function(.data) {
-    id_col <- attr(.data, "identifier")
-    w_col <- attr(.data, "weights")
+calculate_ate <- function(data) {
+    id_col <- attr(data, "identifier")
+    w_col <- attr(data, "weights")
     o <- dplyr::summarize(
-        .data,
+        data,
         estimand = "SATE",
-        estimate = mean(.data$.pseudo_outcome),
-        std_error = clustered_se_of_mean(.data$.pseudo_outcome, .data[[id_col]]),
-        sample_size = length(unique(.data[[id_col]]))
+        estimate = mean(data$.pseudo_outcome),
+        std_error = clustered_se_of_mean(data$.pseudo_outcome, data[[id_col]]),
+        sample_size = length(unique(data[[id_col]]))
     )
-    if (!zero_range(.data[[w_col]])) {
+    if (!zero_range(data[[w_col]])) {
         o <- dplyr::bind_rows(
             o,
             dplyr::summarize(
-                .data,
+                data,
                 estimand = "PATE",
-                estimate = stats::weighted.mean(.data$.pseudo_outcome, .data[[w_col]]),
+                estimate = stats::weighted.mean(data$.pseudo_outcome, data[[w_col]]),
                 std_error = clustered_se_of_mean(
-                    .data$.pseudo_outcome, .data[[id_col]], .data[[w_col]]
+                    data$.pseudo_outcome, data[[id_col]], data[[w_col]]
                 ),
-                sample_size = sum(.data[[w_col]])
+                sample_size = sum(data[[w_col]])
             )
         )
     }
@@ -108,7 +108,7 @@ calculate_ate <- function(.data) {
 
 
 #' @keywords internal
-calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cfg) {
+calculate_mcate_quantities <- function(full_data, .weights, .outcome, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     .outcome <- rlang::enexpr(.outcome)
     .weights <- rlang::enexpr(.weights)
@@ -123,20 +123,20 @@ calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cf
     pb$tick(0)
     for (covariate in dots) {
         .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_name(covariate)]]
-        data <- Model_data$new(.data, {{ .outcome }}, {{ covariate }}, .weight_col = {{ .weights }})
+        data <- Model_data$new(full_data, {{ .outcome }}, {{ covariate }}, .weight_col = {{ .weights }})
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
         if (.MCATE_cfg$std_errors) {
             result <- model$predict_se(data)
             result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, term, x, estimate, std_error
+                .data$result, .data$term, .data$x, .data$estimate, .data$std_error
             )
         } else {
             result <- model$predict(data)
             result$term <- rlang::as_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, term, x, estimate
+                .data$result, .data$term, .data$x, .data$estimate
             )
         }
         if (is.double(result$x) || is.integer(result$x) || is.character(result$x)) {
@@ -156,7 +156,7 @@ calculate_mcate_quantities <- function(.data, .weights, .outcome, ..., .MCATE_cf
 #' @description
 #' `r lifecycle::badge("experimental")`
 #' @keywords internal
-calculate_pcate_quantities <- function(.data, .weights, .outcome, fx_model, ..., .MCATE_cfg) {
+calculate_pcate_quantities <- function(full_data, .weights, .outcome, fx_model, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)
     result_list <- list()
     pb <- progress::progress_bar$new(
@@ -167,24 +167,24 @@ calculate_pcate_quantities <- function(.data, .weights, .outcome, fx_model, ...,
     )
     pb$tick(0)
     for (covariate in dots) {
-        fx_data <- fx_model$predict(.data, covariate)
+        fx_data <- fx_model$predict(full_data, covariate)
         .Model_cfg <- .MCATE_cfg$cfgs[[rlang::as_name(covariate)]]
-        data <- Model_data$new(fx_data, .hte, covariate_value)
+        data <- Model_data$new(fx_data, .data$.hte, .data$covariate_value)
         predictor <- predictor_factory(.Model_cfg)
         model <- predictor$fit(data)
         if (.MCATE_cfg$std_errors) {
             result <- model$predict_se(data)
             result$term <- rlang::as_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, term, x, estimate, std_error, sample_size
+                result, .data$term, .data$x, .data$estimate, .data$std_error, .data$sample_size
             )
-            mse <- mean((.data$.pseudo_outcome_hat - .data$.pseudo_outcome) ^ 2)
+            mse <- mean((full_data$.pseudo_outcome_hat - full_data$.pseudo_outcome) ^ 2)
             result$std_error <- sqrt(result$std_error ^ 2 + mse / result$sample_size)
         } else {
             result <- model$predict(data)
             result$term <- rlang::quo_name(rlang::enquo(covariate))
             result <- dplyr::select(
-                result, term, x, estimate, sample_size
+                .data$result, .data$term, .data$x, .data$estimate, .data$sample_size
             )
         }
         if (is.double(result$x) || is.integer(result$x)) {

@@ -4,10 +4,10 @@
 \alias{produce_plugin_estimates}
 \title{Estimate models of nuisance functions}
 \usage{
-produce_plugin_estimates(.data, outcome, treatment, ..., .weights = NULL)
+produce_plugin_estimates(data, outcome, treatment, ..., .weights = NULL)
 }
 \arguments{
-\item{.data}{dataframe (already prepared with \code{attach_config} and \code{make_splits})}
+\item{data}{dataframe (already prepared with \code{attach_config} and \code{make_splits})}
 
 \item{outcome}{Unquoted name of the outcome variable.}
 
@@ -15,8 +15,8 @@ produce_plugin_estimates(.data, outcome, treatment, ..., .weights = NULL)
 
 \item{...}{Unquoted names of covariates to include in the models of the nuisance functions.}
 
-\item{.weights}{Unquoted name of weights column. If NULL, all analysis will assume weights are all
-equal to one and sample-based quantities will be returned.}
+\item{.weights}{Unquoted name of weights column. If NULL, all analysis will assume weights
+are all equal to one and sample-based quantities will be returned.}
 }
 \description{
 This takes a dataset with an identified outcome and treatment column along

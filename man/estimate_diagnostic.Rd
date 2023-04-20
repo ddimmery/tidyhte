@@ -4,10 +4,10 @@
 \alias{estimate_diagnostic}
 \title{Function to calculate diagnostics based on model outputs}
 \usage{
-estimate_diagnostic(.data, label, prediction, diag_name, params)
+estimate_diagnostic(data, label, prediction, diag_name, params)
 }
 \arguments{
-\item{.data}{The full data frame with all auxilliary columns.}
+\item{data}{The full data frame with all auxilliary columns.}
 
 \item{label}{The (string) column name for the labels to evaluate against.}
 
@@ -24,6 +24,6 @@ which are available.
 }
 \examples{
 df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100))
-estimate_diagnostic(df, "y", "p", "AUC")
+tidyhte:::estimate_diagnostic(df, "y", "p", "AUC")
 }
 \keyword{internal}

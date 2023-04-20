@@ -9,7 +9,7 @@ check_weights(data, weight_col)
 \arguments{
 \item{data}{Dataframe of interest.}
 
-\item{id_col}{Quoted name of weights column.}
+\item{weight_col}{Quoted name of weights column.}
 }
 \value{
 Returns NULL. Errors if a problem is discovered.

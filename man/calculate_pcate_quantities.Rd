@@ -5,7 +5,7 @@
 \title{Calculate "partial" CATE estimates}
 \usage{
 calculate_pcate_quantities(
-  .data,
+  full_data,
   .weights,
   .outcome,
   fx_model,

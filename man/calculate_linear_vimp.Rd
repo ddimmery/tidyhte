@@ -5,7 +5,7 @@
 \title{Calculate Linear Variable Importance of HTEs}
 \usage{
 calculate_linear_vimp(
-  .data,
+  full_data,
   weight_col,
   pseudo_outcome,
   ...,
@@ -14,7 +14,7 @@ calculate_linear_vimp(
 )
 }
 \arguments{
-\item{.data}{dataframe}
+\item{full_data}{dataframe}
 
 \item{weight_col}{Unquoted name of the weight column.}
 

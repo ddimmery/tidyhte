@@ -4,10 +4,10 @@
 \alias{estimate_QoI}
 \title{Estimate Quantities of Interest}
 \usage{
-estimate_QoI(.data, ...)
+estimate_QoI(data, ...)
 }
 \arguments{
-\item{.data}{data frame (already prepared with \code{attach_config}, \code{make_splits},
+\item{data}{data frame (already prepared with \code{attach_config}, \code{make_splits},
 \code{produce_plugin_estimates} and \code{construct_pseudo_outcomes})}
 
 \item{...}{Unquoted names of moderators to calculate QoIs for.}

@@ -2,7 +2,7 @@
 #'
 #' `calculate_vimp` estimates the reduction in (population) $R^2$ from
 #' removing a particular moderator from a model containing all moderators.
-#' @param .data dataframe
+#' @param full_data dataframe
 #' @param weight_col Unquoted name of the weight column.
 #' @param pseudo_outcome Unquoted name of the pseudo-outcome.
 #' @param ... Unquoted names of covariates to include in the joint effect model.
@@ -19,17 +19,17 @@
 #' @seealso [calculate_linear_vimp()]
 #' @importFrom progress progress_bar
 #' @import SuperLearner
-calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
+calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
     dots <- rlang::enexprs(...)
     weight_col <- rlang::enexpr(weight_col)
     pseudo_outcome <- rlang::enexpr(pseudo_outcome)
 
-    check_splits(.data)
+    check_splits(full_data)
 
-    split_ids <- as.integer(as.factor(.data[[".split_id"]]))
+    split_ids <- as.integer(as.factor(full_data[[".split_id"]]))
     unq_splits <- unique(split_ids)
     num_splits_in_data <- length(unq_splits)
-    num_splits_in_attr <- attr(.data, "num_splits")
+    num_splits_in_attr <- attr(full_data, "num_splits")
     if (num_splits_in_data != num_splits_in_attr) stop("Number of splits is inconsistent.")
     if (ceiling(num_splits_in_data / 2) != floor(num_splits_in_data / 2)) {
         stop("Number of splits must be even to calculate VIMP.")
@@ -37,7 +37,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 
     sample_splitting <- .VIMP_cfg$sample_splitting
 
-    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots, .weight_col = {{ weight_col }})
+    data <- Model_data$new(full_data, {{ pseudo_outcome }}, !!!dots, .weight_col = {{ weight_col }})
 
     result_list <- list()
     cv_ctl <- data$SL_cv_control()
@@ -142,7 +142,7 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 #' from a linear model containing all moderators. Unlike `calculate_vimp`, this will only be
 #' unbiased and have correct asymptotic coverage rates if the true model is linear. This linear
 #' approach is also substantially faster, so may be useful when prototyping an analysis.
-#' @param .data dataframe
+#' @param full_data dataframe
 #' @param weight_col Unquoted name of the weight column.
 #' @param pseudo_outcome Unquoted name of the pseudo-outcome.
 #' @param ... Unquoted names of covariates to include in the joint effect model.
@@ -162,12 +162,12 @@ calculate_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .M
 #' @importFrom dplyr select %>% tibble
 #' @importFrom rlang enexprs enexpr
 #' @import SuperLearner
-calculate_linear_vimp <- function(.data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
+calculate_linear_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
     dots <- rlang::enexprs(...)
     weight_col <- rlang::enexpr(weight_col)
     pseudo_outcome <- rlang::enexpr(pseudo_outcome)
 
-    data <- Model_data$new(.data, {{ pseudo_outcome }}, !!!dots, .weight_col = {{ weight_col }})
+    data <- Model_data$new(full_data, {{ pseudo_outcome }}, !!!dots, .weight_col = {{ weight_col }})
 
     df <- dplyr::bind_cols(
         .label = data$label,

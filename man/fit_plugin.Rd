@@ -4,10 +4,10 @@
 \alias{fit_plugin}
 \title{Fits a plugin model using the appropriate settings}
 \usage{
-fit_plugin(.data, weight_col, outcome_col, ..., .Model_cfg)
+fit_plugin(full_data, weight_col, outcome_col, ..., .Model_cfg)
 }
 \arguments{
-\item{.data}{The full dataset of interest for the modelling problem.}
+\item{full_data}{The full dataset of interest for the modelling problem.}
 
 \item{weight_col}{The unquoted weighting variable name to use in model fitting.}
 
