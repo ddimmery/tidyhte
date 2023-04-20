@@ -162,7 +162,9 @@ calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg
 #' @importFrom dplyr select %>% tibble
 #' @importFrom rlang enexprs enexpr
 #' @import SuperLearner
-calculate_linear_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
+calculate_linear_vimp <- function(
+    full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg
+) {
     dots <- rlang::enexprs(...)
     weight_col <- rlang::enexpr(weight_col)
     pseudo_outcome <- rlang::enexpr(pseudo_outcome)
