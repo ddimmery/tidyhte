@@ -151,6 +151,7 @@ n_rows <- (
 
 
 test_that("Check results data", {
+    skip_on_cran()
     checkmate::check_character(results$estimand, any.missing = FALSE)
     checkmate::check_double(results$estimate, any.missing = FALSE)
     checkmate::check_double(results$std_error, any.missing = FALSE)

@@ -20,7 +20,9 @@ navbar:
 reference:
 - title: Estimation API
   desc: >
-    Tidy functions for performing an analysis of heterogeneous treatment effects.
+    Tidy functions for performing an analysis of heterogeneous treatment effects. Once
+    a configuration has been defined (like by the Recipe API), these functions are the
+    workhorses that perform all estimation.
 - contents:
   - attach_config
   - make_splits
@@ -30,6 +32,7 @@ reference:
 - title: Recipe API
   desc: >
     Tidy functions for configuring a "recipe" for how to estimate heterogeneous treatment effects.
+    This is the easiest way to get started with setting up a configuration for an HTE analysis.
 - contents:
   - basic_config
   - add_propensity_score_model
@@ -44,6 +47,9 @@ reference:
 - title: Model Configuration
   desc: >
     Classes to define the configuration of models to be used in the eventual HTE analysis.
+    These are the classes which define the underlying configurations in the Recipe API. They're
+    most useful for advanced users who want the most granular control over their analysis, but
+    most users will be best served by the Recipe API.
 - subtitle: Base Class
 - contents:
   - Model_cfg
@@ -70,7 +76,8 @@ reference:
     These classes configure the overall shape of the HTE analysis: essentially, how
     all the various components and models should fit together. They explain what models
     should be estimated and how those models should be combined into relevant quantities
-    of interest.
+    of interest. These, too, underlie the Recipe API, and should rarely need to be used
+    directly.
 - contents:
   - Diagnostics_cfg
   - HTE_cfg

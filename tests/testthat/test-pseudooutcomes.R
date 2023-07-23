@@ -93,6 +93,15 @@ test_that("Estimate Plugin Models", {
     checkmate::expect_data_frame(data3)
 })
 
+test_that("Errors on unknown type", {
+    expect_error(
+        construct_pseudo_outcomes(
+            data3, {{ outcome_variable }}, {{ treatment_variable }}, type = "idk"
+        ),
+        "Unknown type of pseudo-outcome."
+    )
+})
+
 test_that("Construct DR Pseudo-outcomes", {
     data4 <<- construct_pseudo_outcomes(
         data3, {{ outcome_variable }}, {{ treatment_variable }}

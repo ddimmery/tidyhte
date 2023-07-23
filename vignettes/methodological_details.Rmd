@@ -22,7 +22,8 @@ abstract: >
     This package implements the methods of @kennedy2020optimal and presents them through a tidy-style user-facing API.
     The design principles undergirding this package are (1) the APIs should be tidy-friendly, (2) Analyses should be 
     easy to replicate with minor changes, (3) specifying complex ensembles for the nuisance functions should be
-    straightforward, and (4) sensible diagnostics should be easily accessible.
+    straightforward, and (4) sensible diagnostics should be easily accessible. Plotting and formatting of the results
+    are left for the end-user to customize.
 ---
 
 ```{r setup, echo=FALSE}
@@ -41,11 +42,13 @@ set.seed(100)
 n <- nrow(penguins)
 ```
 
-# Introduction
+# Summary
 
-This document details the broad strokes of how `tidyhte` constructs estimates of heterogeneous treatment effects. It will highlight a variety of the features of the package and discuss the mathematics which undergird them.
+This document details how `tidyhte` constructs estimates of heterogeneous treatment effects. It will highlight a variety of the features of the package and discuss the mathematics which undergird them.
 
 After a brief introduction to the methods of HTE estimation of @kennedy2020optimal, the structure will generally follow the estimation API of `tidyhte`: it will begin by discussing the creation of cross-validation folds, then highlight nuisance function estimation, proceed to the construction of "pseudo outcomes", a concept from @kennedy2020optimal, and conclude by demonstrating the calculation of a few varieties of Quantities of Interest: the actual statistics which are desired by the end-user.
+
+# Statement of Need
 
 # Preliminaries
 
@@ -68,7 +71,7 @@ Heterogeneous treatment effects are defined as the difference in conditional exp
 Under these assumptions, $\tau(x) = \mathbb{E}[Y(1) - Y(0) \mid X = x]$.
 
 For the remainder of this paper, we will use a semi-simulated running example based on the `penguins` dataset of @palmerpenguins.
-We will imagine a nutritional intervention for which we wish to measure the causal effect on body mass.
+We will imagine a randomly assigned nutritional intervention for which we wish to measure the causal effect on body mass.
 We also have a lower variance measurement of the average food consumed per day over an observation period.
 Gentoo penguins gain weight by this intervention on average, while vice-versa for Adelie penguins.
 The average change in weight for Chinstrap penguins is zero.
@@ -101,13 +104,13 @@ $$
 \hat{\tau}_{dr}(x) = \hat{\mathbb{E}}[\hat{\psi}(Z) \mid X = x]
 $$
 
-This algorithm is written when estimates of nuisance functions are trained on separate data and, therefore, can be treated as fixed. The easiest way to do this is with a sample-splitting procedure, after which results are averaged across splits.
+This algorithm is written assuming estimates of nuisance functions are trained on separate data and, therefore, can be treated as fixed. The easiest way to do this is with a sample-splitting procedure, after which results are averaged across splits.
 
 The crucial result, Theorem 2 of @kennedy2020optimal, shows that the error of the second stage regression will match the error of an oracle regression of the true individual treatment effects on covariates $X$ up to a factor which depends on the product of the errors of the two estimated nuisance functions (that is, the errors in $\pi$ and in $\mu$).
 
 When the second-stage regression is simple, like subgroup averages within cells defined by $X$, the DR-Learner inherits unbiasedness and efficiency like an AIPW estimator [@robins1995analysis; @van2003unified; @tsiatis2006semiparametric; @tsiatis2008covariate; @chernozhukov2018double].
 
-The approximation results of @kennedy2020optimal applied to regressions on this transformed outcome allows for a lot of flexibility in quantities of interest that may be estimated. We will use this fact to allow the estimation of a variety of models *as if* they were estimated on the individual causal effects themselves: for example, variable importance measures operate off the assumption that various second-stage regressions will be accurate.
+The approximation results of @kennedy2020optimal applied to regressions on this transformed outcome allow for a lot of flexibility in quantities of interest that may be estimated. We will use this fact to allow the estimation of a variety of models *as if* they were estimated on the individual causal effects themselves: for example, variable importance measures operate off the assumption that various second-stage regressions will be accurate.
 
 ## Principles
 
@@ -118,9 +121,23 @@ This design allows for repeating very similar analyses multiple times with very 
 Instances when this might be useful are when the user wishes to explore heterogeneity across a variety of outcomes, or when there are a variety of treatment contrasts of particular interest.
 Each of these analyses will tend to share common features: similar classes of models will be included in the ensembles for nuisance estimation, for example.
 
+Also important is that the methods provided support the usage of common
+
 ### Clustered data
 
+A common feature of real-world data is that treatment may be clustered.
+In other words, if one unit receives treatment, there may be other units who are then also more likely to receive treatment.
+A common example of this sort of design might be when villages or townships are assigned to treatment, but measurement occurs at the individual level.
+As discussed by @abadie2023should, this design implies that standard errors should be clustered at the level at which treatment was assigned.
+The `tidyhte` package supports clustering as a first class citizen, and resulting estimates will all receive the proper statistical uncertainty estimates based around this clustering.
+In practice, the end-user simply specifies the individual unit-id when constructing cross-validation splits (`make_splits()`), and all subsequent analyses take this into account.
+
 ### Population weights
+
+Another common feature of designs used in practice is that they come from samples that do not perfectly represent the larger populations from which they are drawn.
+The most common solution to this problem is through the use of weights to make the sample more closely resemble the population.
+This, too, is supported by `tidyhte`, by simply specifying weights when models are estimated (`produce_plugin_estimates()`).
+Downstream analyses will then take weights into account appropriately.
 
 # Recipe API
 
@@ -139,9 +156,9 @@ cfg <- basic_config() %>%
 
 Since the subject of interest is an experimental intervention, the propensity score is known.
 Using this known propensity score provides unbiasedness for many quantities of interest (although this may leave some efficiency on the table CITE).
-In this case, in addition to the (default) linear model included in the SuperLearner ensemble, we add an elastic-net regression.
+In this case, in addition to the (default) linear model included in the SuperLearner ensemble, we add an elastic-net regression [@zou2005regularization].
 We sweep over a variety of mixing parameters between LASSO and ridge, throwing each of these models into the ensemble.
-This means that SuperLearner will perform model selection and averaging to identify the best hyper-parameter values.
+This means that SuperLearner will perform model selection and averaging to identify the best hyper-parameter values [@van2007super].
 Furthermore, we define all of the moderators of interest and how their results should be collected and displayed.
 Discrete moderators will just take stratified averages at each level of the moderator, while continuous moderators will use local polynomial regression [@fan2018local; @calonico2019nprobust].
 Finally, we add a variable importance measure from @williamson2021nonparametric.
@@ -235,6 +252,10 @@ penguins %<>% construct_pseudo_outcomes(food_consumed_g, treatment)
 Finally, it comes to the most glamorous part of the analysis, when effects are estimated and put into charts.
 
 The design of `tidyhte` chooses to leave the charting to the end-user, but merely returns a tidy tibble with all of the requested quantities of interest.
+The package focuses on a few types of quantities of interest:
+- Marginal Conditional Average Treatment Effects (MCATEs): the standard Conditional Average Treatment Effects (CATEs) in the literature, in which all covariates except one are marginalized over, providing one average effect for one level of a single covariate. This is in contrast to a "Partial" CATE, in which other variables are "controlled for" in some way. This does not provide a satisfying causal interpretation without assumptions of joint randomization of treatment and covariates.
+- Variable Importance (VIMP): Using @williamson2021nonparametric, `tidyhte` calculates how much each moderator contributes to the overall reduction in mean-squared-error in a joint model of the heterogeneous effects.
+- Diagnostics: A wide variety of diagnostics are provided for all models fit as part of the `tidyhte` estimation process. These include single-number summaries like mean-squared-error or AUC, as well as entire receiver operating characteristic curves and coefficients in the SuperLearner ensembles.
 
 
 ```{r qoi, results='hide', message=FALSE, warning=FALSE}
@@ -380,7 +401,14 @@ By allowing the user to flexibly compose HTE estimators, it drastically reduces 
 # Conclusion
 
 This paper has introduced the concepts underlying the `tidyhte` package and given examples as to how the package can be used.
+In general, the package is written in a sufficiently general way that some features can be added with relatively little work.
+For instance, adding new plugin models is as simple as providing some information on configuration as well as standardizing train / predict methods.
+This is similarly true for providing new ways to summarize CATEs for plotting, which is handled in much the same way.
+This makes it relatively easy for methodologists to fit in their preferred fitting methods and thereby extending `tidyhte`'s functionality.
 
+# Acknowledgements
+
+We gratefully acknowledge the collaboration with the US 2020 Facebook and Instagram Election Project for being a testbed for the initial versions of `tidyhte`, particularly Pablo Barberá at Meta. We received no financial support for this software project.
 
 # References
 

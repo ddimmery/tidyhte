@@ -38,6 +38,11 @@ attach_config <- function(data, .HTE_cfg) {
 #' arbitrary number of covariates on which to stratify the splits.
 #' It returns the original dataset with an additional column `.split_id`
 #' corresponding to an identifier for the split.
+#' 
+#' To see an example analysis, read `vignette("experimental_analysis")` in the context
+#' of an experiment, `vignette("experimental_analysis")` for an observational study, or
+#' `vignette("methodological_details")` for a deeper dive under the hood.
+#' 
 #' @param data dataframe
 #' @param identifier Unquoted name of unique identifier column
 #' @param ... variables on which to stratify (requires that `quickblock` be installed.)
@@ -141,6 +146,11 @@ make_splits <- function(data, identifier, ..., .num_splits) {
 #' to an estimate of the conditional expectation of treatment (`.pi_hat`), along with the
 #' conditional expectation of the control and treatment potential outcome surfaces
 #' (`.mu0_hat` and `.mu1_hat` respectively).
+#' 
+#' To see an example analysis, read `vignette("experimental_analysis")` in the context
+#' of an experiment, `vignette("experimental_analysis")` for an observational study, or
+#' `vignette("methodological_details")` for a deeper dive under the hood.
+#' 
 #' @param data dataframe (already prepared with `attach_config` and `make_splits`)
 #' @param outcome Unquoted name of the outcome variable.
 #' @param treatment Unquoted name of the treatment variable.
@@ -276,6 +286,10 @@ produce_plugin_estimates <- function(data, outcome, treatment, ..., .weights = N
 #' plugin estimates and pseudo-outcomes and calculates the requested
 #' quantities of interest (QoIs).
 #'
+#' To see an example analysis, read `vignette("experimental_analysis")` in the context
+#' of an experiment, `vignette("experimental_analysis")` for an observational study, or
+#' `vignette("methodological_details")` for a deeper dive under the hood.
+#' 
 #' @param data data frame (already prepared with `attach_config`, `make_splits`,
 #' `produce_plugin_estimates` and `construct_pseudo_outcomes`)
 #' @param ... Unquoted names of moderators to calculate QoIs for.
