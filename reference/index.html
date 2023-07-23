@@ -70,7 +70,7 @@
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
           <h2 id="estimation-api">Estimation API <a href="#estimation-api" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Tidy functions for performing an analysis of heterogeneous treatment effects.</p>
+          <p class="section-desc"></p><p>Tidy functions for performing an analysis of heterogeneous treatment effects. Once a configuration has been defined (like by the Recipe API), these functions are the workhorses that perform all estimation.</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="attach_config.html">attach_config()</a></code> </p>
@@ -94,7 +94,7 @@
         <td><p>Estimate Quantities of Interest</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="recipe-api">Recipe API <a href="#recipe-api" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Tidy functions for configuring a “recipe” for how to estimate heterogeneous treatment effects.</p>
+          <p class="section-desc"></p><p>Tidy functions for configuring a “recipe” for how to estimate heterogeneous treatment effects. This is the easiest way to get started with setting up a configuration for an HTE analysis.</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="basic_config.html">basic_config()</a></code> </p>
@@ -138,7 +138,7 @@
         <td><p>Adds variable importance information</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="model-configuration">Model Configuration <a href="#model-configuration" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Classes to define the configuration of models to be used in the eventual HTE analysis.</p>
+          <p class="section-desc"></p><p>Classes to define the configuration of models to be used in the eventual HTE analysis. These are the classes which define the underlying configurations in the Recipe API. They’re most useful for advanced users who want the most granular control over their analysis, but most users will be best served by the Recipe API.</p>
         </th>
       </tr></tbody><tbody><tr><th colspan="2">
           <h3 id="base-class">Base Class <a href="#base-class" class="anchor" aria-hidden="true"></a></h3>
@@ -182,7 +182,7 @@
         <td><p>Configuration of SuperLearner Submodel</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="analysis-configuration">Analysis Configuration <a href="#analysis-configuration" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>These classes configure the overall shape of the HTE analysis: essentially, how all the various components and models should fit together. They explain what models should be estimated and how those models should be combined into relevant quantities of interest.</p>
+          <p class="section-desc"></p><p>These classes configure the overall shape of the HTE analysis: essentially, how all the various components and models should fit together. They explain what models should be estimated and how those models should be combined into relevant quantities of interest. These, too, underlie the Recipe API, and should rarely need to be used directly.</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="Diagnostics_cfg.html">Diagnostics_cfg</a></code> </p>
