@@ -1,47 +1,52 @@
 Package: tidyhte
 Title: Tidy Estimation of Heterogeneous Treatment Effects
-Version: 0.2.1
+Version: 1.0.0
 Authors@R: 
     person(given = "Drew",
            family = "Dimmery",
-           role = c("aut", "cre"),
+           role = c("aut", "cre", "cph"),
            email = "drew.dimmery@univie.ac.at",
            comment = c(ORCID = "0000-0001-9602-6325"))
-Description: Tools for the estimation of heterogeneous treatment effects
-    using tidy semantics. Methods are based on the doubly-robust learner
-    of Kennedy (n.d.).
-URL: http://github.com/ddimmery/tidyhte https://ddimmery.github.io/tidyhte/index.html
+Description: Estimates heterogeneous treatment effects using tidy semantics 
+    on experimental or observational data.  Methods are based on the doubly-robust
+    learner of Kennedy (n.d.) <arXiv:2004.14497>. You provide a simple
+    recipe for what machine learning algorithms to use in estimating the nuisance
+    functions and 'tidyhte' will take care of cross-validation, estimation, model
+    selection, diagnostics and construction of relevant quantities of interest about
+    the variability of treatment effects.
+URL: https://github.com/ddimmery/tidyhte https://ddimmery.github.io/tidyhte/index.html
+BugReports: https://github.com/ddimmery/tidyhte/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
-    knitr,
-    devtools,
-    rmarkdown,
-    ggplot2,
-    testthat (>= 3.0.0),
     covr,
-    quickblock,
-    nprobust,
-    glmnet,
-    WeightedROC,
-    vimp,
-    mockr,
+    devtools,
     estimatr,
+    ggplot2,
+    glmnet,
+    knitr,
+    mockr,
+    nprobust,
+    palmerpenguins,
     quadprog,
-    palmerpenguins
+    quickblock,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    vimp,
+    WeightedROC
 Config/testthat/edition: 3
 Imports: 
     checkmate,
-    magrittr,
     dplyr,
+    lifecycle,
+    magrittr,
+    progress,
+    purrr,
     R6,
     rlang,
-    purrr,
-    tibble,
     SuperLearner,
-    progress,
-    lifecycle
+    tibble
 VignetteBuilder: knitr

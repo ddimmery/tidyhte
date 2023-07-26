@@ -6,7 +6,7 @@
 \alias{tidyhte-package}
 \title{tidyhte: Tidy Estimation of Heterogeneous Treatment Effects}
 \description{
-Tools for the estimation of heterogeneous treatment effects using tidy semantics. Methods are based on the doubly-robust learner of Kennedy (n.d.).
+Estimates heterogeneous treatment effects using tidy semantics on experimental or observational data. Methods are based on the doubly-robust learner of Kennedy (n.d.) \href{https://arxiv.org/abs/2004.14497}{arXiv:2004.14497}. You provide a simple recipe for what machine learning algorithms to use in estimating the nuisance functions and 'tidyhte' will take care of cross-validation, estimation, model selection, diagnostics and construction of relevant quantities of interest about the variability of treatment effects.
 }
 \details{
 The best place to get started with \code{tidyhte} is \code{vignette("experimental_analysis")} which
@@ -23,7 +23,7 @@ The core public-facing functions are \code{make_splits}, \code{produce_plugin_es
 in addition to a variety of related classes (see \code{basic_config}).
 }
 \author{
-\strong{Maintainer}: Drew Dimmery \email{drew.dimmery@univie.ac.at} (\href{https://orcid.org/0000-0001-9602-6325}{ORCID})
+\strong{Maintainer}: Drew Dimmery \email{drew.dimmery@univie.ac.at} (\href{https://orcid.org/0000-0001-9602-6325}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

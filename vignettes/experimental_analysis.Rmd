@@ -43,7 +43,7 @@ Note that datatypes can be either continuous or discrete, and that there can be 
 
 ```{r sim_data}
 set.seed(100)
-n <- 1000
+n <- 500
 data <- tibble(
     uid = 1:n
 ) %>%
@@ -93,14 +93,12 @@ An additional quantity of interest provided is the variable importance of a lear
 basic_config() %>%
     add_known_propensity_score("ps") %>%
     add_outcome_model("SL.glm.interaction") %>%
-    add_outcome_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
-    add_outcome_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_outcome_model("SL.glmnet", alpha = c(0, 1)) %>%
+    add_outcome_model("SL.glmnet.interaction", alpha = c(0, 1)) %>%
     add_outcome_diagnostic("RROC") %>%
-    # add_outcome_model("SL.ranger", num.trees = c(50, 100)) %>%
-    # add_outcome_model("SL.xgboost", ntrees = c(250, 500), shrinkage = c(0.1, 0.01)) %>%
     add_effect_model("SL.glm.interaction") %>%
-    add_effect_model("SL.glmnet", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
-    add_effect_model("SL.glmnet.interaction", alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)) %>%
+    add_effect_model("SL.glmnet", alpha = c(0, 1)) %>%
+    add_effect_model("SL.glmnet.interaction", alpha = c(0, 1)) %>%
     add_effect_diagnostic("RROC") %>%
     add_moderator("Stratified", x2, x3) %>%
     add_moderator("KernelSmooth", x1, x4, x5) %>%
@@ -116,7 +114,7 @@ To actually perform the estimation, the following will be sufficient. Note that 
 ```{r estimate, message=FALSE}
 data %>%
     attach_config(hte_cfg) %>%
-    make_splits(uid, .num_splits = 4) %>%
+    make_splits(uid, .num_splits = 3) %>%
     produce_plugin_estimates(
         y,
         a,

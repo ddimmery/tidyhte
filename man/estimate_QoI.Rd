@@ -17,6 +17,11 @@ estimate_QoI(data, ...)
 plugin estimates and pseudo-outcomes and calculates the requested
 quantities of interest (QoIs).
 }
+\details{
+To see an example analysis, read \code{vignette("experimental_analysis")} in the context
+of an experiment, \code{vignette("experimental_analysis")} for an observational study, or
+\code{vignette("methodological_details")} for a deeper dive under the hood.
+}
 \examples{
 \dontrun{
 cfg <- basic_config()

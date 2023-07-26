@@ -25,6 +25,11 @@ to an estimate of the conditional expectation of treatment (\code{.pi_hat}), alo
 conditional expectation of the control and treatment potential outcome surfaces
 (\code{.mu0_hat} and \code{.mu1_hat} respectively).
 }
+\details{
+To see an example analysis, read \code{vignette("experimental_analysis")} in the context
+of an experiment, \code{vignette("experimental_analysis")} for an observational study, or
+\code{vignette("methodological_details")} for a deeper dive under the hood.
+}
 \examples{
 \dontrun{
 cfg <- basic_config()

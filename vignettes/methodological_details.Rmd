@@ -148,7 +148,7 @@ A `basic_config` function creates a bare-bones configuration consisting of only 
 ```{r cfg}
 cfg <- basic_config() %>%
     add_known_propensity_score("propensity_score") %>%
-    add_outcome_model("SL.glmnet", alpha = c(0.0, 0.25, 0.5, 0.75, 1.0)) %>%
+    add_outcome_model("SL.glmnet", alpha = c(0.0, 1.0)) %>%
     add_moderator("Stratified", species, island, sex, year) %>%
     add_moderator("KernelSmooth", bill_length_mm, bill_depth_mm, flipper_length_mm) %>%
     add_vimp(sample_splitting = FALSE)
@@ -192,7 +192,7 @@ Since the object returned is the same as what was passed in, this makes for easy
 
 
 ```{r split}
-penguins %<>% make_splits(id, species, sex, flipper_length_mm, .num_splits = 4)
+penguins %<>% make_splits(id, species, sex, flipper_length_mm, .num_splits = 3)
 ```
 
 Note that `tidyhte` gracefully handles missing data via listwise deletion.

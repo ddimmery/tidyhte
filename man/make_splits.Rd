@@ -25,6 +25,11 @@ arbitrary number of covariates on which to stratify the splits.
 It returns the original dataset with an additional column \code{.split_id}
 corresponding to an identifier for the split.
 }
+\details{
+To see an example analysis, read \code{vignette("experimental_analysis")} in the context
+of an experiment, \code{vignette("experimental_analysis")} for an observational study, or
+\code{vignette("methodological_details")} for a deeper dive under the hood.
+}
 \examples{
 \dontrun{
 cfg <- basic_config()

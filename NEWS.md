@@ -1,4 +1,4 @@
-# tidyhte (dev)
+# tidyhte (1.0.0)
 * Improved documentation.
 
 * Fix errors introduced by new release of VIMP.
@@ -59,7 +59,7 @@
 
 * Listwise deletion no longer fully drops rows from the dataset. It instead will drop rows at each step based on the columns that are necessary to be non-missing in that particular step.
 
-* `soft_require` now uses the underlying `rlang::check_installed` to also prompt the end-user to install necessary pacakges.
+* `soft_require` now uses the underlying `rlang::check_installed` to also prompt the end-user to install necessary packages.
 
 ## Population weights
 

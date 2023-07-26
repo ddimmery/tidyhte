@@ -8,14 +8,14 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![lint](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml)
-[![codecov](https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg?token=AHT3X4S2KQ)](https://codecov.io/gh/ddimmery/tidyhte)
+[![codecov](https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg?token=AHT3X4S2KQ)](https://app.codecov.io/gh/ddimmery/tidyhte)
 [![R-CMD-check](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 Status](https://www.r-pkg.org/badges/version/tidyhte)](https://cran.r-project.org/package=tidyhte)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/375330850.svg)](https://zenodo.org/badge/latestdoi/375330850)
-[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?style=flat)](https://discord.gg/MrxjbHc3jD)
+[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?style=flat)](https://discord.com/invite/MrxjbHc3jD)
 <!-- badges: end -->
 
 `tidyhte` provides tidy semantics for estimation of heterogeneous
@@ -159,7 +159,7 @@ with all of the relevant debugging steps you’ve already taken.
 
 Support for the package will also be provided in the Experimentation
 Community Discord:
-[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?theme=clean&compact=true)](https://discord.gg/MrxjbHc3jD)
+[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?theme=clean&compact=true)](https://discord.com/invite/MrxjbHc3jD)
 
 You are welcome to come in and get support for your usage in the
 `tidyhte` channel. Keep in mind that everyone is volunteering their time
