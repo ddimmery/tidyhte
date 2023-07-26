@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -51,7 +51,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="http://github.com/ddimmery/tidyhte/" class="external-link">
+  <a href="https://github.com/ddimmery/tidyhte/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -66,7 +66,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href="http://github.com/ddimmery/tidyhte/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ddimmery/tidyhte/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
@@ -105,7 +105,7 @@
 <ul><li><p>Increment to first minor version number. The package is generally feature-complete enough for general usage, although there are still lots of things to do before an initial major version release.</p></li>
 <li><p>Public API no longer constantly passes in the <code>HTE_cfg</code>. Instead, a new public function is added, <code>attach_config</code>, which adds metadata to a given dataframe expressing how HTEs should be calculated.</p></li>
 <li><p>Listwise deletion no longer fully drops rows from the dataset. It instead will drop rows at each step based on the columns that are necessary to be non-missing in that particular step.</p></li>
-<li><p><code>soft_require</code> now uses the underlying <code><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">rlang::check_installed</a></code> to also prompt the end-user to install necessary pacakges.</p></li>
+<li><p><code>soft_require</code> now uses the underlying <code><a href="https://rlang.r-lib.org/reference/is_installed.html" class="external-link">rlang::check_installed</a></code> to also prompt the end-user to install necessary packages.</p></li>
 </ul><div class="section level3">
 <h3 id="population-weights-0-1-0">Population weights<a class="anchor" aria-label="anchor" href="#population-weights-0-1-0"></a></h3>
 <p>Adds support for population weights. This is a large change affecting a lot of functionality.</p>

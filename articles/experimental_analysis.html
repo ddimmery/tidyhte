@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidyhte</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="http://github.com/ddimmery/tidyhte/" class="external-link">
+  <a href="https://github.com/ddimmery/tidyhte/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -94,9 +94,9 @@
                         <h4 data-toc-skip class="author">Drew Dimmery
 (<a href="mailto:ddimmery@univie.ac.at" class="email">ddimmery@univie.ac.at</a>)</h4>
             
-            <h4 data-toc-skip class="date">23 July, 2023</h4>
+            <h4 data-toc-skip class="date">26 July, 2023</h4>
       
-      <small class="dont-index">Source: <a href="http://github.com/ddimmery/tidyhte/blob/HEAD/vignettes/experimental_analysis.Rmd" class="external-link"><code>vignettes/experimental_analysis.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ddimmery/tidyhte/blob/HEAD/vignettes/experimental_analysis.Rmd" class="external-link"><code>vignettes/experimental_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>experimental_analysis.Rmd</code></div>
 
     </div>
@@ -126,7 +126,7 @@ associated standard errors.</p>
 <h2 id="load-packages-and-setup-environment">Load packages and setup environment<a class="anchor" aria-label="anchor" href="#load-packages-and-setup-environment"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/ddimmery/tidyhte" class="external-link">tidyhte</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ddimmery/tidyhte" class="external-link">tidyhte</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -142,7 +142,7 @@ there can be columns in the tibble that are not included in any
 resulting anayses.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>    uid <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -217,14 +217,12 @@ Gilbert, Carone and Simon (2020).</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/basic_config.html">basic_config</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_known_propensity_score.html">add_known_propensity_score</a></span><span class="op">(</span><span class="st">"ps"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_outcome_model.html">add_outcome_model</a></span><span class="op">(</span><span class="st">"SL.glm.interaction"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="../reference/add_outcome_model.html">add_outcome_model</a></span><span class="op">(</span><span class="st">"SL.glmnet"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="../reference/add_outcome_model.html">add_outcome_model</a></span><span class="op">(</span><span class="st">"SL.glmnet.interaction"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="../reference/add_outcome_model.html">add_outcome_model</a></span><span class="op">(</span><span class="st">"SL.glmnet"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="../reference/add_outcome_model.html">add_outcome_model</a></span><span class="op">(</span><span class="st">"SL.glmnet.interaction"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_outcome_diagnostic.html">add_outcome_diagnostic</a></span><span class="op">(</span><span class="st">"RROC"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="co"># add_outcome_model("SL.ranger", num.trees = c(50, 100)) %&gt;%</span></span>
-<span>    <span class="co"># add_outcome_model("SL.xgboost", ntrees = c(250, 500), shrinkage = c(0.1, 0.01)) %&gt;%</span></span>
 <span>    <span class="fu"><a href="../reference/add_effect_model.html">add_effect_model</a></span><span class="op">(</span><span class="st">"SL.glm.interaction"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="../reference/add_effect_model.html">add_effect_model</a></span><span class="op">(</span><span class="st">"SL.glmnet"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="../reference/add_effect_model.html">add_effect_model</a></span><span class="op">(</span><span class="st">"SL.glmnet.interaction"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="../reference/add_effect_model.html">add_effect_model</a></span><span class="op">(</span><span class="st">"SL.glmnet"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="../reference/add_effect_model.html">add_effect_model</a></span><span class="op">(</span><span class="st">"SL.glmnet.interaction"</span>, alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_effect_diagnostic.html">add_effect_diagnostic</a></span><span class="op">(</span><span class="st">"RROC"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_moderator.html">add_moderator</a></span><span class="op">(</span><span class="st">"Stratified"</span>, <span class="va">x2</span>, <span class="va">x3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/add_moderator.html">add_moderator</a></span><span class="op">(</span><span class="st">"KernelSmooth"</span>, <span class="va">x1</span>, <span class="va">x4</span>, <span class="va">x5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -245,7 +243,7 @@ curly-brackets and bangs.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">hte_cfg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="va">uid</span>, .num_splits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="../reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="va">uid</span>, .num_splits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span></span>
 <span>        <span class="va">y</span>,</span>
 <span>        <span class="va">a</span>,</span>
@@ -255,32 +253,36 @@ curly-brackets and bangs.</p>
 <span></span>
 <span><span class="va">prepped_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span>, <span class="va">x3</span>, <span class="va">x4</span>, <span class="va">x5</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## Error in model.frame.default(Terms, newdata, na.action = na.action, xlev = object$xlevels) : </span></span>
+<span><span class="co">##   factor x2 has new levels 1</span></span>
+<span><span class="co">## Error in model.frame.default(Terms, newdata, na.action = na.action, xlev = object$xlevels) : </span></span>
+<span><span class="co">##   factor x2 has new levels 1</span></span></code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1,375 × 6</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 843 × 6</span></span></span>
 <span><span class="co">##    estimand term  value level estimate std_error</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> MCATE    x1    -<span style="color: #BB0000;">1.64</span> <span style="color: #BB0000;">NA</span>        3.40     0.176</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> MCATE    x1    -<span style="color: #BB0000;">1.52</span> <span style="color: #BB0000;">NA</span>        3.30     0.164</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> MCATE    x1    -<span style="color: #BB0000;">1.47</span> <span style="color: #BB0000;">NA</span>        3.25     0.160</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> MCATE    x1    -<span style="color: #BB0000;">1.40</span> <span style="color: #BB0000;">NA</span>        3.19     0.153</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> MCATE    x1    -<span style="color: #BB0000;">1.36</span> <span style="color: #BB0000;">NA</span>        3.15     0.150</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> MCATE    x1    -<span style="color: #BB0000;">1.32</span> <span style="color: #BB0000;">NA</span>        3.11     0.147</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> MCATE    x1    -<span style="color: #BB0000;">1.29</span> <span style="color: #BB0000;">NA</span>        3.08     0.145</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MCATE    x1    -<span style="color: #BB0000;">1.25</span> <span style="color: #BB0000;">NA</span>        3.05     0.143</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MCATE    x1    -<span style="color: #BB0000;">1.20</span> <span style="color: #BB0000;">NA</span>        3.00     0.139</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> MCATE    x1    -<span style="color: #BB0000;">1.13</span> <span style="color: #BB0000;">NA</span>        2.93     0.135</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 1,365 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> MCATE    x1    -<span style="color: #BB0000;">1.80</span> <span style="color: #BB0000;">NA</span>        3.22     0.173</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> MCATE    x1    -<span style="color: #BB0000;">1.71</span> <span style="color: #BB0000;">NA</span>        3.11     0.166</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> MCATE    x1    -<span style="color: #BB0000;">1.58</span> <span style="color: #BB0000;">NA</span>        2.96     0.157</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> MCATE    x1    -<span style="color: #BB0000;">1.47</span> <span style="color: #BB0000;">NA</span>        2.84     0.149</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> MCATE    x1    -<span style="color: #BB0000;">1.40</span> <span style="color: #BB0000;">NA</span>        2.78     0.145</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> MCATE    x1    -<span style="color: #BB0000;">1.35</span> <span style="color: #BB0000;">NA</span>        2.73     0.142</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> MCATE    x1    -<span style="color: #BB0000;">1.30</span> <span style="color: #BB0000;">NA</span>        2.69     0.139</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MCATE    x1    -<span style="color: #BB0000;">1.26</span> <span style="color: #BB0000;">NA</span>        2.65     0.137</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MCATE    x1    -<span style="color: #BB0000;">1.21</span> <span style="color: #BB0000;">NA</span>        2.60     0.135</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> MCATE    x1    -<span style="color: #BB0000;">1.16</span> <span style="color: #BB0000;">NA</span>        2.56     0.134</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 833 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="ates">ATEs<a class="anchor" aria-label="anchor" href="#ates"></a>
 </h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"SATE|PATE"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
 <span><span class="co">##   estimand term  value level estimate std_error</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> SATE     <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>        1.74    0.084<span style="text-decoration: underline;">5</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> SATE     <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>        1.58     0.101</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="plots">Plots<a class="anchor" aria-label="anchor" href="#plots"></a>
@@ -288,7 +290,7 @@ curly-brackets and bangs.</p>
 <div class="section level3">
 <h3 id="plot-ensemble-coefficients">Plot Ensemble Coefficients<a class="anchor" aria-label="anchor" href="#plot-ensemble-coefficients"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"SL coefficient"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">level</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Control Response"</span>, <span class="st">"Treatment Response"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -311,7 +313,7 @@ curly-brackets and bangs.</p>
 <div class="section level3">
 <h3 id="plot-risk-for-each-submodel">Plot risk for each submodel<a class="anchor" aria-label="anchor" href="#plot-risk-for-each-submodel"></a>
 </h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"SL risk"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">level</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Control Response"</span>, <span class="st">"Treatment Response"</span>, <span class="st">"Effect Surface"</span><span class="op">)</span><span class="op">)</span></span>
@@ -337,7 +339,7 @@ curly-brackets and bangs.</p>
 <div class="section level3">
 <h3 id="plot-regression-roc-curves">Plot Regression ROC Curves<a class="anchor" aria-label="anchor" href="#plot-regression-roc-curves"></a>
 </h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"RROC"</span>, <span class="va">estimand</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">level</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Control Response"</span>, <span class="st">"Treatment Response"</span>, <span class="st">"Effect Surface"</span><span class="op">)</span><span class="op">)</span></span>
@@ -365,7 +367,7 @@ curly-brackets and bangs.</p>
 <div class="section level3">
 <h3 id="plot-vimp">Plot VIMP<a class="anchor" aria-label="anchor" href="#plot-vimp"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"VIMP"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_pointrange</a></span><span class="op">(</span></span>
@@ -387,7 +389,7 @@ curly-brackets and bangs.</p>
 <div class="section level3">
 <h3 id="plot-continuous-covariates-mcate">Plot Continuous Covariates’ MCATE<a class="anchor" aria-label="anchor" href="#plot-continuous-covariates-mcate"></a>
 </h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -414,7 +416,7 @@ curly-brackets and bangs.</p>
 <div class="section level3">
 <h3 id="plot-discrete-covariates-mcate">Plot Discrete Covariates’ MCATE<a class="anchor" aria-label="anchor" href="#plot-discrete-covariates-mcate"></a>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">cov</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x2"</span>, <span class="st">"x3"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">estimand</span> <span class="op">==</span> <span class="st">"MCATE"</span>, <span class="va">term</span> <span class="op">==</span> <span class="va">cov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_abline</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">0</span>, slope <span class="op">=</span> <span class="fl">0</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -439,7 +441,7 @@ curly-brackets and bangs.</p>
 <div class="section level2">
 <h2 id="session-info">Session Info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.3.1 (2023-06-16)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin20 (64-bit)</span></span>
@@ -460,7 +462,7 @@ curly-brackets and bangs.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">## [1] nnls_1.4              SuperLearner_2.0-28.1 dplyr_1.1.2          </span></span>
-<span><span class="co">## [4] ggplot2_3.4.2         tidyhte_0.2.1        </span></span>
+<span><span class="co">## [4] ggplot2_3.4.2         tidyhte_1.0.0        </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##  [1] shape_1.4.6           gtable_0.3.3          xfun_0.39            </span></span>
