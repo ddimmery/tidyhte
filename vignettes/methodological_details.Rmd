@@ -48,8 +48,6 @@ This document details how `tidyhte` constructs estimates of heterogeneous treatm
 
 After a brief introduction to the methods of HTE estimation of @kennedy2020optimal, the structure will generally follow the estimation API of `tidyhte`: it will begin by discussing the creation of cross-validation folds, then highlight nuisance function estimation, proceed to the construction of "pseudo outcomes", a concept from @kennedy2020optimal, and conclude by demonstrating the calculation of a few varieties of Quantities of Interest: the actual statistics which are desired by the end-user.
 
-# Statement of Need
-
 # Preliminaries
 
 ## Problem Setting

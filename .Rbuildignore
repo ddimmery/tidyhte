@@ -16,3 +16,4 @@ figure$
 \.bbl$
 \.blg$
 cran-comments.md
+^CRAN-SUBMISSION$
