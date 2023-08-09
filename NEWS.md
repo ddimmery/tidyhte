@@ -1,4 +1,9 @@
+# tidyhte (1.0.1)
+
+* Fix CRAN NOTEs.
+
 # tidyhte (1.0.0)
+
 * Improved documentation.
 
 * Fix errors introduced by new release of VIMP.

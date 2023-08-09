@@ -1,3 +1,5 @@
+Resubmission due to 'gs+qpdf' size reduction warning.
+
 ## R CMD check results
 Tested locally, on winbuilder and Rhub (windows-x86_64-devel, fedora-clang-devel, ubuntu-gcc-release)
 
