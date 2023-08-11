@@ -33,3 +33,4 @@ This function calculates the diagnostics requested by the \code{Diagnostics_cfg}
 \seealso{
 \link{Diagnostics_cfg}
 }
+\keyword{internal}

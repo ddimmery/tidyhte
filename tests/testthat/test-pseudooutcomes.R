@@ -72,53 +72,55 @@ cfg <- HTE_cfg$new(
     qoi = qoi.cfg
 )
 
+E = new.env(parent = emptyenv())
+
 test_that("add config", {
-    data1 <<- attach_config(data, cfg)
-    checkmate::expect_data_frame(data1)
-    expect_true("HTE_cfg" %in% names(attributes(data1)))
+    E$data1 <- attach_config(data, cfg)
+    checkmate::expect_data_frame(E$data1)
+    expect_true("HTE_cfg" %in% names(attributes(E$data1)))
 })
 
 test_that("Split data", {
-    data2 <<- make_splits(data1, {{ userid }}, .num_splits = 3)
-    checkmate::expect_data_frame(data2)
+    E$data2 <- make_splits(E$data1, {{ userid }}, .num_splits = 3)
+    checkmate::expect_data_frame(E$data2)
 })
 
 test_that("Estimate Plugin Models", {
-    data3 <<- produce_plugin_estimates(
-        data2,
+    E$data3 <- produce_plugin_estimates(
+        E$data2,
         {{ outcome_variable }},
         {{ treatment_variable }},
         !!!model_covariates
     )
-    checkmate::expect_data_frame(data3)
+    checkmate::expect_data_frame(E$data3)
 })
 
 test_that("Errors on unknown type", {
     expect_error(
         construct_pseudo_outcomes(
-            data3, {{ outcome_variable }}, {{ treatment_variable }}, type = "idk"
+            E$data3, {{ outcome_variable }}, {{ treatment_variable }}, type = "idk"
         ),
         "Unknown type of pseudo-outcome."
     )
 })
 
 test_that("Construct DR Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(
-        data3, {{ outcome_variable }}, {{ treatment_variable }}
+    data4 <- construct_pseudo_outcomes(
+        E$data3, {{ outcome_variable }}, {{ treatment_variable }}
     )
     checkmate::expect_data_frame(data4)
 })
 
 test_that("Construct IPW Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(
-        data3, {{ outcome_variable }}, {{ treatment_variable }}, "ipw"
+    data4 <- construct_pseudo_outcomes(
+        E$data3, {{ outcome_variable }}, {{ treatment_variable }}, "ipw"
     )
     checkmate::expect_data_frame(data4)
 })
 
 test_that("Construct Plugin Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(
-        data3, {{ outcome_variable }}, {{ treatment_variable }}, "plugin"
+    data4 <- construct_pseudo_outcomes(
+        E$data3, {{ outcome_variable }}, {{ treatment_variable }}, "plugin"
     )
     checkmate::expect_data_frame(data4)
 })

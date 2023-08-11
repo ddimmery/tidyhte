@@ -90,38 +90,40 @@ cfg <- HTE_cfg$new(
     qoi = qoi.cfg
 )
 
+E = new.env(parent = emptyenv())
+
 test_that("add config", {
-    data1 <<- attach_config(data, cfg)
-    checkmate::expect_data_frame(data1)
-    expect_true("HTE_cfg" %in% names(attributes(data1)))
+    E$data1 <- attach_config(data, cfg)
+    checkmate::expect_data_frame(E$data1)
+    expect_true("HTE_cfg" %in% names(attributes(E$data1)))
 })
 
 test_that("Split data", {
-    data2 <<- make_splits(data1, {{ userid }}, .num_splits = 3)
-    checkmate::expect_data_frame(data2)
+    E$data2 <- make_splits(E$data1, {{ userid }}, .num_splits = 3)
+    checkmate::expect_data_frame(E$data2)
 })
 
 test_that("Estimate Plugin Models", {
-    data3 <<- produce_plugin_estimates(
-        data2,
+    E$data3 <- produce_plugin_estimates(
+        E$data2,
         {{ outcome_variable }},
         {{ treatment_variable }},
         !!!model_covariates
     )
-    checkmate::expect_data_frame(data3)
+    checkmate::expect_data_frame(E$data3)
 })
 
 test_that("Construct Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }})
-    checkmate::expect_data_frame(data4)
+    E$data4 <- construct_pseudo_outcomes(E$data3, {{ outcome_variable }}, {{ treatment_variable }})
+    checkmate::expect_data_frame(E$data4)
 })
 
 test_that("Estimate QoIs", {
     expect_message(
-        results <<- estimate_QoI(data4),
+        E$results <- estimate_QoI(E$data4),
         "No moderators specified, so pulling list from definitions in QoI."
     )
-    checkmate::expect_data_frame(results)
+    checkmate::expect_data_frame(E$results)
 })
 
 n_rows <- (
@@ -136,12 +138,12 @@ n_rows <- (
 
 
 test_that("Check results data", {
-    checkmate::check_character(results$estimand, any.missing = FALSE)
-    checkmate::check_double(results$estimate, any.missing = FALSE)
-    checkmate::check_double(results$std_error, any.missing = FALSE)
+    checkmate::check_character(E$results$estimand, any.missing = FALSE)
+    checkmate::check_double(E$results$estimate, any.missing = FALSE)
+    checkmate::check_double(E$results$std_error, any.missing = FALSE)
 
     checkmate::expect_tibble(
-        results,
+        E$results,
         all.missing = FALSE,
         nrows = n_rows,
         ncols = 6,

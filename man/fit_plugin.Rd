@@ -26,3 +26,4 @@ A new \code{Predictor} object of the appropriate subclass corresponding to the
 This function prepares data, fits the appropriate models and returns the
 resulting estimates in a standardized format.
 }
+\keyword{internal}

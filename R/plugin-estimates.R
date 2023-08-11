@@ -10,6 +10,7 @@
 #' @param .Model_cfg A `Model_cfg` object configuring the appropriate model type to use.
 #' @return A new `Predictor` object of the appropriate subclass corresponding to the
 #' `Model_cfg` fit to the data.
+#' @keywords internal
 fit_plugin <- function(full_data, weight_col, outcome_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
     predictor <- predictor_factory(.Model_cfg)
@@ -30,6 +31,7 @@ fit_plugin <- function(full_data, weight_col, outcome_col, ..., .Model_cfg) {
 #' @param .Model_cfg A `Model_cfg` object configuring the appropriate model type to use.
 #' @return A list with one element, `ps`. This element contains a `Predictor` object of
 #' the appropriate subclass corresponding to the `Model_cfg` fit to the data.
+#' @keywords internal
 fit_plugin_A <- function(full_data, weight_col, a_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
     if (.Model_cfg$model_class == "known") {
@@ -56,6 +58,7 @@ fit_plugin_A <- function(full_data, weight_col, a_col, ..., .Model_cfg) {
 #' @return A list with two elements, `mu1` and `mu0` corresponding to the models fit to
 #' the treatment and control potential outcomes, respectively. Each is a new `Predictor`
 #' object of the appropriate subclass corresponding to the the `Model_cfg` fit to the data.
+#' @keywords internal
 fit_plugin_Y <- function(full_data, weight_col, y_col, a_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
 
@@ -80,6 +83,7 @@ fit_plugin_Y <- function(full_data, weight_col, y_col, a_col, ..., .Model_cfg) {
 #' @param .Model_cfg A `Model_cfg` object configuring the appropriate model type to use.
 #' @return A list with one element, `fx`. This element contains a `Predictor` object of
 #' the appropriate subclass corresponding to the `Model_cfg` fit to the data.
+#' @keywords internal
 fit_effect <- function(full_data, weight_col, fx_col, ..., .Model_cfg) {
     dots <- rlang::enexprs(...)
 

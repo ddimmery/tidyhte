@@ -97,6 +97,10 @@ add_propensity_score_model <- function(hte_cfg, model_name, ...) {
 #' @export
 add_known_propensity_score <- function(hte_cfg, covariate_name) {
     hte_cfg$treatment <- Known_cfg$new(covariate_name)
+    hte_cfg$qoi$diag = Diagnostics_cfg$new(
+        outcome = hte_cfg$qoi$diag$outcome,
+        effect = hte_cfg$qoi$diag$effect
+    )
     invisible(hte_cfg)
 }
 
@@ -282,5 +286,21 @@ add_vimp <- function(hte_cfg, sample_splitting = TRUE, linear_only = FALSE) {
     hte_cfg$qoi$vimp <- VIMP_cfg$new(
         sample_splitting = sample_splitting
     )
+    invisible(hte_cfg)
+}
+
+#' Removes variable importance information
+#' 
+#' This removes the variable importance quantity of interest
+#' from an `HTE_cfg`.
+#' @param hte_cfg `HTE_cfg` object to update.
+#' @return Updated `HTE_cfg` object
+#' @examples
+#' library("dplyr")
+#' basic_config() %>%
+#'    remove_vimp() -> hte_cfg
+#' @export
+remove_vimp <- function(hte_cfg) {
+    hte_cfg$qoi$vimp = NULL
     invisible(hte_cfg)
 }

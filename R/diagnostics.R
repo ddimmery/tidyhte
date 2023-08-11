@@ -1,3 +1,4 @@
+#' @noRd
 #' @keywords internal
 SL_model_slot <- function(prediction) {
     if (prediction == ".pi_hat") "pi"
@@ -21,8 +22,9 @@ SL_model_slot <- function(prediction) {
 #' df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100), w = rexp(100), u = 1:100)
 #' attr(df, "weights") <- "w"
 #' attr(df, "identifier") <- "u"
-#' tidyhte:::estimate_diagnostic(df, "y", "p", "AUC")
+#' estimate_diagnostic(df, "y", "p", "AUC")
 #' @keywords internal
+#' @export
 #' @importFrom stats sd weighted.mean
 estimate_diagnostic <- function(data, label, prediction, diag_name, params) {
     w_col <- attr(data, "weights")
@@ -124,6 +126,7 @@ estimate_diagnostic <- function(data, label, prediction, diag_name, params) {
 #' * `estimate` - Point estimate of the diagnostic.
 #' * `std_error` - Standard error of the diagnostic.
 #' @seealso [Diagnostics_cfg]
+#' @keywords internal
 calculate_diagnostics <- function(data, treatment, outcome, .diag.cfg) {
     ps_cfg <- .diag.cfg$ps
     y_cfg <- .diag.cfg$outcome

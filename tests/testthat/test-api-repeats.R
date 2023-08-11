@@ -70,41 +70,43 @@ cfg <- HTE_cfg$new(
     qoi = qoi.cfg
 )
 
+E = new.env(parent = emptyenv())
+
 test_that("add config", {
-    data <<- attach_config(data, cfg)
-    checkmate::expect_data_frame(data)
-    expect_true("HTE_cfg" %in% names(attributes(data)))
+    E$data <- attach_config(data, cfg)
+    checkmate::expect_data_frame(E$data)
+    expect_true("HTE_cfg" %in% names(attributes(E$data)))
 })
 
 test_that("Split data", {
-    data2 <<- make_splits(data, {{ userid }}, .num_splits = 4)
-    checkmate::expect_data_frame(data2)
+    E$data2 <- make_splits(E$data, {{ userid }}, .num_splits = 4)
+    checkmate::expect_data_frame(E$data2)
 })
 
 test_that("Estimate Plugin Models", {
-    data3 <<- produce_plugin_estimates(
-        data2,
+    E$data3 <- produce_plugin_estimates(
+        E$data2,
         {{ outcome_variable }},
         {{ treatment_variable }},
         !!!model_covariates
     )
-    checkmate::expect_data_frame(data3)
+    checkmate::expect_data_frame(E$data3)
 })
 
 test_that("Construct Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }})
-    checkmate::expect_data_frame(data4)
+    E$data4 <- construct_pseudo_outcomes(E$data3, {{ outcome_variable }}, {{ treatment_variable }})
+    checkmate::expect_data_frame(E$data4)
 })
 
 test_that("Estimate QoIs", {
     skip_on_cran()
-    results <<- estimate_QoI(data4, !!!moderators)
-    checkmate::expect_data_frame(results)
+    E$results <- estimate_QoI(E$data4, !!!moderators)
+    checkmate::expect_data_frame(E$results)
 })
 
 test_that("VIMP is valid", {
     skip_on_cran()
-    vimp <- results %>% dplyr::filter(grepl("VIMP", estimand))
+    vimp <- E$results %>% dplyr::filter(grepl("VIMP", estimand))
     vimp_z <- vimp$estimate / vimp$std_error
     # expect small p-value for x1 which has actual HTE
     expect_lt(2 * pnorm(vimp_z[1], lower.tail = FALSE), 0.01)
@@ -125,12 +127,12 @@ n_rows <- (
 
 test_that("Check results data", {
     skip_on_cran()
-    checkmate::check_character(results$estimand, any.missing = FALSE)
-    checkmate::check_double(results$estimate, any.missing = FALSE)
-    checkmate::check_double(results$std_error, any.missing = FALSE)
+    checkmate::check_character(E$results$estimand, any.missing = FALSE)
+    checkmate::check_double(E$results$estimate, any.missing = FALSE)
+    checkmate::check_double(E$results$std_error, any.missing = FALSE)
 
     checkmate::expect_tibble(
-        results,
+        E$results,
         all.missing = FALSE,
         nrows = n_rows,
         ncols = 6,

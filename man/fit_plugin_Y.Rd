@@ -28,3 +28,4 @@ object of the appropriate subclass corresponding to the the \code{Model_cfg} fit
 This function prepares data, fits the appropriate model and returns the
 resulting estimates in a standardized format.
 }
+\keyword{internal}

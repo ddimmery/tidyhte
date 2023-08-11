@@ -16,3 +16,4 @@ Returns NULL. Errors if a problem is discovered.
 This helper function makes a few simple checks to identify obvious
 issues with the way that splits have been made in the supplied data.
 }
+\keyword{internal}

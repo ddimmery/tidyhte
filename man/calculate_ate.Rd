@@ -26,3 +26,4 @@ yet flexible approach. \emph{Statistics in medicine}, 27(23), 4658-4677.
 \code{\link[=basic_config]{basic_config()}}, \code{\link[=attach_config]{attach_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=produce_plugin_estimates]{produce_plugin_estimates()}},
 \code{\link[=construct_pseudo_outcomes]{construct_pseudo_outcomes()}}, \code{\link[=estimate_QoI]{estimate_QoI()}}
 }
+\keyword{internal}

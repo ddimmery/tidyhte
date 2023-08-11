@@ -31,13 +31,21 @@ of an experiment, \code{vignette("experimental_analysis")} for an observational 
 \code{vignette("methodological_details")} for a deeper dive under the hood.
 }
 \examples{
-\dontrun{
-cfg <- basic_config()
-attach_config(data, cfg) \%>\%
-make_splits(unitid, .num_splits = 10) \%>\%
-produce_plugin_estimates(outcome, treatment, covariate1, covariate2) \%>\%
-construct_pseudo_outcomes(outcome, treatment) \%>\%
-estimate_QoI(covariate1, covariate2)
+library("dplyr")
+if(require("palmerpenguins")) {
+data(package = 'palmerpenguins')
+penguins$unitid = seq_len(nrow(penguins))
+penguins$propensity = rep(0.5, nrow(penguins))
+penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
+cfg <- basic_config() \%>\% 
+add_known_propensity_score("propensity") \%>\%
+add_outcome_model("SL.glm.interaction") \%>\%
+remove_vimp()
+attach_config(penguins, cfg) \%>\%
+make_splits(unitid, .num_splits = 4) \%>\%
+produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) \%>\%
+construct_pseudo_outcomes(body_mass_g, treatment) \%>\%
+estimate_QoI(species, sex)
 }
 }
 \seealso{

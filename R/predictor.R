@@ -1,3 +1,4 @@
+#' @noRd
 #' @keywords internal
 predictor_factory <- function(cfg, ...) {
     if (!("model_class" %in% names(cfg))) {
@@ -37,7 +38,7 @@ Predictor <- R6::R6Class("Predictor",
     )
 )
 
-
+#' @noRd
 #' @keywords internal
 KnownPredictor <- R6::R6Class("KnownPredictor",
     inherit = Predictor,
@@ -60,7 +61,7 @@ KnownPredictor <- R6::R6Class("KnownPredictor",
     )
 )
 
-
+#' @noRd
 #' @keywords internal
 ConstantPredictor <- R6::R6Class("ConstantPredictor",
     inherit = Predictor,
@@ -83,7 +84,7 @@ ConstantPredictor <- R6::R6Class("ConstantPredictor",
     )
 )
 
-
+#' @noRd
 #' @import SuperLearner
 #' @keywords internal
 SLPredictor <- R6::R6Class("SLPredictor",
@@ -130,7 +131,7 @@ SLPredictor <- R6::R6Class("SLPredictor",
     )
 )
 
-
+#' @noRd
 #' @keywords internal
 KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
     inherit = Predictor,
@@ -195,6 +196,7 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
     )
 )
 
+#' @noRd
 #' @importFrom stats sd
 #' @importFrom magrittr %>%
 #' @keywords internal

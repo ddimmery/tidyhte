@@ -26,6 +26,6 @@ which are available.
 df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100), w = rexp(100), u = 1:100)
 attr(df, "weights") <- "w"
 attr(df, "identifier") <- "u"
-tidyhte:::estimate_diagnostic(df, "y", "p", "AUC")
+estimate_diagnostic(df, "y", "p", "AUC")
 }
 \keyword{internal}

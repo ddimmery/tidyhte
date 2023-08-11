@@ -18,3 +18,4 @@ Returns NULL. Errors if a problem is discovered.
 This helper function makes a few simple checks to identify obvious
 issues with the way provided column of unit identifiers.
 }
+\keyword{internal}

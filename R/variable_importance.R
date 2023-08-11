@@ -19,6 +19,7 @@
 #' @seealso [calculate_linear_vimp()]
 #' @importFrom progress progress_bar
 #' @import SuperLearner
+#' @keywords internal
 calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
     dots <- rlang::enexprs(...)
     weight_col <- rlang::enexpr(weight_col)
@@ -162,6 +163,7 @@ calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg
 #' @importFrom dplyr select %>% tibble
 #' @importFrom rlang enexprs enexpr
 #' @import SuperLearner
+#' @keywords internal
 calculate_linear_vimp <- function(
     full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg
 ) {

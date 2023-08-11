@@ -1,7 +1,9 @@
 test_that("basic config shortcut", {
-    cfg <<- basic_config()
+    cfg <- basic_config()
     checkmate::expect_r6(cfg, "HTE_cfg")
 })
+
+cfg <- basic_config()
 
 test_that("recipe manipulations on ps", {
     checkmate::expect_r6(add_propensity_score_model(cfg, "SL.glmnet"), "HTE_cfg")

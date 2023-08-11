@@ -14,13 +14,21 @@
 #' @seealso [basic_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @examples
-#' \dontrun{
-#' cfg <- basic_config()
-#' attach_config(data, cfg) %>%
-#' make_splits(unitid, .num_splits = 10) %>%
-#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
-#' construct_pseudo_outcomes(outcome, treatment) %>%
-#' estimate_QoI(covariate1, covariate2)
+#' library("dplyr")
+#' if(require("palmerpenguins")) {
+#' data(package = 'palmerpenguins')
+#' penguins$unitid = seq_len(nrow(penguins))
+#' penguins$propensity = rep(0.5, nrow(penguins))
+#' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
+#' cfg <- basic_config() %>% 
+#' add_known_propensity_score("propensity") %>%
+#' add_outcome_model("SL.glm.interaction") %>%
+#' remove_vimp()
+#' attach_config(penguins, cfg) %>%
+#' make_splits(unitid, .num_splits = 4) %>%
+#' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
+#' construct_pseudo_outcomes(body_mass_g, treatment) %>%
+#' estimate_QoI(species, sex)
 #' }
 #' @export
 attach_config <- function(data, .HTE_cfg) {
@@ -52,13 +60,21 @@ attach_config <- function(data, .HTE_cfg) {
 #' @seealso [attach_config()], [produce_plugin_estimates()], [construct_pseudo_outcomes()],
 #' [estimate_QoI()]
 #' @examples
-#' \dontrun{
-#' cfg <- basic_config()
-#' attach_config(data, cfg) %>%
-#' make_splits(unitid, .num_splits = 10) %>%
-#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
-#' construct_pseudo_outcomes(outcome, treatment) %>%
-#' estimate_QoI(covariate1, covariate2)
+#' library("dplyr")
+#' if(require("palmerpenguins")) {
+#' data(package = 'palmerpenguins')
+#' penguins$unitid = seq_len(nrow(penguins))
+#' penguins$propensity = rep(0.5, nrow(penguins))
+#' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
+#' cfg <- basic_config() %>% 
+#' add_known_propensity_score("propensity") %>%
+#' add_outcome_model("SL.glm.interaction") %>%
+#' remove_vimp()
+#' attach_config(penguins, cfg) %>%
+#' make_splits(unitid, .num_splits = 4) %>%
+#' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
+#' construct_pseudo_outcomes(body_mass_g, treatment) %>%
+#' estimate_QoI(species, sex)
 #' }
 #' @importFrom magrittr %>%
 #' @importFrom stats model.matrix
@@ -124,7 +140,7 @@ make_splits <- function(data, identifier, ..., .num_splits) {
                 sample(.num_splits, dplyr::n() - .num_splits * num_per_split)
             ))
         ) %>%
-        dplyr::select(!dplyr::matches("n")) -> split_data
+        dplyr::select({{ identifier }}, ".split_id") -> split_data
     }
 
     data <- dplyr::left_join(
@@ -159,13 +175,21 @@ make_splits <- function(data, identifier, ..., .num_splits) {
 #' are all equal to one and sample-based quantities will be returned.
 #' @seealso [attach_config()], [make_splits()], [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @examples
-#' \dontrun{
-#' cfg <- basic_config()
-#' attach_config(data, cfg) %>%
-#' make_splits(unitid, .num_splits = 10) %>%
-#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
-#' construct_pseudo_outcomes(outcome, treatment) %>%
-#' estimate_QoI(covariate1, covariate2)
+#' library("dplyr")
+#' if(require("palmerpenguins")) {
+#' data(package = 'palmerpenguins')
+#' penguins$unitid = seq_len(nrow(penguins))
+#' penguins$propensity = rep(0.5, nrow(penguins))
+#' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
+#' cfg <- basic_config() %>% 
+#' add_known_propensity_score("propensity") %>%
+#' add_outcome_model("SL.glm.interaction") %>%
+#' remove_vimp()
+#' attach_config(penguins, cfg) %>%
+#' make_splits(unitid, .num_splits = 4) %>%
+#' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
+#' construct_pseudo_outcomes(body_mass_g, treatment) %>%
+#' estimate_QoI(species, sex)
 #' }
 #' @importFrom progress progress_bar
 #' @importFrom dplyr matches left_join select
@@ -296,13 +320,21 @@ produce_plugin_estimates <- function(data, outcome, treatment, ..., .weights = N
 #' @seealso [attach_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()],
 #' @examples
-#' \dontrun{
-#' cfg <- basic_config()
-#' attach_config(data, cfg) %>%
-#' make_splits(unitid, .num_splits = 10) %>%
-#' produce_plugin_estimates(outcome, treatment, covariate1, covariate2) %>%
-#' construct_pseudo_outcomes(outcome, treatment) %>%
-#' estimate_QoI(covariate1, covariate2)
+#' library("dplyr")
+#' if(require("palmerpenguins")) {
+#' data(package = 'palmerpenguins')
+#' penguins$unitid = seq_len(nrow(penguins))
+#' penguins$propensity = rep(0.5, nrow(penguins))
+#' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
+#' cfg <- basic_config() %>% 
+#' add_known_propensity_score("propensity") %>%
+#' add_outcome_model("SL.glm.interaction") %>%
+#' remove_vimp()
+#' attach_config(penguins, cfg) %>%
+#' make_splits(unitid, .num_splits = 4) %>%
+#' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
+#' construct_pseudo_outcomes(body_mass_g, treatment) %>%
+#' estimate_QoI(species, sex)
 #' }
 #' @export
 #' @importFrom rlang .env

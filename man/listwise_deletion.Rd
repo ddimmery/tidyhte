@@ -20,3 +20,4 @@ This function removes rows with missingness based on the columns provided.
 If rows are dropped, a message is displayed to the user to inform them of this
 fact.
 }
+\keyword{internal}

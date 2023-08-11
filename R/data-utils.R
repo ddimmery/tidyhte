@@ -124,6 +124,7 @@ Model_data <- R6::R6Class("Model_data", list(
 #' issues with the way that splits have been made in the supplied data.
 #' @param data Dataframe which should have appropriate `.split_id` column.
 #' @return Returns NULL. Errors if a problem is discovered.
+#' @keywords internal
 check_splits <- function(data) {
     attrs <- names(attributes(data))
     ok <- TRUE
@@ -141,6 +142,7 @@ check_splits <- function(data) {
 #' @param data Dataframe which should have appropriate columns of nuisance function
 #' predictions: `.pi_hat`, `.mu0_hat`, and `.mu1_hat`
 #' @return Returns NULL. Errors if a problem is discovered.
+#' @keywords internal
 check_nuisance_models <- function(data) {
     cols <- names(data)
     ok <- TRUE
@@ -161,6 +163,7 @@ check_nuisance_models <- function(data) {
 #' columns will result in dropped observations. Missingness in other columns will not.
 #' @return The original data with all observations which are fully observed.
 #' @importFrom stats complete.cases
+#' @keywords internal
 listwise_deletion <- function(data, ...) {
     dots <- rlang::enexprs(...)
     start_rows <- nrow(data)
@@ -191,6 +194,7 @@ listwise_deletion <- function(data, ...) {
 #' @param data Dataframe of interest.
 #' @param id_col Quoted name of identifier column.
 #' @return Returns NULL. Errors if a problem is discovered.
+#' @keywords internal
 check_identifier <- function(data, id_col) {
     N <- nrow(data)
     ids <- data[[id_col]]
@@ -219,6 +223,7 @@ check_identifier <- function(data, id_col) {
 #' @param data Dataframe of interest.
 #' @param weight_col Quoted name of weights column.
 #' @return Returns NULL. Errors if a problem is discovered.
+#' @keywords internal
 check_weights <- function(data, weight_col) {
     if (!(weight_col %in% names(data))) {
         msg <- "Invalid weight column. Must exist in dataframe."
@@ -247,6 +252,7 @@ check_weights <- function(data, weight_col) {
 #' estimation.
 #' @param data Dataframe of interest.
 #' @return Returns NULL. Errors if a problem is discovered.
+#' @keywords internal
 check_data_has_hte_cfg <- function(data) {
     if (! "HTE_cfg" %in% names(attributes(data))) {
         msg <- "Must attach HTE_cfg with `attach_config`."

@@ -17,3 +17,6 @@ figure$
 \.blg$
 cran-comments.md
 ^CRAN-SUBMISSION$
+paper.md
+paper.bib
+paper.pdf

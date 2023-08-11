@@ -17,3 +17,4 @@ This helper function ensures that the provided dataframe has
 the necessary auxilliary configuration information for HTE
 estimation.
 }
+\keyword{internal}

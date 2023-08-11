@@ -98,45 +98,47 @@ cfg2 <- HTE_cfg$new(
     qoi = qoi.cfg2
 )
 
+E = new.env(parent = emptyenv())
+
 test_that("add config", {
-    data <<- attach_config(data, cfg)
-    checkmate::expect_data_frame(data)
-    expect_true("HTE_cfg" %in% names(attributes(data)))
+    E$data <- attach_config(data, cfg)
+    checkmate::expect_data_frame(E$data)
+    expect_true("HTE_cfg" %in% names(attributes(E$data)))
 })
 
 test_that("Split data", {
-    data2 <<- make_splits(data, {{ userid }}, .num_splits = 3)
-    checkmate::expect_data_frame(data2)
+    E$data2 <- make_splits(E$data, {{ userid }}, .num_splits = 3)
+    checkmate::expect_data_frame(E$data2)
 })
 
 test_that("Estimate Plugin Models", {
-    data3 <<- produce_plugin_estimates(
-        data2,
+    E$data3 <- produce_plugin_estimates(
+        E$data2,
         {{ outcome_variable }},
         {{ treatment_variable }},
         !!!model_covariates
     )
-    checkmate::expect_data_frame(data3)
+    checkmate::expect_data_frame(E$data3)
 })
 
 test_that("Construct Pseudo-outcomes", {
-    data4 <<- construct_pseudo_outcomes(data3, {{ outcome_variable }}, {{ treatment_variable }})
-    checkmate::expect_data_frame(data4)
+    E$data4 <- construct_pseudo_outcomes(E$data3, {{ outcome_variable }}, {{ treatment_variable }})
+    checkmate::expect_data_frame(E$data4)
 })
 
 test_that("Estimate QoIs", {
     skip_on_cran()
     expect_warning(
-        results <<- estimate_QoI(data4, !!!moderators),
+        E$results <- estimate_QoI(E$data4, !!!moderators),
         "Only use PCATEs if you know what you're doing!"
     )
-    checkmate::expect_data_frame(results)
-    data4 <- attach_config(data4, cfg2)
+    checkmate::expect_data_frame(E$results)
+    E$data4 <- attach_config(E$data4, cfg2)
     expect_warning(
-        results2 <<- estimate_QoI(data4, !!!moderators),
+        E$results2 <- estimate_QoI(E$data4, !!!moderators),
         "Only use PCATEs if you know what you're doing!"
     )
-    checkmate::expect_data_frame(results2)
+    checkmate::expect_data_frame(E$results2)
 })
 
 n_rows <- (
@@ -152,12 +154,12 @@ n_rows <- (
 
 test_that("Check results data", {
     skip_on_cran()
-    checkmate::check_character(results$estimand, any.missing = FALSE)
-    checkmate::check_double(results$estimate, any.missing = FALSE)
-    checkmate::check_double(results$std_error, any.missing = FALSE)
+    checkmate::check_character(E$results$estimand, any.missing = FALSE)
+    checkmate::check_double(E$results$estimate, any.missing = FALSE)
+    checkmate::check_double(E$results$std_error, any.missing = FALSE)
 
     checkmate::expect_tibble(
-        results,
+        E$results,
         all.missing = FALSE,
         nrows = n_rows,
         ncols = 6,

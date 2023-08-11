@@ -46,3 +46,4 @@ Journal of the American Statistical Association, 1-14.
 \seealso{
 \code{\link[=calculate_vimp]{calculate_vimp()}}
 }
+\keyword{internal}

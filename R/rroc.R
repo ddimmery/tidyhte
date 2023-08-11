@@ -20,6 +20,7 @@
 #' @return A tibble with `nbins` rows.
 #' @importFrom dplyr tibble bind_rows
 #' @importFrom stats quantile
+#' @keywords internal
 calculate_rroc <- function(label, prediction, nbins = 100) {
     residuals <- label - prediction
     n <- length(residuals)
@@ -50,6 +51,8 @@ calculate_rroc <- function(label, prediction, nbins = 100) {
     results
 }
 
+#' @noRd
+#' @keywords internal
 #' @importFrom rlang list2
 calculate_pos_and_neg <- function(residuals, shift = 0.0) {
     shifted_residuals <- residuals + shift

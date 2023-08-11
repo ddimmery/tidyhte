@@ -33,6 +33,7 @@ construct_pseudo_outcomes <- function(data, outcome, treatment, type = "dr") {
 }
 
 
+#' @noRd
 #' @keywords internal
 pseudo_outcome_factory <- function(type) {
     type <- tolower(type)
@@ -47,17 +48,20 @@ pseudo_outcome_factory <- function(type) {
     }
 }
 
+#' @noRd
 #' @keywords internal
 dr_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
     muA <- muA <- A * mu1 + (1 - A) * mu0
     (A - pi) / (pi * (1 - pi)) * (YA - muA) + mu1 - mu0
 }
 
+#' @noRd
 #' @keywords internal
 ipw_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
     (A - pi) / (pi * (1 - pi)) * YA
 }
 
+#' @noRd
 #' @keywords internal
 plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
     mu1 - mu0
@@ -79,6 +83,7 @@ plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
 #' yet flexible approach. *Statistics in medicine*, 27(23), 4658-4677.
 #' @importFrom dplyr summarize
 #' @importFrom stats weighted.mean
+#' @keywords internal
 calculate_ate <- function(data) {
     id_col <- attr(data, "identifier")
     w_col <- attr(data, "weights")
@@ -106,7 +111,7 @@ calculate_ate <- function(data) {
     o
 }
 
-
+#' @noRd
 #' @keywords internal
 calculate_mcate_quantities <- function(full_data, .weights, .outcome, ..., .MCATE_cfg) {
     dots <- rlang::enexprs(...)

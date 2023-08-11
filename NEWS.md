@@ -1,3 +1,7 @@
+# tidyhte (1.0.2)
+
+* Update documentation to better abide with CRAN policies.
+
 # tidyhte (1.0.1)
 
 * Fix CRAN NOTEs.
