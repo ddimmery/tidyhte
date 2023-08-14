@@ -5,5 +5,8 @@ articles:
   experimental_analysis: experimental_analysis.html
   methodological_details: methodological_details.html
   observational_analysis: observational_analysis.html
-last_built: 2023-08-09T09:43Z
+last_built: 2023-08-14T14:15Z
+urls:
+  reference: https://ddimmery.github.io/tidyhte/reference
+  article: https://ddimmery.github.io/tidyhte/articles
 
