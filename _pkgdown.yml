@@ -1,3 +1,4 @@
+url: https://ddimmery.github.io/tidyhte/
 template:
   params:
     ganalytics: G-R58XC167ZD
@@ -44,6 +45,7 @@ reference:
   - add_effect_diagnostic
   - add_moderator
   - add_vimp
+  - remove_vimp
 - title: Model Configuration
   desc: >
     Classes to define the configuration of models to be used in the eventual HTE analysis.

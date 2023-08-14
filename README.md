@@ -165,3 +165,10 @@ You are welcome to come in and get support for your usage in the
 `tidyhte` channel. Keep in mind that everyone is volunteering their time
 to help, so try to come prepared with the debugging steps you’ve already
 taken.
+
+## Code of Conduct
+
+Please note that the tidyhte project is released with a [Contributor
+Code of
+Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.

@@ -140,3 +140,7 @@ If you have a problem, feel free to [open an issue on GitHub](https://github.com
 Support for the package will also be provided in the Experimentation Community Discord: [![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?theme=clean&compact=true)](https://discord.com/invite/MrxjbHc3jD)
 
 You are welcome to come in and get support for your usage in the `tidyhte` channel. Keep in mind that everyone is volunteering their time to help, so try to come prepared with the debugging steps you've already taken.
+
+## Code of Conduct
+
+Please note that the tidyhte project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
