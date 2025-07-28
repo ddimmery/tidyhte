@@ -6,13 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTE Analysis on Observational Data • tidyhte</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="HTE Analysis on Observational Data">
-<meta property="og:description" content="tidyhte">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -25,7 +24,7 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -51,7 +50,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Vignettes
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -74,7 +73,7 @@
 <li>
   <a href="https://github.com/ddimmery/tidyhte/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -85,7 +84,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -94,9 +93,9 @@
                         <h4 data-toc-skip class="author">Drew Dimmery
 (<a href="mailto:ddimmery@univie.ac.at" class="email">ddimmery@univie.ac.at</a>)</h4>
             
-            <h4 data-toc-skip class="date">14 August, 2023</h4>
+            <h4 data-toc-skip class="date">28 July, 2025</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ddimmery/tidyhte/blob/HEAD/vignettes/observational_analysis.Rmd" class="external-link"><code>vignettes/observational_analysis.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ddimmery/tidyhte/blob/main/vignettes/observational_analysis.Rmd" class="external-link"><code>vignettes/observational_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>observational_analysis.Rmd</code></div>
 
     </div>
@@ -221,8 +220,8 @@ Gilbert, Carone and Simon (2020).</p>
 <span>    <span class="fu"><a href="../reference/add_vimp.html">add_vimp</a></span><span class="op">(</span>sample_splitting <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">-&gt;</span></span>
 <span>    <span class="va">hte_cfg</span></span></code></pre></div>
 <pre><code><span><span class="co">## Super Learner</span></span></code></pre>
-<pre><code><span><span class="co">## Version: 2.0-28.1</span></span></code></pre>
-<pre><code><span><span class="co">## Package created on 2021-05-04</span></span></code></pre>
+<pre><code><span><span class="co">## Version: 2.0-29</span></span></code></pre>
+<pre><code><span><span class="co">## Package created on 2024-02-06</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -430,13 +429,13 @@ curly-brackets and bangs.</p>
 </h2>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.3.1 (2023-06-16)</span></span>
-<span><span class="co">## Platform: x86_64-apple-darwin20 (64-bit)</span></span>
-<span><span class="co">## Running under: macOS Monterey 12.6.7</span></span>
+<pre><code><span><span class="co">## R version 4.5.1 (2025-06-13)</span></span>
+<span><span class="co">## Platform: aarch64-apple-darwin20</span></span>
+<span><span class="co">## Running under: macOS Sonoma 14.7.6</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib </span></span>
-<span><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0</span></span>
+<span><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
@@ -448,43 +447,39 @@ curly-brackets and bangs.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] nnls_1.4              SuperLearner_2.0-28.1 dplyr_1.1.2          </span></span>
-<span><span class="co">## [4] ggplot2_3.4.2         tidyhte_1.0.2        </span></span>
+<span><span class="co">## [1] nnls_1.6            SuperLearner_2.0-29 dplyr_1.1.4        </span></span>
+<span><span class="co">## [4] ggplot2_3.5.2       tidyhte_1.0.2      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] shape_1.4.6           gtable_0.3.3          xfun_0.40            </span></span>
-<span><span class="co">##  [4] bslib_0.5.1           lattice_0.21-8        quadprog_1.5-8       </span></span>
-<span><span class="co">##  [7] vctrs_0.6.3           tools_4.3.1           generics_0.1.3       </span></span>
-<span><span class="co">## [10] tibble_3.2.1          fansi_1.0.4           highr_0.10           </span></span>
-<span><span class="co">## [13] pkgconfig_2.0.3       Matrix_1.5-4.1        data.table_1.14.8    </span></span>
-<span><span class="co">## [16] checkmate_2.2.0       desc_1.4.2            lifecycle_1.0.3      </span></span>
-<span><span class="co">## [19] farver_2.1.1          compiler_4.3.1        stringr_1.5.0        </span></span>
-<span><span class="co">## [22] textshaping_0.3.6     progress_1.2.2        nprobust_0.4.0       </span></span>
-<span><span class="co">## [25] munsell_0.5.0         codetools_0.2-19      htmltools_0.5.6      </span></span>
-<span><span class="co">## [28] sass_0.4.7            yaml_2.3.7            glmnet_4.1-7         </span></span>
-<span><span class="co">## [31] pillar_1.9.0          pkgdown_2.0.7         crayon_1.5.2         </span></span>
-<span><span class="co">## [34] jquerylib_0.1.4       MASS_7.3-60           cachem_1.0.8         </span></span>
-<span><span class="co">## [37] iterators_1.0.14      boot_1.3-28.1         foreach_1.5.2        </span></span>
-<span><span class="co">## [40] tidyselect_1.2.0      digest_0.6.33         stringi_1.7.12       </span></span>
-<span><span class="co">## [43] purrr_1.0.2           labeling_0.4.2        splines_4.3.1        </span></span>
-<span><span class="co">## [46] distances_0.1.9       rprojroot_2.0.3       fastmap_1.1.1        </span></span>
-<span><span class="co">## [49] grid_4.3.1            colorspace_2.1-0      cli_3.6.1            </span></span>
-<span><span class="co">## [52] magrittr_2.0.3        survival_3.5-5        utf8_1.2.3           </span></span>
-<span><span class="co">## [55] withr_2.5.0           prettyunits_1.1.1     scales_1.2.1         </span></span>
-<span><span class="co">## [58] backports_1.4.1       vimp_2.3.1            rmarkdown_2.23       </span></span>
-<span><span class="co">## [61] WeightedROC_2020.1.31 ragg_1.2.5            hms_1.1.3            </span></span>
-<span><span class="co">## [64] gam_1.22-2            memoise_2.0.1         evaluate_0.21        </span></span>
-<span><span class="co">## [67] knitr_1.43            rlang_1.1.1           Rcpp_1.0.11          </span></span>
-<span><span class="co">## [70] glue_1.6.2            quickblock_0.2.0      jsonlite_1.8.7       </span></span>
-<span><span class="co">## [73] R6_2.5.1              systemfonts_1.0.4     fs_1.6.3</span></span></code></pre>
+<span><span class="co">##  [1] vimp_2.3.5            utf8_1.2.6            sass_0.4.10          </span></span>
+<span><span class="co">##  [4] generics_0.1.4        quickblock_0.2.2      shape_1.4.6.1        </span></span>
+<span><span class="co">##  [7] lattice_0.22-7        distances_0.1.12      hms_1.1.3            </span></span>
+<span><span class="co">## [10] digest_0.6.37         magrittr_2.0.3        evaluate_1.0.4       </span></span>
+<span><span class="co">## [13] grid_4.5.1            RColorBrewer_1.1-3    iterators_1.0.14     </span></span>
+<span><span class="co">## [16] fastmap_1.2.0         Matrix_1.7-3          glmnet_4.1-10        </span></span>
+<span><span class="co">## [19] foreach_1.5.2         jsonlite_2.0.0        progress_1.2.3       </span></span>
+<span><span class="co">## [22] backports_1.5.0       survival_3.8-3        purrr_1.1.0          </span></span>
+<span><span class="co">## [25] scales_1.4.0          codetools_0.2-20      textshaping_1.0.1    </span></span>
+<span><span class="co">## [28] jquerylib_0.1.4       cli_3.6.5             rlang_1.1.6          </span></span>
+<span><span class="co">## [31] crayon_1.5.3          splines_4.5.1         withr_3.0.2          </span></span>
+<span><span class="co">## [34] cachem_1.1.0          yaml_2.3.10           tools_4.5.1          </span></span>
+<span><span class="co">## [37] checkmate_2.3.2       boot_1.3-31           nprobust_0.5.0       </span></span>
+<span><span class="co">## [40] vctrs_0.6.5           R6_2.6.1              lifecycle_1.0.4      </span></span>
+<span><span class="co">## [43] fs_1.6.6              htmlwidgets_1.6.4     MASS_7.3-65          </span></span>
+<span><span class="co">## [46] ragg_1.4.0            pkgconfig_2.0.3       desc_1.4.3           </span></span>
+<span><span class="co">## [49] pkgdown_2.1.3         pillar_1.11.0         bslib_0.9.0          </span></span>
+<span><span class="co">## [52] gtable_0.3.6          glue_1.8.0            data.table_1.17.8    </span></span>
+<span><span class="co">## [55] Rcpp_1.1.0            systemfonts_1.2.3     xfun_0.52            </span></span>
+<span><span class="co">## [58] tibble_3.3.0          tidyselect_1.2.1      knitr_1.50           </span></span>
+<span><span class="co">## [61] farver_2.1.2          htmltools_0.5.8.1     labeling_0.4.3       </span></span>
+<span><span class="co">## [64] rmarkdown_2.29        gam_1.22-5            compiler_4.5.1       </span></span>
+<span><span class="co">## [67] quadprog_1.5-8        prettyunits_1.2.0     WeightedROC_2020.1.31</span></span></code></pre>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -497,16 +492,16 @@ curly-brackets and bangs.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

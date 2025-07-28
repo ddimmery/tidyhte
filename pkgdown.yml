@@ -1,12 +1,11 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   experimental_analysis: experimental_analysis.html
   methodological_details: methodological_details.html
   observational_analysis: observational_analysis.html
-last_built: 2023-08-14T14:15Z
+last_built: 2025-07-28T12:22Z
 urls:
   reference: https://ddimmery.github.io/tidyhte/reference
   article: https://ddimmery.github.io/tidyhte/articles
-

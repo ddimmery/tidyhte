@@ -1,201 +1,69 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/404.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/articles/experimental_analysis.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/articles/methodological_details.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/articles/observational_analysis.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/Constant_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/Diagnostics_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/FX.Predictor.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/HTEFold.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/HTE_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/KernelSmooth_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/Known_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/MCATE_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/Model_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/Model_data.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/PCATE_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/QoI_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/SL.glmnet.interaction.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/SLEnsemble_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/SLLearner_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/Stratified_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/VIMP_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_effect_diagnostic.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_effect_model.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_known_propensity_score.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_moderator.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_outcome_diagnostic.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_outcome_model.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_propensity_diagnostic.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_propensity_score_model.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/add_vimp.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/attach_config.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/basic_config.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/calculate_ate.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/calculate_diagnostics.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/calculate_linear_vimp.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/calculate_pcate_quantities.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/calculate_rroc.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/calculate_vimp.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/check_data_has_hte_cfg.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/check_identifier.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/check_nuisance_models.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/check_splits.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/check_weights.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/construct_pseudo_outcomes.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/estimate_QoI.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/estimate_diagnostic.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/fit_effect.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/fit_fx_predictor.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/fit_plugin.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/fit_plugin_A.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/fit_plugin_Y.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/listwise_deletion.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/make_splits.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/predict.SL.glmnet.interaction.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/produce_plugin_estimates.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/remove_vimp.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/split_data.html</loc>
-  </url>
-  <url>
-    <loc>https://ddimmery.github.io/tidyhte/reference/tidyhte-package.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://ddimmery.github.io/tidyhte/404.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/LICENSE-text.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/LICENSE.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/articles/experimental_analysis.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/articles/index.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/articles/methodological_details.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/articles/observational_analysis.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/authors.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/index.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/news/index.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/Constant_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/Diagnostics_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/FX.Predictor.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/HTEFold.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/HTE_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/KernelSmooth_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/Known_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/MCATE_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/Model_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/Model_data.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/PCATE_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/QoI_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/SL.glmnet.interaction.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/SLEnsemble_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/SLLearner_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/Stratified_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/VIMP_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_effect_diagnostic.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_effect_model.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_known_propensity_score.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_moderator.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_outcome_diagnostic.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_outcome_model.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_propensity_diagnostic.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_propensity_score_model.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/add_vimp.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/attach_config.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/basic_config.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/calculate_ate.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/calculate_diagnostics.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/calculate_linear_vimp.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/calculate_pcate_quantities.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/calculate_rroc.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/calculate_vimp.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/check_data_has_hte_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/check_identifier.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/check_nuisance_models.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/check_splits.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/check_weights.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/construct_pseudo_outcomes.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/estimate_QoI.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/estimate_diagnostic.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/fit_effect.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/fit_fx_predictor.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/fit_plugin.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/fit_plugin_A.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/fit_plugin_Y.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/index.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/listwise_deletion.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/make_splits.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/predict.SL.glmnet.interaction.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/produce_plugin_estimates.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/remove_vimp.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/split_data.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/tidyhte-package.html</loc></url>
 </urlset>
+
