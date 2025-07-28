@@ -13,7 +13,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![CRAN
 Status](https://www.r-pkg.org/badges/version/tidyhte)](https://cran.r-project.org/package=tidyhte)
 [![License:
-MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/)
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
 [![DOI](https://zenodo.org/badge/375330850.svg)](https://zenodo.org/badge/latestdoi/375330850)
 [![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?style=flat)](https://discord.com/invite/MrxjbHc3jD)
 <!-- badges: end -->

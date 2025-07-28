@@ -79,7 +79,7 @@ SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
 #'   in the new data, and set values to 0.
 #' @param ... Any additional arguments (not used).
 #'
-#' @seealso \code{\link{SL.glmnet}}
+#' @seealso [SuperLearner::SL.glmnet]
 #'
 #' @export
 #' @importFrom stats model.matrix

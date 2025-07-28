@@ -5,11 +5,11 @@ Authors@R:
     person(given = "Drew",
            family = "Dimmery",
            role = c("aut", "cre", "cph"),
-           email = "drew.dimmery@univie.ac.at",
+           email = "cran@ddimmery.com",
            comment = c(ORCID = "0000-0001-9602-6325"))
 Description: Estimates heterogeneous treatment effects using tidy semantics 
     on experimental or observational data.  Methods are based on the doubly-robust
-    learner of Kennedy (n.d.) <arXiv:2004.14497>. You provide a simple
+    learner of Kennedy (2023) <doi:10.1214/23-EJS2157>. You provide a simple
     recipe for what machine learning algorithms to use in estimating the nuisance
     functions and 'tidyhte' will take care of cross-validation, estimation, model
     selection, diagnostics and construction of relevant quantities of interest about
@@ -20,7 +20,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: 
     covr,
     devtools,

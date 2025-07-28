@@ -29,5 +29,5 @@ in the new data, and set values to 0.}
 Prediction for the glmnet wrapper.
 }
 \seealso{
-\code{\link{SL.glmnet}}
+\link[SuperLearner:SL.glmnet]{SuperLearner::SL.glmnet}
 }
