@@ -1,3 +1,7 @@
+# tidyhte (1.0.3)
+
+* Update links to comply with new CRAN policies.
+
 # tidyhte (1.0.2)
 
 * Update documentation to better abide with CRAN policies.
