@@ -28,6 +28,21 @@ This analysis will focus on using machine learning ensembles (through SuperLearn
 
 # Load packages and setup environment
 
+```{r rmd_setup, include = FALSE}
+# Detect if we're on CRAN
+on_cran <- !identical(Sys.getenv("NOT_CRAN"), "true")
+
+# Set different figure options for CRAN vs local/website builds
+if (on_cran) {
+  knitr::opts_chunk$set(
+    dpi = 72,           # Lower DPI for CRAN
+    fig.width = 5,      # Smaller figures
+    fig.height = 4,
+    out.width = "70%"
+  )
+}
+```
+
 ```{r setup, print=FALSE, message=FALSE}
 library(tidyhte)
 library(ggplot2)
