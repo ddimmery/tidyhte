@@ -1,3 +1,9 @@
+# tidyhte (1.0.4)
+
+* Reduce packaged vignette file sizes.
+
+* Update maintainer email.
+
 # tidyhte (1.0.3)
 
 * Update links to comply with new CRAN policies.
