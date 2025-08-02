@@ -2,7 +2,7 @@
 #' @keywords internal
 predictor_factory <- function(cfg, ...) {
     if (!("model_class" %in% names(cfg))) {
-        stop("Unknown model class.")
+        abort_model("Model configuration must include 'model_class' field.")
     } else if (cfg$model_class == "known") {
         KnownPredictor$new(cfg$covariate_name)
     } else if (cfg$model_class == "SL") {
@@ -14,7 +14,7 @@ predictor_factory <- function(cfg, ...) {
     } else if (cfg$model_class == "Constant") {
         ConstantPredictor$new()
     } else {
-        stop("Unknown model class.")
+        abort_model(paste0("Unknown model class: '", cfg$model_class, "'."))
     }
 }
 
@@ -27,13 +27,13 @@ Predictor <- R6::R6Class("Predictor",
             warning("Not Implemented")
         },
         fit = function(labels, features) {
-            stop("Not Implemented")
+            abort_not_implemented("fit() method not implemented for base Predictor class")
         },
         predict = function(features) {
-            stop("Not Implemented")
+            abort_not_implemented("predict() method not implemented for base Predictor class")
         },
         predict_se = function(features) {
-            stop("Not Implemented")
+            abort_not_implemented("predict_se() method not implemented for base Predictor class")
         }
     )
 )
@@ -148,7 +148,7 @@ KernelSmoothPredictor <- R6::R6Class("KernelSmoothPredictor",
         fit = function(data) {
             self$label <- data$label
             self$covariates <- drop(data$features)
-            if (any(data$weights != 1)) stop("`nprobust` does not support the use of weights.")
+            if (any(data$weights != 1)) abort_package("`nprobust` does not support the use of weights.")
             eval_pts <- quantile(
                 self$covariates,
                 probs = seq(self$eval_min_quantile, 1 - self$eval_min_quantile, length = self$neval)

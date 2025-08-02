@@ -44,7 +44,7 @@ pseudo_outcome_factory <- function(type) {
     } else if (type == "plugin") {
         plugin_pseudo_outcome
     } else {
-        stop("Unknown type of pseudo-outcome.")
+        abort_config("Unknown type of pseudo-outcome.")
     }
 }
 

@@ -7,25 +7,25 @@ test_that("predictor factory", {
     checkmate::expect_r6(predictor_factory(model_cfg), classes = "Predictor")
 
     model_cfg <- Model_cfg$new()
-    expect_error(predictor_factory(model_cfg), "Unknown model class.")
+    expect_error(predictor_factory(model_cfg), class = "tidyhte_error_model")
 
-    expect_error(predictor_factory(list(model_class = "test")), "Unknown model class.")
+    expect_error(predictor_factory(list(model_class = "test")), class = "tidyhte_error_model")
 
-    expect_error(predictor_factory("test"), "Unknown model class.")
+    expect_error(predictor_factory("test"), class = "tidyhte_error_model")
 })
 
 test_that("base Predictor class", {
     expect_warning(pred <- Predictor$new(), "Not Implemented")
-    expect_error(pred$fit(y, x))
-    expect_error(pred$predict(data))
-    expect_error(pred$predict_se(data))
+    expect_error(pred$fit(y, x), class = "tidyhte_error_not_implemented")
+    expect_error(pred$predict(data), class = "tidyhte_error_not_implemented")
+    expect_error(pred$predict_se(data), class = "tidyhte_error_not_implemented")
 })
 
 test_that("check check_nuisance_models", {
     df <- dplyr::tibble(a = 1:10, b = letters[1:10])
     expect_error(
         check_nuisance_models(df),
-        "You must first estimate plugin models with `tidyhte::produce_plugin_estimates`."
+        class = "tidyhte_error_data"
     )
 })
 

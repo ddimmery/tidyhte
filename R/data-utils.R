@@ -18,7 +18,7 @@ HTEFold <- R6::R6Class("HTEFold", list(
     #' @return Returns an object of class `HTEFold`
     initialize = function(data, split_id) {
         if (!(".split_id" %in% names(data))) {
-            stop("Must construct split identifiers before splitting.")
+            abort_data("Must construct split identifiers before splitting.")
         }
         num_splits <- length(unique(data$.split_id))
         # check that the split_id is valid
@@ -132,7 +132,7 @@ check_splits <- function(data) {
     if (!("num_splits" %in% attrs)) ok <- FALSE
     if (!("identifier" %in% attrs)) ok <- FALSE
 
-    if (!ok) stop("You must first construct splits with `tidyhte::make_splits`.")
+    if (!ok) abort_data("You must first construct splits with `tidyhte::make_splits`.")
 }
 
 #' Checks that nuisance models have been estimated and exist in the supplied dataset.
@@ -150,7 +150,7 @@ check_nuisance_models <- function(data) {
     if (!(".mu0_hat" %in% cols)) ok <- FALSE
     if (!(".mu1_hat" %in% cols)) ok <- FALSE
 
-    if (!ok) stop("You must first estimate plugin models with `tidyhte::produce_plugin_estimates`.")
+    if (!ok) abort_data("You must first estimate plugin models with `tidyhte::produce_plugin_estimates`.")
 }
 
 #' Removes rows which have missing data on any of the supplied columns.
@@ -212,7 +212,7 @@ check_identifier <- function(data, id_col) {
 
     if (!ok) {
         msg <- "Invalid identifier. Each unit / cluster must have its own unique ID."
-        stop(msg)
+        abort_data(msg)
     }
 }
 
@@ -227,7 +227,7 @@ check_identifier <- function(data, id_col) {
 check_weights <- function(data, weight_col) {
     if (!(weight_col %in% names(data))) {
         msg <- "Invalid weight column. Must exist in dataframe."
-        stop(msg)
+        abort_data(msg)
     }
 
     wts <- data[[weight_col]]
@@ -236,12 +236,12 @@ check_weights <- function(data, weight_col) {
 
     if (!is_num) {
         msg <- "Invalid weight column. Must be numeric."
-        stop(msg)
+        abort_data(msg)
     }
 
     if (min(wts) < 0) {
         msg <- "Invalid weight column. Must be non-negative."
-        stop(msg)
+        abort_data(msg)
     }
 }
 
@@ -256,6 +256,6 @@ check_weights <- function(data, weight_col) {
 check_data_has_hte_cfg <- function(data) {
     if (! "HTE_cfg" %in% names(attributes(data))) {
         msg <- "Must attach HTE_cfg with `attach_config`."
-        stop(msg)
+        abort_config(msg)
     }
 }

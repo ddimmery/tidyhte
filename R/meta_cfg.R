@@ -118,7 +118,7 @@ PCATE_cfg <- R6::R6Class("PCATE_cfg",
             } else if (is.list(num_mc_samples)) {
                 self$num_mc_samples <- num_mc_samples
             } else {
-                stop("Unknown type of num_mc_samples")
+                abort_config("Unknown type of num_mc_samples")
             }
             invisible(self)
         },
@@ -346,7 +346,7 @@ QoI_cfg <- R6::R6Class("QoI_cfg",
             mcate = NULL, pcate = NULL, vimp = NULL, diag = NULL, ate = TRUE, predictions = FALSE
         ) {
             if (is.null(mcate) && is.null(pcate) && is.null(vimp) && is.null(diag)) {
-                stop("Must define at least one QoI!")
+                abort_config("Must define at least one QoI!")
             }
             if (!is.null(mcate)) self$mcate <- mcate
             if (!is.null(pcate)) self$pcate <- pcate

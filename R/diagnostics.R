@@ -5,7 +5,7 @@ SL_model_slot <- function(prediction) {
     else if (prediction == ".mu1_hat") "mu1"
     else if (prediction == ".mu0_hat") "mu0"
     else if (prediction == ".pseudo_outcome_hat") "fx"
-    else stop("Unknown model slot.")
+    else abort_model("Unknown model slot.")
 }
 
 #' Function to calculate diagnostics based on model outputs
