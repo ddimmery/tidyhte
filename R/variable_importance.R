@@ -31,9 +31,9 @@ calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg
     unq_splits <- unique(split_ids)
     num_splits_in_data <- length(unq_splits)
     num_splits_in_attr <- attr(full_data, "num_splits")
-    if (num_splits_in_data != num_splits_in_attr) stop("Number of splits is inconsistent.")
+    if (num_splits_in_data != num_splits_in_attr) abort_data("Number of splits is inconsistent.")
     if (ceiling(num_splits_in_data / 2) != floor(num_splits_in_data / 2)) {
-        stop("Number of splits must be even to calculate VIMP.")
+        abort_data("Number of splits must be even to calculate VIMP.")
     }
 
     sample_splitting <- .VIMP_cfg$sample_splitting

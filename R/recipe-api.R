@@ -235,7 +235,7 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
     } else if (tolower(model_type) == "kernelsmooth") {
         model_cls <- KernelSmooth_cfg
     } else {
-        stop("Unknown `model_type`.")
+        abort_config("Unknown `model_type`.")
     }
 
     qoi_list <- rlang::list2()
