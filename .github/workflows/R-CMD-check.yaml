@@ -1,5 +1,11 @@
 name: CRAN-like-check
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: "0 4 * * *"
 
 jobs:
   R-CMD-check:
