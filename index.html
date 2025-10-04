@@ -95,26 +95,91 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><code>tidyhte</code> provides tidy semantics for estimation of heterogeneous treatment effects through the use of <a href="https://arxiv.org/abs/2004.14497" class="external-link">Kennedy’s (n.d.) doubly-robust learner</a>.</p>
-<p>The goal of <code>tidyhte</code> is to use a sort of “recipe” design. This should (hopefully) make it extremely easy to scale an analysis of HTE from the common single-outcome / single-moderator case to many outcomes and many moderators. The configuration of <code>tidyhte</code> should make it extremely easy to perform the same analysis across many outcomes and for a wide-array of moderators. It’s written to be fairly easy to extend to different models and to add additional diagnostics and ways to output information from a set of HTE estimates.</p>
-<p>The best place to start for learning how to use <code>tidyhte</code> are the vignettes which runs through example analyses from start to finish: <code><a href="articles/experimental_analysis.html">vignette("experimental_analysis")</a></code> and <code><a href="articles/observational_analysis.html">vignette("observational_analysis")</a></code>. There is also a writeup summarizing the method and implementation in <code><a href="articles/methodological_details.html">vignette("methodological_details")</a></code>.</p>
+<p><code>tidyhte</code> provides tidy semantics for estimation of heterogeneous treatment effects through the use of <a href="https://doi.org/10.1214/23-EJS2157" class="external-link">Kennedy’s (2023) doubly-robust learner</a>.</p>
+<p>The package includes comprehensive automated tests with over 80% code coverage and continuous integration across multiple platforms, ensuring reliability for production research use.</p>
+<div class="section level2">
+<h2 id="why-tidyhte">Why tidyhte?<a class="anchor" aria-label="anchor" href="#why-tidyhte"></a>
+</h2>
+<p>While heterogeneous treatment effect estimation has become increasingly important in applied research, existing tools often require substantial statistical expertise to implement correctly. Researchers must navigate complex decisions about cross-validation, model selection, and valid inference. <code>tidyhte</code> addresses these challenges by:</p>
+<ol style="list-style-type: decimal">
+<li>Implementing state-of-the-art doubly-robust methods with automatic cross-validation</li>
+<li>Using intuitive “recipe” semantics familiar to R users</li>
+<li>Scaling easily from single to multiple outcomes and moderators</li>
+<li>Providing built-in diagnostics for model quality</li>
+<li>Returning results in tidy formats for easy visualization</li>
+</ol>
+<p>This makes modern HTE methods accessible to applied researchers who need to understand treatment effect variation but may not be causal inference experts.</p>
+</div>
+<div class="section level2">
+<h2 id="research-applications">Research Applications<a class="anchor" aria-label="anchor" href="#research-applications"></a>
+</h2>
+<p><code>tidyhte</code> is designed to support research across multiple domains where understanding treatment effect variation is crucial:</p>
+<ul>
+<li>
+<strong>Clinical Trials</strong>: Identify patient subgroups that benefit most from medical treatments</li>
+<li>
+<strong>Policy Evaluation</strong>: Understand which populations are most affected by policy interventions</li>
+<li>
+<strong>Technology &amp; A/B Testing</strong>: Optimize product features for different user segments</li>
+<li>
+<strong>Economics</strong>: Study heterogeneous effects of economic policies across demographics</li>
+<li>
+<strong>Education</strong>: Evaluate differential impacts of educational interventions</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>The best place to start for learning how to use <code>tidyhte</code> are the vignettes which run through example analyses from start to finish: <code><a href="articles/experimental_analysis.html">vignette("experimental_analysis")</a></code> and <code><a href="articles/observational_analysis.html">vignette("observational_analysis")</a></code>. There is also a writeup summarizing the method and implementation in <code><a href="articles/methodological_details.html">vignette("methodological_details")</a></code>, which includes a quasi-real world example using the Palmer Penguins dataset.</p>
+<div class="section level3">
+<h3 id="minimal-example">Minimal Example<a class="anchor" aria-label="anchor" href="#minimal-example"></a>
+</h3>
+<p>For a quick start with default settings, simply use <code><a href="reference/basic_config.html">basic_config()</a></code>:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ddimmery/tidyhte" class="external-link">tidyhte</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Use all defaults - linear models for nuisance functions</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="fu"><a href="reference/basic_config.html">basic_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="va">user_id</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment</span>, <span class="va">x1</span>, <span class="va">x2</span>, <span class="va">x3</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="model-selection-guide">Model Selection Guide<a class="anchor" aria-label="anchor" href="#model-selection-guide"></a>
+</h3>
+<p>When choosing machine learning algorithms for the ensemble, consider a progression like the following based on your subject-matter expertise:</p>
+<ul>
+<li>
+<strong>Start simple</strong>: <code>"SL.glm"</code> (linear models) for initial exploration</li>
+<li>
+<strong>Add interactions</strong>: <code>"SL.glm.interaction"</code> when you expect treatment effects to vary with covariates</li>
+<li>
+<strong>Regularization</strong>: <code>"SL.glmnet"</code> for higher-dimensional data (e.g. many interactions, note <code>SL.glmnet.interaction</code>) or when overfitting is a concern</li>
+<li>
+<strong>Flexible models</strong>: <code>"SL.ranger"</code> (random forests) or <code>"SL.xgboost"</code> (gradient boosting) when relationships are complex</li>
+</ul>
+<p>The SuperLearner ensemble will automatically weight these models. Start with 2-3 algorithms and add complexity as needed. See <code><a href="https://rdrr.io/pkg/SuperLearner/man/listWrappers.html" class="external-link">SuperLearner::listWrappers()</a></code> for all available options.</p>
+</div>
+</div>
 </div>
 <div class="section level1">
 <h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h1>
-<p>You will be able to install the released version of tidyhte from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tidyhte"</span><span class="op">)</span></span></code></pre></div>
-<p>But this does not yet exist. In the meantime, install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>Install the released version of tidyhte from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tidyhte"</span><span class="op">)</span></span></code></pre></div>
+<p>Or install the development version from <a href="https://github.com/" class="external-link">GitHub</a>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ddimmery/tidyhte"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level1">
 <h1 id="setting-up-a-configuration">Setting up a configuration<a class="anchor" aria-label="anchor" href="#setting-up-a-configuration"></a>
 </h1>
-<p>To set up a simple configuration, it’s straightforward to use the Recipe API:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>To set up a simple configuration, it’s straightforward to use the Recipe API. For complete examples with data, see <code><a href="articles/experimental_analysis.html">vignette("experimental_analysis")</a></code> and <code><a href="articles/observational_analysis.html">vignette("observational_analysis")</a></code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ddimmery/tidyhte" class="external-link">tidyhte</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -129,7 +194,7 @@
 <div class="section level1">
 <h1 id="running-an-analysis">Running an Analysis<a class="anchor" aria-label="anchor" href="#running-an-analysis"></a>
 </h1>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">hte_cfg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="va">userid</span>, .num_splits <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -143,11 +208,11 @@
 <span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">covariate1</span>, <span class="va">covariate2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></span></code></pre></div>
 <p>To get information on estimate CATEs for a moderator not included previously would just require rerunning the final line:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">covariate3</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></span></code></pre></div>
 <p>Replicating this on a new outcome would be as simple as running the following, with no reconfiguration necessary.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">hte_cfg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span></span>
@@ -158,25 +223,41 @@
 <span>    <span class="fu"><a href="reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">second_outcome_variable</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">covariate1</span>, <span class="va">covariate2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">results</span></span></code></pre></div>
 <p>This leads to the ability to easily chain together analyses across many outcomes in an easy way:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/foreach" class="external-link">"foreach"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/attach_config.html">attach_config</a></span><span class="op">(</span><span class="va">hte_cfg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/make_splits.html">make_splits</a></span><span class="op">(</span><span class="va">userid</span>, .num_splits <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">data</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="va">list_of_outcomes</span>, .combine <span class="op">=</span> <span class="st">"bind_rows"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%do%</a></span> <span class="op">{</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="va">list_of_outcome_strs</span>, .combine <span class="op">=</span> <span class="st">"bind_rows"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%do%</a></span> <span class="op">{</span></span>
 <span>    <span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span></span>
-<span>        <span class="va">outcome</span>,</span>
+<span>        <span class="va">.data</span><span class="op">[[</span><span class="va">outcome_str</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>        <span class="va">treatment_variable</span>,</span>
 <span>        <span class="va">covariate1</span>, <span class="va">covariate2</span>, <span class="va">covariate3</span>, <span class="va">covariate4</span>, <span class="va">covariate5</span>, <span class="va">covariate6</span></span>
 <span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment_variable</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">covariate1</span>, <span class="va">covariate2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/as_string.html" class="external-link">as_string</a></span><span class="op">(</span><span class="va">outcome</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="va">outcome_str</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>The function <code>estimate_QoI</code> returns results in a tibble format which makes it easy to manipulate or plot results.</p>
+<div class="section level2">
+<h2 id="performance-considerations">Performance Considerations<a class="anchor" aria-label="anchor" href="#performance-considerations"></a>
+</h2>
+<p>HTE estimation with cross-validation and ensemble machine learning can be computationally intensive. Plan accordingly for larger datasets or analyses with many outcomes.</p>
+<p>Parallelism is not currently managed through the package directly, but can be easily supported using a parallel backend with <code>foreach</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">doParallel</a></span><span class="op">)</span></span>
+<span><span class="fu">registerDoParallel</span><span class="op">(</span>cores <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>outcome <span class="op">=</span> <span class="va">outcome_list</span>, .combine <span class="op">=</span> <span class="st">"bind_rows"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%dopar%</a></span> <span class="op">{</span></span>
+<span>  <span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="reference/produce_plugin_estimates.html">produce_plugin_estimates</a></span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment</span>, <span class="va">covariates</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="reference/construct_pseudo_outcomes.html">construct_pseudo_outcomes</a></span><span class="op">(</span><span class="va">outcome</span>, <span class="va">treatment</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="reference/estimate_QoI.html">estimate_QoI</a></span><span class="op">(</span><span class="va">moderators</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level1">
 <h1 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
@@ -223,6 +304,7 @@
 <div class="community">
 <h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
@@ -244,13 +326,14 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
 <li><a href="https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml" class="external-link"><img src="https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml/badge.svg" alt="lint"></a></li>
 <li><a href="https://app.codecov.io/gh/ddimmery/tidyhte" class="external-link"><img src="https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg?token=AHT3X4S2KQ" alt="codecov"></a></li>
 <li><a href="https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://cran.r-project.org/package=tidyhte" class="external-link"><img src="https://www.r-pkg.org/badges/version/tidyhte" alt="CRAN Status"></a></li>
 <li><a href="https://opensource.org/license/mit" class="external-link"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></li>
 <li><a href="https://zenodo.org/badge/latestdoi/375330850" class="external-link"><img src="https://zenodo.org/badge/375330850.svg" alt="DOI"></a></li>
+<li><a href="https://joss.theoj.org/papers/10.21105/joss.XXXXX" class="external-link"><img src="https://joss.theoj.org/papers/10.21105/joss.XXXXX/status.svg" alt="JOSS"></a></li>
 <li><a href="https://discord.com/invite/MrxjbHc3jD" class="external-link"><img src="https://dcbadge.vercel.app/api/server/MrxjbHc3jD?style=flat"></a></li>
 </ul>
 </div>

@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://ddimmery.github.io/tidyhte/404.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/CONTRIBUTING.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/LICENSE-text.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/LICENSE.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/articles/experimental_analysis.html</loc></url>
@@ -27,6 +28,11 @@
 <url><loc>https://ddimmery.github.io/tidyhte/reference/SLLearner_cfg.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/Stratified_cfg.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/VIMP_cfg.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/abort_config.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/abort_data.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/abort_model.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/abort_not_implemented.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/abort_package.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/add_effect_diagnostic.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/add_effect_model.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/add_known_propensity_score.html</loc></url>
@@ -64,6 +70,8 @@
 <url><loc>https://ddimmery.github.io/tidyhte/reference/produce_plugin_estimates.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/remove_vimp.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/split_data.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/tidyhte-errors.html</loc></url>
 <url><loc>https://ddimmery.github.io/tidyhte/reference/tidyhte-package.html</loc></url>
+<url><loc>https://ddimmery.github.io/tidyhte/reference/tidyhte_abort.html</loc></url>
 </urlset>
 
