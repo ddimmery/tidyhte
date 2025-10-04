@@ -30,15 +30,30 @@ Effects in R</article-title>
 </name>
 <xref ref-type="aff" rid="aff-1"/>
 </contrib>
+<contrib contrib-type="author">
+<contrib-id contrib-id-type="orcid">https://orcid.org/0000-0002-0227-158X</contrib-id>
+<name>
+<surname>Kennedy</surname>
+<given-names>Edward</given-names>
+</name>
+<xref ref-type="aff" rid="aff-2"/>
+</contrib>
 <aff id="aff-1">
 <institution-wrap>
 <institution>Hertie School Data Science Lab</institution>
 <institution-id institution-id-type="ROR">0473a4773</institution-id>
 </institution-wrap>
 </aff>
+<aff id="aff-2">
+<institution-wrap>
+<institution>Department of Statistics and Data Science, Carnegie Mellon
+University, USA</institution>
+<institution-id institution-id-type="ROR">05x2bcf33</institution-id>
+</institution-wrap>
+</aff>
 </contrib-group>
-<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2025-10-02">
-<day>2</day>
+<pub-date date-type="pub" publication-format="electronic" iso-8601-date="2025-10-04">
+<day>4</day>
 <month>10</month>
 <year>2025</year>
 </pub-date>
@@ -69,140 +84,64 @@ a Creative Commons Attribution 4.0 International License (CC BY
 <body>
 <sec id="summary">
   <title>Summary</title>
-  <p>Heterogeneous treatment effects (HTE) describe how the impact of an
-  intervention varies across individuals or subgroups. Understanding
-  this variation is crucial for targeting interventions, optimizing
-  resource allocation, and gaining insights into mechanisms of action.
-  <monospace>tidyhte</monospace> is an R package that provides a
-  principled, user-friendly framework for estimating heterogeneous
-  treatment effects using modern machine learning methods. The package
-  implements the doubly-robust learner of Kennedy
+  <p>Heterogeneous treatment effects (HTE) describe how intervention
+  impacts vary across individuals or subgroups. Understanding this
+  variation is crucial for targeting interventions, optimizing resource
+  allocation, and identifying mechanisms of action.
+  <monospace>tidyhte</monospace> provides a principled framework for
+  estimating heterogeneous treatment effects using modern machine
+  learning methods. The package implements the doubly-robust learner of
+  Kennedy
   (<xref alt="2023" rid="ref-kennedy2023towards" ref-type="bibr">2023</xref>),
-  which combines outcome modeling and propensity score estimation with
+  combining outcome modeling and propensity score estimation with
   cross-validation to produce valid statistical inference on treatment
   effect heterogeneity.</p>
-  <p>The package uses a “recipe” design that makes it straightforward to
-  scale analyses from single outcomes and moderators to many outcomes
-  and moderators. Users specify machine learning algorithms for nuisance
-  function estimation (treatment propensity and outcome models), define
-  moderators of interest, and <monospace>tidyhte</monospace> handles
-  cross-validation, model selection, diagnostics, and construction of
-  relevant quantities of interest. The tidy data principles make it easy
-  to chain operations and integrate with the broader R data science
-  ecosystem.</p>
+  <p>The package uses a “recipe” design that scales naturally from
+  single to multiple outcomes and moderators. Users specify machine
+  learning algorithms for nuisance function estimation (treatment
+  propensity and outcome models) and define moderators of interest;
+  <monospace>tidyhte</monospace> handles cross-validation, model
+  selection, diagnostics, and construction of quantities of interest.
+  The tidy design integrates seamlessly with the broader R data science
+  ecosystem and supports common empirical practices including weighting
+  for population average effects and clustered treatment assignment.</p>
 </sec>
 <sec id="statement-of-need">
   <title>Statement of Need</title>
-  <p>While heterogeneous treatment effect estimation has become
-  increasingly important in applied research, existing tools often
-  require substantial statistical expertise to implement correctly.
-  Researchers must navigate complex decisions about cross-validation
-  strategies, model selection, doubly-robust estimation, and valid
-  inference. Many implementations are scattered across different
-  packages with inconsistent interfaces, making it difficult to apply
-  these methods reliably and at scale.</p>
+  <p>Existing tools for heterogeneous treatment effect estimation often
+  require substantial statistical expertise and involve navigating
+  complex decisions about cross-validation, model selection,
+  doubly-robust estimation, and valid inference. Implementations are
+  scattered across packages with inconsistent interfaces, making
+  reliable application difficult.</p>
   <p><monospace>tidyhte</monospace> addresses these challenges by
-  providing a unified interface for HTE estimation that:</p>
-  <list list-type="order">
-    <list-item>
-      <p>Implements state-of-the-art doubly-robust methods with
-      automatic cross-validation</p>
-    </list-item>
-    <list-item>
-      <p>Uses intuitive “recipe” semantics familiar to R users from
-      packages like <monospace>recipes</monospace> and
-      <monospace>parsnip</monospace></p>
-    </list-item>
-    <list-item>
-      <p>Handles both experimental and observational data</p>
-    </list-item>
-    <list-item>
-      <p>Scales easily from single to multiple outcomes and
-      moderators</p>
-    </list-item>
-    <list-item>
-      <p>Provides built-in diagnostics for model quality and effect
-      heterogeneity</p>
-    </list-item>
-    <list-item>
-      <p>Returns results in tidy data formats for easy downstream
-      analysis and visualization</p>
-    </list-item>
-  </list>
-  <p>The package is designed for applied researchers in social sciences,
-  policy evaluation, medicine, and technology companies who need to
-  understand treatment effect variation but may not be experts in the
-  underlying statistical methods. By automating many technical details
-  while maintaining statistical rigor, <monospace>tidyhte</monospace>
-  makes modern HTE methods accessible to a broader audience.</p>
-</sec>
-<sec id="key-features">
-  <title>Key Features</title>
-  <list list-type="bullet">
-    <list-item>
-      <p><bold>Doubly-robust estimation</bold>: Combines outcome and
-      propensity score models using Kennedy
-      (<xref alt="2023" rid="ref-kennedy2023towards" ref-type="bibr">2023</xref>)
-      methodology</p>
-    </list-item>
-    <list-item>
-      <p><bold>Flexible ML integration</bold>: Works with any
-      SuperLearner-compatible algorithm</p>
-    </list-item>
-    <list-item>
-      <p><bold>Multiple moderator types</bold>: Supports stratified,
-      kernel smooth, and custom moderator specifications</p>
-    </list-item>
-    <list-item>
-      <p><bold>Built-in diagnostics</bold>: Includes model quality
-      metrics and tests for effect heterogeneity</p>
-    </list-item>
-    <list-item>
-      <p><bold>Variable importance</bold>: Optional variable importance
-      measures for identifying key moderators</p>
-    </list-item>
-    <list-item>
-      <p><bold>Tidy semantics</bold>: Integrates with dplyr and
-      tidyverse workflows</p>
-    </list-item>
-    <list-item>
-      <p><bold>Cross-validation</bold>: Automatic sample splitting with
-      user control over fold numbers</p>
-    </list-item>
-  </list>
+  providing a unified interface that: (1) implements state-of-the-art
+  doubly-robust methods with automatic cross-validation, (2) uses
+  intuitive “recipe” semantics familiar from packages like
+  <monospace>recipes</monospace>
+  (<xref alt="Kuhn et al., 2025" rid="ref-recipes_package" ref-type="bibr">Kuhn
+  et al., 2025</xref>) and <monospace>parsnip</monospace>
+  (<xref alt="Kuhn &amp; Vaughan, 2024" rid="ref-parsnip_package" ref-type="bibr">Kuhn
+  &amp; Vaughan, 2024</xref>), (3) handles both experimental and
+  observational data, (4) scales from single to multiple outcomes and
+  moderators, (5) provides built-in diagnostics for model quality and
+  effect heterogeneity, and (6) returns tidy data formats for downstream
+  analysis. By automating technical details while maintaining
+  statistical rigor, the package makes modern HTE methods accessible to
+  applied researchers who need to understand treatment effect
+  variation.</p>
 </sec>
 <sec id="research-applications">
   <title>Research Applications</title>
-  <p><monospace>tidyhte</monospace> has been designed to support
-  research in fields where understanding treatment effect heterogeneity
-  is important:</p>
-  <list list-type="bullet">
-    <list-item>
-      <p><bold>Clinical trials</bold>: Identifying patient subgroups
-      that benefit most from treatments</p>
-    </list-item>
-    <list-item>
-      <p><bold>Policy evaluation</bold>: Understanding which populations
-      are most affected by policy interventions</p>
-    </list-item>
-    <list-item>
-      <p><bold>Technology</bold>: Optimizing product interventions for
-      different user segments</p>
-    </list-item>
-    <list-item>
-      <p><bold>Economics</bold>: Studying heterogeneous effects of
-      economic policies across demographics</p>
-    </list-item>
-    <list-item>
-      <p><bold>Education</bold>: Evaluating differential impacts of
-      educational interventions</p>
-    </list-item>
-  </list>
-  <p>It was created specifically as the HTE estimation software for use
-  in the high-profile series of publications on the effects of Facebook
-  and Instagram on the US 2020 Presidential election and was stress
-  tested for this application which involved estimation of HTEs on
-  around ten moderators across dozens of outcomes
+  <p><monospace>tidyhte</monospace> supports research across clinical
+  trials (identifying patient subgroups), policy evaluation
+  (understanding differential population impacts), technology
+  (optimizing interventions for user segments), economics (studying
+  policy effects across demographics), and education (evaluating
+  differential intervention impacts). The package was stress-tested as
+  the HTE estimation software for publications on Facebook and
+  Instagram’s effects on the 2020 US Presidential election, involving
+  estimation across approximately ten moderators and dozens of outcomes
   (<xref alt="Guess et al., 2023a" rid="ref-guess2023social" ref-type="bibr">Guess
   et al., 2023a</xref>,
   <xref alt="2023b" rid="ref-guess2023reshares" ref-type="bibr">2023b</xref>;
@@ -225,18 +164,33 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <p>Other R packages for HTE estimation include
   <monospace>grf</monospace>
   (<xref alt="Athey et al., 2019" rid="ref-grf" ref-type="bibr">Athey et
-  al., 2019</xref>) for generalized random forests and
+  al., 2019</xref>;
+  <xref alt="Tibshirani et al., 2024" rid="ref-grf_package" ref-type="bibr">Tibshirani
+  et al., 2024</xref>) for generalized random forests,
   <monospace>bcf</monospace>
   (<xref alt="Hahn et al., 2020" rid="ref-bcf" ref-type="bibr">Hahn et
-  al., 2020</xref>) for Bayesian additive regression trees.
+  al., 2020</xref>;
+  <xref alt="Murray et al., 2023" rid="ref-bcf_package" ref-type="bibr">Murray
+  et al., 2023</xref>) for Bayesian causal forests, and
+  <monospace>FindIt</monospace>
+  (<xref alt="Imai &amp; Ratkovic, 2013" rid="ref-imai2013estimating" ref-type="bibr">Imai
+  &amp; Ratkovic, 2013</xref>,
+  <xref alt="2018" rid="ref-FindIt_package" ref-type="bibr">2018</xref>).
   <monospace>tidyhte</monospace> differentiates itself through its
-  doubly-robust methodology, recipe interface, and focus on scaling to
-  multiple outcomes and moderators.</p>
+  doubly-robust methodology
+  (<xref alt="Kennedy, 2023" rid="ref-kennedy2023towards" ref-type="bibr">Kennedy,
+  2023</xref>), recipe interface, support for scaling to multiple
+  outcomes and moderators, and native handling of weights and
+  clustering.</p>
 </sec>
 <sec id="acknowledgements">
   <title>Acknowledgements</title>
-  <p>We acknowledge contributions from early users who provided feedback
-  on the package design and functionality.</p>
+  <p>We gratefully acknowledge the collaboration with the US 2020
+  Facebook and Instagram Election Study team for being a testbed for the
+  initial versions of <monospace>tidyhte</monospace>, particularly Pablo
+  Barberá for testing this package during development and providing
+  valuable feedback on the design and functionality. We received no
+  financial support for this software project.</p>
 </sec>
 </body>
 <back>
@@ -346,6 +300,19 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <lpage>1178</lpage>
     </element-citation>
   </ref>
+  <ref id="ref-grf_package">
+    <element-citation publication-type="book">
+      <person-group person-group-type="author">
+        <name><surname>Tibshirani</surname><given-names>Julie</given-names></name>
+        <name><surname>Athey</surname><given-names>Susan</given-names></name>
+        <name><surname>Wager</surname><given-names>Stefan</given-names></name>
+      </person-group>
+      <source>Grf: Generalized random forests</source>
+      <year iso-8601-date="2024">2024</year>
+      <uri>https://CRAN.R-project.org/package=grf</uri>
+      <pub-id pub-id-type="doi">10.32614/CRAN.package.grf</pub-id>
+    </element-citation>
+  </ref>
   <ref id="ref-bcf">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
@@ -361,6 +328,19 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <pub-id pub-id-type="doi">10.1214/19-BA1195</pub-id>
       <fpage>965</fpage>
       <lpage>1056</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-bcf_package">
+    <element-citation publication-type="book">
+      <person-group person-group-type="author">
+        <name><surname>Murray</surname><given-names>Jared</given-names></name>
+        <name><surname>Hahn</surname><given-names>P. Richard</given-names></name>
+        <name><surname>Carvalho</surname><given-names>Carlos</given-names></name>
+      </person-group>
+      <source>Bcf: Causal inference using bayesian causal forests</source>
+      <year iso-8601-date="2023">2023</year>
+      <uri>https://CRAN.R-project.org/package=bcf</uri>
+      <pub-id pub-id-type="doi">10.32614/CRAN.package.bcf</pub-id>
     </element-citation>
   </ref>
   <ref id="ref-guess2023social">
@@ -436,6 +416,61 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <issue>6656</issue>
       <fpage>404</fpage>
       <lpage>408</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-imai2013estimating">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Imai</surname><given-names>Kosuke</given-names></name>
+        <name><surname>Ratkovic</surname><given-names>Marc</given-names></name>
+      </person-group>
+      <article-title>Estimating treatment effect heterogeneity in randomized program evaluation</article-title>
+      <source>The Annals of Applied Statistics</source>
+      <publisher-name>Institute of Mathematical Statistics</publisher-name>
+      <year iso-8601-date="2013">2013</year>
+      <volume>7</volume>
+      <issue>1</issue>
+      <uri>https://doi.org/10.1214/12-AOAS593</uri>
+      <pub-id pub-id-type="doi">10.1214/12-AOAS593</pub-id>
+      <fpage>443 </fpage>
+      <lpage> 470</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-FindIt_package">
+    <element-citation publication-type="book">
+      <person-group person-group-type="author">
+        <name><surname>Imai</surname><given-names>Kosuke</given-names></name>
+        <name><surname>Ratkovic</surname><given-names>Marc</given-names></name>
+      </person-group>
+      <source>FindIt: Finding heterogeneous treatment effects</source>
+      <year iso-8601-date="2018">2018</year>
+      <uri>https://CRAN.R-project.org/package=FindIt</uri>
+      <pub-id pub-id-type="doi">10.32614/CRAN.package.FindIt</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-recipes_package">
+    <element-citation publication-type="book">
+      <person-group person-group-type="author">
+        <name><surname>Kuhn</surname><given-names>Max</given-names></name>
+        <name><surname>Wickham</surname><given-names>Hadley</given-names></name>
+        <name><surname>Hvitfeldt</surname><given-names>Emil</given-names></name>
+      </person-group>
+      <source>Recipes: Preprocessing and feature engineering steps for modeling</source>
+      <year iso-8601-date="2025">2025</year>
+      <uri>https://CRAN.R-project.org/package=recipes</uri>
+      <pub-id pub-id-type="doi">10.32614/CRAN.package.recipes</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-parsnip_package">
+    <element-citation publication-type="book">
+      <person-group person-group-type="author">
+        <name><surname>Kuhn</surname><given-names>Max</given-names></name>
+        <name><surname>Vaughan</surname><given-names>Davis</given-names></name>
+      </person-group>
+      <source>Parsnip: A common API to modeling and analysis functions</source>
+      <year iso-8601-date="2024">2024</year>
+      <uri>https://CRAN.R-project.org/package=parsnip</uri>
+      <pub-id pub-id-type="doi">10.32614/CRAN.package.parsnip</pub-id>
     </element-citation>
   </ref>
 </ref-list>
