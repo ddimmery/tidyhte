@@ -16,31 +16,83 @@ knitr::opts_chunk$set(
 # tidyhte
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![lint](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/lint.yaml)
 [![codecov](https://codecov.io/gh/ddimmery/tidyhte/branch/main/graph/badge.svg?token=AHT3X4S2KQ)](https://app.codecov.io/gh/ddimmery/tidyhte)
 [![R-CMD-check](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ddimmery/tidyhte/actions/workflows/R-CMD-check.yaml)
 [![CRAN Status](https://www.r-pkg.org/badges/version/tidyhte)](https://cran.r-project.org/package=tidyhte)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
 [![DOI](https://zenodo.org/badge/375330850.svg)](https://zenodo.org/badge/latestdoi/375330850)
+[![JOSS](https://joss.theoj.org/papers/10.21105/joss.XXXXX/status.svg)](https://joss.theoj.org/papers/10.21105/joss.XXXXX)
 [![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?style=flat)](https://discord.com/invite/MrxjbHc3jD)
 <!-- badges: end -->
 
-`tidyhte` provides tidy semantics for estimation of heterogeneous treatment effects through the use of [Kennedy's (n.d.) doubly-robust learner](https://arxiv.org/abs/2004.14497).
+`tidyhte` provides tidy semantics for estimation of heterogeneous treatment effects through the use of [Kennedy's (2023) doubly-robust learner](https://doi.org/10.1214/23-EJS2157).
 
-The goal of `tidyhte` is to use a sort of "recipe" design. This should (hopefully) make it extremely easy to scale an analysis of HTE from the common single-outcome / single-moderator case to many outcomes and many moderators. The configuration of `tidyhte` should make it extremely easy to perform the same analysis across many outcomes and for a wide-array of moderators. It's written to be fairly easy to extend to different models and to add additional diagnostics and ways to output information from a set of HTE estimates.
+The package includes comprehensive automated tests with over 80% code coverage and continuous integration across multiple platforms, ensuring reliability for production research use.
 
-The best place to start for learning how to use `tidyhte` are the vignettes which runs through example analyses from start to finish: `vignette("experimental_analysis")` and `vignette("observational_analysis")`. There is also a writeup summarizing the method and implementation in `vignette("methodological_details")`.
+## Why tidyhte?
+
+While heterogeneous treatment effect estimation has become increasingly important in applied research, existing tools often require substantial statistical expertise to implement correctly. Researchers must navigate complex decisions about cross-validation, model selection, and valid inference. `tidyhte` addresses these challenges by:
+
+1. Implementing state-of-the-art doubly-robust methods with automatic cross-validation
+2. Using intuitive "recipe" semantics familiar to R users
+3. Scaling easily from single to multiple outcomes and moderators
+4. Providing built-in diagnostics for model quality
+5. Returning results in tidy formats for easy visualization
+
+This makes modern HTE methods accessible to applied researchers who need to understand treatment effect variation but may not be causal inference experts.
+
+## Research Applications
+
+`tidyhte` is designed to support research across multiple domains where understanding treatment effect variation is crucial:
+
+- **Clinical Trials**: Identify patient subgroups that benefit most from medical treatments
+- **Policy Evaluation**: Understand which populations are most affected by policy interventions
+- **Technology & A/B Testing**: Optimize product features for different user segments
+- **Economics**: Study heterogeneous effects of economic policies across demographics
+- **Education**: Evaluate differential impacts of educational interventions
+
+## Getting Started
+
+The best place to start for learning how to use `tidyhte` are the vignettes which run through example analyses from start to finish: `vignette("experimental_analysis")` and `vignette("observational_analysis")`. There is also a writeup summarizing the method and implementation in `vignette("methodological_details")`, which includes a quasi-real world example using the Palmer Penguins dataset.
+
+### Minimal Example
+
+For a quick start with default settings, simply use `basic_config()`:
+
+```{r eval=FALSE}
+library(tidyhte)
+
+# Use all defaults - linear models for nuisance functions
+results <- data %>%
+  attach_config(basic_config()) %>%
+  make_splits(user_id) %>%
+  produce_plugin_estimates(outcome, treatment, x1, x2, x3) %>%
+  construct_pseudo_outcomes(outcome, treatment) %>%
+  estimate_QoI(x1, x2)
+```
+
+### Model Selection Guide
+
+When choosing machine learning algorithms for the ensemble, consider a progression like the following based on your subject-matter expertise:
+
+- **Start simple**: `"SL.glm"` (linear models) for initial exploration
+- **Add interactions**: `"SL.glm.interaction"` when you expect treatment effects to vary with covariates
+- **Regularization**: `"SL.glmnet"` for higher-dimensional data (e.g. many interactions, note `SL.glmnet.interaction`) or when overfitting is a concern
+- **Flexible models**: `"SL.ranger"` (random forests) or `"SL.xgboost"` (gradient boosting) when relationships are complex
+
+The SuperLearner ensemble will automatically weight these models. Start with 2-3 algorithms and add complexity as needed. See `SuperLearner::listWrappers()` for all available options.
 
 # Installation
 
-You will be able to install the released version of tidyhte from [CRAN](https://CRAN.R-project.org) with:
+Install the released version of tidyhte from [CRAN](https://CRAN.R-project.org):
 
 ``` r
 install.packages("tidyhte")
 ```
 
-But this does not yet exist. In the meantime, install the development version from [GitHub](https://github.com/) with:
+Or install the development version from [GitHub](https://github.com/):
 
 ``` r
 # install.packages("devtools")
@@ -49,7 +101,7 @@ devtools::install_github("ddimmery/tidyhte")
 
 # Setting up a configuration
 
-To set up a simple configuration, it's straightforward to use the Recipe API:
+To set up a simple configuration, it's straightforward to use the Recipe API. For complete examples with data, see `vignette("experimental_analysis")` and `vignette("observational_analysis")`.
 
 ```{r eval=FALSE}
 library(tidyhte)
@@ -112,20 +164,38 @@ data %>%
     attach_config(hte_cfg) %>%
     make_splits(userid, .num_splits = 12) -> data
 
-foreach(outcome = list_of_outcomes, .combine = "bind_rows") %do% {
+foreach(outcome = list_of_outcome_strs, .combine = "bind_rows") %do% {
     data %>%
     produce_plugin_estimates(
-        outcome,
+        .data[[outcome_str]],
         treatment_variable,
         covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
     ) %>%
     construct_pseudo_outcomes(outcome, treatment_variable) %>%
     estimate_QoI(covariate1, covariate2) %>%
-    mutate(outcome = rlang::as_string(outcome))
+    mutate(outcome = outcome_str)
 }
 ```
 
 The function `estimate_QoI` returns results in a tibble format which makes it easy to manipulate or plot results.
+
+## Performance Considerations
+
+HTE estimation with cross-validation and ensemble machine learning can be computationally intensive. Plan accordingly for larger datasets or analyses with many outcomes.
+
+Parallelism is not currently managed through the package directly, but can be easily supported using a parallel backend with `foreach`:
+
+```{r eval=FALSE}
+library(doParallel)
+registerDoParallel(cores = 4)
+
+foreach(outcome = outcome_list, .combine = "bind_rows") %dopar% {
+  data %>%
+    produce_plugin_estimates(outcome, treatment, covariates) %>%
+    construct_pseudo_outcomes(outcome, treatment) %>%
+    estimate_QoI(moderators)
+}
+```
 
 # Getting help
 

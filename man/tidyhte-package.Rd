@@ -14,8 +14,8 @@ walks through a full analysis of HTE on simulated data, or \code{vignette("metho
 which gets into more of the details underlying the method.
 }
 \references{
-Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
-causal effects. \emph{arXiv preprint arXiv:2004.14497}.
+Kennedy, E. H. (2023). Towards optimal doubly robust estimation of heterogeneous
+causal effects. \emph{Electronic Journal of Statistics}, 17(2), 3008-3049.
 }
 \seealso{
 The core public-facing functions are \code{make_splits}, \code{produce_plugin_estimates},

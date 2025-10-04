@@ -1,6 +1,6 @@
 ---
 title: HTE Analysis in an Experiment
-author: Drew Dimmery (ddimmery@univie.ac.at)
+author: Drew Dimmery (cran@ddimmery.com)
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
     rmarkdown::html_vignette:
@@ -21,7 +21,7 @@ div.main-container {
 
 # Introduction
 
-In this example analysis, I will demonstrate how to run an analysis of heterogeneous treatment effects in a randomized control trial using the methods of Kennedy (2020).
+In this example analysis, I will demonstrate how to run an analysis of heterogeneous treatment effects in a randomized control trial using the methods of Kennedy (2023).
 This implies that propensity scores are _known_, so estimates will generally be unbiased.
 
 This analysis will focus on using machine learning ensembles (through SuperLearner) to estimate nuisance functions and then provide a tibble of estimates of conditional treatment effects along with their associated standard errors.

@@ -219,6 +219,8 @@ add_effect_diagnostic <- function(hte_cfg, diag) {
 #' @param ... The (unquoted) names of the moderator variables.
 #' @param .model_arguments A named list from argument name to value to pass into the
 #' constructor for the model. See `Stratified_cfg` and `KernelSmooth_cfg` for more details.
+#' @note For moderators with many levels and limited sample per level, estimates may be noisy.
+#' Consider whether other encodings would be more appropriate.
 #' @return Updated `HTE_cfg` object
 #' @examples
 #' library("dplyr")

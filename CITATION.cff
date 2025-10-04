@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: 'tidyhte: Tidy Estimation of Heterogeneous Treatment Effects'
+version: 1.0.3
+doi: 10.5281/zenodo.6325442
+date-released: 2024-09-01
+url: "https://github.com/ddimmery/tidyhte"
+repository-code: "https://github.com/ddimmery/tidyhte"
+authors:
+  - family-names: "Dimmery"
+    given-names: "Drew"
+    orcid: "https://orcid.org/0000-0001-9602-6325"
+    email: "cran@ddimmery.com"
+abstract: >-
+  Estimates heterogeneous treatment effects using tidy semantics
+  on experimental or observational data. Methods are based on the
+  doubly-robust learner of Kennedy (2023). You provide a simple
+  recipe for what machine learning algorithms to use in estimating
+  the nuisance functions and 'tidyhte' will take care of
+  cross-validation, estimation, model selection, diagnostics and
+  construction of relevant quantities of interest about the
+  variability of treatment effects.
+keywords:
+  - R
+  - causal inference
+  - heterogeneous treatment effects
+  - machine learning
+  - experimental design
+  - doubly-robust estimation
+license: MIT
+references:
+  - type: article
+    title: "Towards optimal doubly robust estimation of heterogeneous causal effects"
+    authors:
+      - family-names: "Kennedy"
+        given-names: "Edward H."
+    journal: "Electronic Journal of Statistics"
+    volume: 17
+    issue: 2
+    year: 2023
+    start: 3008
+    end: 3049
+    doi: "10.1214/23-EJS2157"

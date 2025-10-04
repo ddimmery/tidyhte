@@ -5,8 +5,8 @@
 #' @seealso The core public-facing functions are `make_splits`, `produce_plugin_estimates`,
 #' `construct_pseudo_outcomes` and `estimate_QoI`. Configuration is accomplished through `HTE_cfg`
 #' in addition to a variety of related classes (see `basic_config`).
-#' @references Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
-#' causal effects. *arXiv preprint arXiv:2004.14497*.
+#' @references Kennedy, E. H. (2023). Towards optimal doubly robust estimation of heterogeneous
+#' causal effects. *Electronic Journal of Statistics*, 17(2), 3008-3049.
 #' @keywords internal
 "_PACKAGE"
 

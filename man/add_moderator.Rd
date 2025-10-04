@@ -26,6 +26,10 @@ This adds a definition about how to display a moderators to
 the MCATE config. A moderator is any variable that you want to view information
 about CATEs with respect to.
 }
+\note{
+For moderators with many levels and limited sample per level, estimates may be noisy.
+Consider whether other encodings would be more appropriate.
+}
 \examples{
 library("dplyr")
 basic_config() \%>\%

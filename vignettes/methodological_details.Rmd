@@ -3,7 +3,7 @@ title: Methodological Details
 description: |
     Details on the design and implementation of `tidyhte`
 author: 
-    - Drew Dimmery (ddimmery@univie.ac.at)
+    - Drew Dimmery (cran@ddimmery.com)
     - Edward Kennedy (edward@stat.cmu.edu)
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:

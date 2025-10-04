@@ -4,6 +4,9 @@
 #' cross-validated estimates, as well as to measure how treatment effects change
 #' when only a single covariate is changed from its "natural" levels (in the sense
 #' "natural" used by the direct / indirect effects literature).
+#'
+#' @note This is experimental functionality that hasn't been tested as thoroughly.
+#' The API may change in future versions.
 #' @keywords internal
 FX.Predictor <- R6::R6Class("FX.Predictor",
     public = list(

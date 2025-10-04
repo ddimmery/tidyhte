@@ -76,8 +76,8 @@ plugin_pseudo_outcome <- function(A, YA, pi, mu1, mu0) {
 #' @seealso [basic_config()], [attach_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @references
-#' * Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
-#' causal effects. *arXiv preprint arXiv:2004.14497*.
+#' * Kennedy, E. H. (2023). Towards optimal doubly robust estimation of heterogeneous
+#' causal effects. *Electronic Journal of Statistics*, 17(2), 3008-3049.
 #' * Tsiatis, A. A., Davidian, M., Zhang, M., & Lu, X. (2008). Covariate adjustment
 #' for two‐sample treatment comparisons in randomized clinical trials: a principled
 #' yet flexible approach. *Statistics in medicine*, 27(23), 4658-4677.

@@ -15,8 +15,8 @@ necessary models) and estimates average treatment effects using AIPW.
 }
 \references{
 \itemize{
-\item Kennedy, E. H. (2020). Towards optimal doubly robust estimation of heterogeneous
-causal effects. \emph{arXiv preprint arXiv:2004.14497}.
+\item Kennedy, E. H. (2023). Towards optimal doubly robust estimation of heterogeneous
+causal effects. \emph{Electronic Journal of Statistics}, 17(2), 3008-3049.
 \item Tsiatis, A. A., Davidian, M., Zhang, M., & Lu, X. (2008). Covariate adjustment
 for two‐sample treatment comparisons in randomized clinical trials: a principled
 yet flexible approach. \emph{Statistics in medicine}, 27(23), 4658-4677.
