@@ -16,16 +16,16 @@ Status](https://www.r-pkg.org/badges/version/tidyhte)](https://cran.r-project.or
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
 [![DOI](https://zenodo.org/badge/375330850.svg)](https://zenodo.org/badge/latestdoi/375330850)
 [![JOSS](https://joss.theoj.org/papers/10.21105/joss.XXXXX/status.svg)](https://joss.theoj.org/papers/10.21105/joss.XXXXX)
-[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?style=flat)](https://discord.com/invite/MrxjbHc3jD)
+[![](https://dcbadge.limes.pink/api/server/MrxjbHc3jD?style=flat)](https://discord.com/invite/MrxjbHc3jD)
 <!-- badges: end -->
 
 `tidyhte` provides tidy semantics for estimation of heterogeneous
 treatment effects through the use of [Kennedy’s (2023) doubly-robust
 learner](https://doi.org/10.1214/23-EJS2157).
 
-The package includes comprehensive automated tests with over 80% code
-coverage and continuous integration across multiple platforms, ensuring
-reliability for production research use.
+The package includes comprehensive automated tests and continuous
+integration across multiple platforms, ensuring reliability for
+production research use.
 
 ## Why tidyhte?
 
@@ -44,7 +44,7 @@ inference. `tidyhte` addresses these challenges by:
 
 This makes modern HTE methods accessible to applied researchers who need
 to understand treatment effect variation but may not be causal inference
-experts.
+and machine learning experts.
 
 ## Research Applications
 
@@ -133,12 +133,12 @@ API. For complete examples with data, see
 library(tidyhte)
 library(dplyr)
 
-basic_config() %>%
-    add_propensity_score_model("SL.glmnet") %>%
-    add_outcome_model("SL.glmnet") %>%
-    add_moderator("Stratified", x1, x2) %>%
-    add_moderator("KernelSmooth", x3) %>%
-    add_vimp(sample_splitting = FALSE) -> hte_cfg
+hte_cfg <- basic_config() %>%
+  add_propensity_score_model("SL.glmnet") %>%
+  add_outcome_model("SL.glmnet") %>%
+  add_moderator("Stratified", x1, x2) %>%
+  add_moderator("KernelSmooth", x3) %>%
+  add_vimp(sample_splitting = FALSE)
 ```
 
 The `basic_config` includes a number of defaults: it starts off the
@@ -148,41 +148,41 @@ SuperLearner ensembles for both treatment and outcome with linear models
 # Running an Analysis
 
 ``` r
-data %>%
-    attach_config(hte_cfg) %>%
-    make_splits(userid, .num_splits = 12) %>%
-    produce_plugin_estimates(
-        outcome_variable,
-        treatment_variable,
-        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
-    ) %>%
-    construct_pseudo_outcomes(outcome_variable, treatment_variable) -> data
+data <- data %>%
+  attach_config(hte_cfg) %>%
+  make_splits(userid, .num_splits = 12) %>%
+  produce_plugin_estimates(
+    outcome_variable,
+    treatment_variable,
+    covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
+  ) %>%
+  construct_pseudo_outcomes(outcome_variable, treatment_variable)
 
-data %>%
-    estimate_QoI(covariate1, covariate2) -> results
+results <- data %>%
+  estimate_QoI(covariate1, covariate2)
 ```
 
-To get information on estimate CATEs for a moderator not included
+Getting information on estimated CATEs for a moderator not included
 previously would just require rerunning the final line:
 
 ``` r
-data %>%
-    estimate_QoI(covariate3) -> results
+results <- data %>%
+  estimate_QoI(covariate3)
 ```
 
 Replicating this on a new outcome would be as simple as running the
 following, with no reconfiguration necessary.
 
 ``` r
-data %>%
-    attach_config(hte_cfg) %>%
-    produce_plugin_estimates(
-        second_outcome_variable,
-        treatment_variable,
-        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
-    ) %>%
-    construct_pseudo_outcomes(second_outcome_variable, treatment_variable) %>%
-    estimate_QoI(covariate1, covariate2) -> results
+results <- data %>%
+  attach_config(hte_cfg) %>%
+  produce_plugin_estimates(
+    second_outcome_variable,
+    treatment_variable,
+    covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
+  ) %>%
+  construct_pseudo_outcomes(second_outcome_variable, treatment_variable) %>%
+  estimate_QoI(covariate1, covariate2)
 ```
 
 This leads to the ability to easily chain together analyses across many
@@ -191,16 +191,16 @@ outcomes in an easy way:
 ``` r
 library("foreach")
 
-data %>%
-    attach_config(hte_cfg) %>%
-    make_splits(userid, .num_splits = 12) -> data
+data <- data %>%
+  attach_config(hte_cfg) %>%
+  make_splits(userid, .num_splits = 12)
 
-foreach(outcome = list_of_outcome_strs, .combine = "bind_rows") %do% {
-    data %>%
+foreach(outcome_str = list_of_outcome_strs, .combine = "bind_rows") %do% {
+  data %>%
     produce_plugin_estimates(
-        .data[[outcome_str]],
-        treatment_variable,
-        covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
+      .data[[outcome_str]],
+      treatment_variable,
+      covariate1, covariate2, covariate3, covariate4, covariate5, covariate6
     ) %>%
     construct_pseudo_outcomes(outcome, treatment_variable) %>%
     estimate_QoI(covariate1, covariate2) %>%
@@ -224,10 +224,10 @@ can be easily supported using a parallel backend with `foreach`:
 library(doParallel)
 registerDoParallel(cores = 4)
 
-foreach(outcome = outcome_list, .combine = "bind_rows") %dopar% {
+foreach(outcome_str = outcome_list_str, .combine = "bind_rows") %dopar% {
   data %>%
-    produce_plugin_estimates(outcome, treatment, covariates) %>%
-    construct_pseudo_outcomes(outcome, treatment) %>%
+    produce_plugin_estimates(.data[[outcome_str]], treatment, covariates) %>%
+    construct_pseudo_outcomes(.data[[outcome_str]], treatment) %>%
     estimate_QoI(moderators)
 }
 ```
@@ -249,7 +249,7 @@ with all of the relevant debugging steps you’ve already taken.
 
 Support for the package will also be provided in the Experimentation
 Community Discord:
-[![](https://dcbadge.vercel.app/api/server/MrxjbHc3jD?theme=clean&compact=true)](https://discord.com/invite/MrxjbHc3jD)
+[![](https://dcbadge.limes.pink/api/server/MrxjbHc3jD?theme=clean&compact=true)](https://discord.com/invite/MrxjbHc3jD)
 
 You are welcome to come in and get support for your usage in the
 `tidyhte` channel. Keep in mind that everyone is volunteering their time

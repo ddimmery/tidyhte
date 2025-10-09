@@ -37,7 +37,7 @@ data(package = 'palmerpenguins')
 penguins$unitid = seq_len(nrow(penguins))
 penguins$propensity = rep(0.5, nrow(penguins))
 penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
-cfg <- basic_config() \%>\% 
+cfg <- basic_config() \%>\%
 add_known_propensity_score("propensity") \%>\%
 add_outcome_model("SL.glm.interaction") \%>\%
 remove_vimp()
