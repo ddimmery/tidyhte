@@ -22,42 +22,40 @@
 #' @importFrom stats quantile
 #' @keywords internal
 calculate_rroc <- function(label, prediction, nbins = 100) {
-    residuals <- label - prediction
-    n <- length(residuals)
-
-    shifts <- stats::quantile(residuals, probs = seq(0, 1, length.out = nbins - 1))
-
-    result <- calculate_pos_and_neg(residuals, 0)
-    results <- dplyr::tibble(
+  residuals <- label - prediction
+  n <- length(residuals)
+  shifts <- stats::quantile(residuals, probs = seq(0, 1, length.out = nbins - 1))
+  result <- calculate_pos_and_neg(residuals, 0)
+  results <- dplyr::tibble(
+    estimand = "RROC",
+    value = result$pos / n,
+    level = "observed",
+    estimate = result$neg / n,
+    std_error = NA_real_
+  )
+  for (shift in shifts) {
+    result <- calculate_pos_and_neg(residuals, -shift)
+    results <- dplyr::bind_rows(
+      results,
+      dplyr::tibble(
         estimand = "RROC",
         value = result$pos / n,
-        level = "observed",
+        level = "shifted",
         estimate = result$neg / n,
         std_error = NA_real_
+      )
     )
-    for (shift in shifts) {
-        result <- calculate_pos_and_neg(residuals, -shift)
-        results <- dplyr::bind_rows(
-            results,
-            dplyr::tibble(
-                estimand = "RROC",
-                value = result$pos / n,
-                level = "shifted",
-                estimate = result$neg / n,
-                std_error = NA_real_
-            )
-        )
-    }
-    results
+  }
+  results
 }
 
 #' @noRd
 #' @keywords internal
 #' @importFrom rlang list2
 calculate_pos_and_neg <- function(residuals, shift = 0.0) {
-    shifted_residuals <- residuals + shift
-    rlang::list2(
-        pos = sum(shifted_residuals[shifted_residuals > 0]),
-        neg = sum(shifted_residuals[shifted_residuals <= 0])
-    )
+  shifted_residuals <- residuals + shift
+  rlang::list2(
+    pos = sum(shifted_residuals[shifted_residuals > 0]),
+    neg = sum(shifted_residuals[shifted_residuals <= 0])
+  )
 }

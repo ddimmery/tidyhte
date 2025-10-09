@@ -1,6 +1,7 @@
 # tidyhte (current)
 
 * Refactored diagnostics calculation.
+* Fixed lint warnings (including switching project to 2-space tabs)
 
 # tidyhte (1.0.4)
 

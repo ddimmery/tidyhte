@@ -43,14 +43,14 @@ if (on_cran) {
 
 ```{r setup, echo=FALSE}
 suppressMessages({
-library(palmerpenguins)
-library(dplyr)
-library(tidyhte)
-library(magrittr)
-library(SuperLearner)
-library(ggplot2)
+  library(palmerpenguins)
+  library(dplyr)
+  library(tidyhte)
+  library(magrittr)
+  library(SuperLearner)
+  library(ggplot2)
 
-theme_set(theme_minimal())
+  theme_set(theme_minimal())
 })
 
 set.seed(100)
@@ -160,11 +160,11 @@ A `basic_config` function creates a bare-bones configuration consisting of only 
 
 ```{r cfg}
 cfg <- basic_config() %>%
-    add_known_propensity_score("propensity_score") %>%
-    add_outcome_model("SL.glmnet", alpha = c(0.0, 1.0)) %>%
-    add_moderator("Stratified", species, island, sex, year) %>%
-    add_moderator("KernelSmooth", bill_length_mm, bill_depth_mm, flipper_length_mm) %>%
-    add_vimp(sample_splitting = FALSE)
+  add_known_propensity_score("propensity_score") %>%
+  add_outcome_model("SL.glmnet", alpha = c(0.0, 1.0)) %>%
+  add_moderator("Stratified", species, island, sex, year) %>%
+  add_moderator("KernelSmooth", bill_length_mm, bill_depth_mm, flipper_length_mm) %>%
+  add_vimp(sample_splitting = FALSE)
 ```
 
 Since the subject of interest is an experimental intervention, the propensity score is known.
@@ -180,7 +180,7 @@ After the configuration is completed, it can be attached to the dataset.
 
 
 ```{r attach}
-penguins %<>% attach_config(cfg)
+penguins <- penguins %>% attach_config(cfg)
 ```
 
 # Cross-validation
@@ -205,7 +205,7 @@ Since the object returned is the same as what was passed in, this makes for easy
 
 
 ```{r split}
-penguins %<>% make_splits(id, species, sex, flipper_length_mm, .num_splits = 3)
+penguins <- penguins %>% make_splits(id, species, sex, flipper_length_mm, .num_splits = 3)
 ```
 
 Note that `tidyhte` gracefully handles missing data via listwise deletion.
@@ -220,12 +220,12 @@ To specify a cross-validated learner using SuperLearner syntax requires substant
 
 ```{r sl, eval = FALSE}
 learners <- create.Learner(
-    "SL.glmnet",
-    tune = list(
-        alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)
-    ),
-    detailed_names = TRUE,
-    name_prefix = paste0("SLglmnet")
+  "SL.glmnet",
+  tune = list(
+    alpha = c(0.05, 0.15, 0.2, 0.25, 0.5, 0.75)
+  ),
+  detailed_names = TRUE,
+  name_prefix = paste0("SLglmnet")
 )
 
 CV.SuperLearner(label, covariates, SL.library = learners$names)
@@ -240,7 +240,7 @@ add_outcome_model(cfg, "SL.glmnet", alpha = c(0.0, 0.25, 0.5, 0.75, 1.0))
 
 
 ```{r plugins, results='hide', message=FALSE, warning=FALSE}
-penguins %<>% produce_plugin_estimates(
+penguins <- penguins %>% produce_plugin_estimates(
   # outcome
   food_consumed_g,
   # treatment
@@ -257,7 +257,7 @@ For typical HTE estimation, the pseudo-outcome of interest is the one analyzed b
 
 
 ```{r psi, results='hide', message=FALSE, warning=FALSE}
-penguins %<>% construct_pseudo_outcomes(food_consumed_g, treatment)
+penguins <- penguins %>% construct_pseudo_outcomes(food_consumed_g, treatment)
 ```
 
 # Quantities of interest
@@ -272,9 +272,8 @@ The package focuses on a few types of quantities of interest:
 
 
 ```{r qoi, results='hide', message=FALSE, warning=FALSE}
-penguins %>%
-  estimate_QoI(species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm) ->
-  results
+results <- penguins %>%
+  estimate_QoI(species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm)
 ```
 
 The resulting tibble provides looks like the following:
@@ -300,27 +299,27 @@ It's then a simple matter to plot results using code like the following:
 
 ```{r discrete_mcate, fig.height = 4, fig.width = 8}
 filter(results, estimand == "MCATE", is.na(value)) %>%
-ggplot(aes(level, estimate)) +
-geom_point() +
-geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
-geom_hline(yintercept = 0, linetype = "dashed") +
-coord_flip() +
-facet_wrap(~term, scales = "free_y")
+  ggplot(aes(level, estimate)) +
+  geom_point() +
+  geom_linerange(aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  coord_flip() +
+  facet_wrap(~term, scales = "free_y")
 ```
 
 ```{r cts_mcate, fig.height = 6, fig.width = 8}
 filter(results, estimand == "MCATE", is.na(level)) %>%
-ggplot(aes(value, estimate)) +
-geom_line() +
-geom_ribbon(
-  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
-  alpha = 0.5
-) +
-geom_hline(yintercept = 0, linetype = "dashed") +
-scale_x_continuous("Covariate value") +
-scale_y_continuous("CATE") +
-coord_flip() +
-facet_wrap(~term, scales = "free_y")
+  ggplot(aes(value, estimate)) +
+  geom_line() +
+  geom_ribbon(
+    aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+    alpha = 0.5
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  scale_x_continuous("Covariate value") +
+  scale_y_continuous("CATE") +
+  coord_flip() +
+  facet_wrap(~term, scales = "free_y")
 ```
 
 ## Plotting diagnostics
@@ -329,33 +328,33 @@ Similarly, it's easy to plot diagnostic information:
 
 ```{r risk, fig.height = 2, fig.width = 8}
 filter(results, estimand == "SL risk") %>%
-ggplot(aes(reorder(term, estimate), estimate)) +
-geom_point() +
-geom_linerange(
-  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
-  alpha = 0.5
-) +
-geom_hline(yintercept = 0, linetype = "dashed") +
-scale_x_discrete("") +
-scale_y_continuous("Risk") +
-facet_wrap(~level) +
-coord_flip()
+  ggplot(aes(reorder(term, estimate), estimate)) +
+  geom_point() +
+  geom_linerange(
+    aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+    alpha = 0.5
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  scale_x_discrete("") +
+  scale_y_continuous("Risk") +
+  facet_wrap(~level) +
+  coord_flip()
 ```
 
 
 ```{r coef, fig.height = 2, fig.width = 8}
 filter(results, estimand == "SL coefficient") %>%
-ggplot(aes(reorder(term, estimate), estimate)) +
-geom_point() +
-geom_linerange(
-  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
-  alpha = 0.5
-) +
-geom_hline(yintercept = 0, linetype = "dashed") +
-scale_x_discrete("") +
-scale_y_continuous("Coefficient") +
-facet_wrap(~level) +
-coord_flip()
+  ggplot(aes(reorder(term, estimate), estimate)) +
+  geom_point() +
+  geom_linerange(
+    aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+    alpha = 0.5
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  scale_x_discrete("") +
+  scale_y_continuous("Coefficient") +
+  facet_wrap(~level) +
+  coord_flip()
 ```
 
 
@@ -365,16 +364,16 @@ And finally, we can examine the variable importance measure of @williamson2021no
 
 ```{r vimp, fig.height = 4, fig.width = 8}
 filter(results, estimand == "VIMP") %>%
-ggplot(aes(reorder(term, estimate), estimate)) +
-geom_point() +
-geom_linerange(
-  aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
-  alpha = 0.5
-) +
-geom_hline(yintercept = 0, linetype = "dashed") +
-scale_x_discrete("") +
-scale_y_continuous("Reduction in R²") +
-coord_flip()
+  ggplot(aes(reorder(term, estimate), estimate)) +
+  geom_point() +
+  geom_linerange(
+    aes(ymin = estimate - 1.96 * std_error, ymax = estimate + 1.96 * std_error),
+    alpha = 0.5
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  scale_x_discrete("") +
+  scale_y_continuous("Reduction in R²") +
+  coord_flip()
 ```
 
 # Replicating analyses
@@ -385,7 +384,7 @@ As an example, to perform the same analysis used above on a different outcome wo
 
 
 ```{r repeat, message=FALSE,warning=FALSE}
-penguins %<>% produce_plugin_estimates(
+results_mass <- penguins %>% produce_plugin_estimates(
   # outcome
   body_mass_g,
   # treatment
@@ -393,10 +392,10 @@ penguins %<>% produce_plugin_estimates(
   # covariates
   species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm
 ) %>%
-construct_pseudo_outcomes(body_mass_g, treatment) %>%
-estimate_QoI(
-  species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm
-) -> results_mass
+  construct_pseudo_outcomes(body_mass_g, treatment) %>%
+  estimate_QoI(
+    species, island, sex, year, bill_length_mm, bill_depth_mm, flipper_length_mm
+  )
 ```
 
 All the same quantities can be easily plotted for this outcome as well, and results may be joined together conveniently.

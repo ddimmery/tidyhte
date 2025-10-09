@@ -3,15 +3,15 @@ set.seed(20051920) # 20051920 is derived from 'test'
 n <- 250
 n0 <- 20
 data <- dplyr::tibble(
-    uid = 1:(n + n0)
+  uid = 1:(n + n0)
 ) %>%
-    dplyr::mutate(
-        a = rbinom(n + n0, 1, 0.5),
-        ps = rep(0.5, n + n0),
-        x1 = c(rnorm(n), rep(0, n0)),
-        x2 = factor(sample(1:4, n + n0, prob = c(1 / 5, 1 / 5, 1 / 5, 2 / 5), replace = TRUE)),
-        y = a + x1 - 2.5 * a * (x1 - mean(x1)) + as.double(x2) + c(rnorm(n), rep(rnorm(1), n0))
-    )
+  dplyr::mutate(
+    a = rbinom(n + n0, 1, 0.5),
+    ps = rep(0.5, n + n0),
+    x1 = c(rnorm(n), rep(0, n0)),
+    x2 = factor(sample(1:4, n + n0, prob = c(1 / 5, 1 / 5, 1 / 5, 2 / 5), replace = TRUE)),
+    y = a + x1 - 2.5 * a * (x1 - mean(x1)) + as.double(x2) + c(rnorm(n), rep(rnorm(1), n0))
+  )
 
 userid <- rlang::expr(uid)
 
@@ -34,88 +34,88 @@ treatment_variable <- rlang::expr(a)
 trt.cfg <- Constant_cfg$new()
 
 regression.cfg <- SLEnsemble_cfg$new(
-    learner_cfgs = list(
-        SLLearner_cfg$new(
-            "SL.glm"
-        ),
-        SLLearner_cfg$new(
-            "SL.gam",
-            list(
-                degree = c(2, 3, 5)
-            )
-        )
+  learner_cfgs = list(
+    SLLearner_cfg$new(
+      "SL.glm"
+    ),
+    SLLearner_cfg$new(
+      "SL.gam",
+      list(
+        degree = c(2, 3, 5)
+      )
     )
+  )
 )
 
 qoi.list <- list()
 for (cov in continuous_moderators) {
-    qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100, eval_min_quantile = 0.05)
+  qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100, eval_min_quantile = 0.05)
 }
 for (cov in discrete_moderators) {
-    qoi.list[[rlang::as_string(cov)]] <- Stratified_cfg$new(cov)
+  qoi.list[[rlang::as_string(cov)]] <- Stratified_cfg$new(cov)
 }
 
 qoi.cfg <- QoI_cfg$new(
-    mcate = MCATE_cfg$new(cfgs = qoi.list),
-    vimp = VIMP_cfg$new(linear_only = TRUE),
-    diag = Diagnostics_cfg$new(
-        outcome = c("SL_risk", "SL_coefs", "MSE", "RROC")
-    )
+  mcate = MCATE_cfg$new(cfgs = qoi.list),
+  vimp = VIMP_cfg$new(linear_only = TRUE),
+  diag = Diagnostics_cfg$new(
+    outcome = c("SL_risk", "SL_coefs", "MSE", "RROC")
+  )
 )
 
 cfg <- HTE_cfg$new(
-    treatment = trt.cfg,
-    outcome = regression.cfg,
-    effect = regression.cfg,
-    qoi = qoi.cfg
+  treatment = trt.cfg,
+  outcome = regression.cfg,
+  effect = regression.cfg,
+  qoi = qoi.cfg
 )
 
-E = new.env(parent = emptyenv())
+E <- new.env(parent = emptyenv())
 
 test_that("add config", {
-    E$data <- attach_config(data, cfg)
-    checkmate::expect_data_frame(E$data)
-    expect_true("HTE_cfg" %in% names(attributes(E$data)))
+  E$data <- attach_config(data, cfg)
+  checkmate::expect_data_frame(E$data)
+  expect_true("HTE_cfg" %in% names(attributes(E$data)))
 })
 
 test_that("Split data", {
-    E$data2 <- make_splits(E$data, {{ userid }}, .num_splits = 4)
-    checkmate::expect_data_frame(E$data2)
+  E$data2 <- make_splits(E$data, {{ userid }}, .num_splits = 4)
+  checkmate::expect_data_frame(E$data2)
 })
 
 test_that("Estimate Plugin Models", {
-    E$data3 <- produce_plugin_estimates(
-        E$data2,
-        {{ outcome_variable }},
-        {{ treatment_variable }},
-        !!!model_covariates
-    )
-    checkmate::expect_data_frame(E$data3)
+  E$data3 <- produce_plugin_estimates(
+    E$data2,
+    {{ outcome_variable }},
+    {{ treatment_variable }},
+    !!!model_covariates
+  )
+  checkmate::expect_data_frame(E$data3)
 })
 
 test_that("Construct Pseudo-outcomes", {
-    E$data4 <- construct_pseudo_outcomes(E$data3, {{ outcome_variable }}, {{ treatment_variable }})
-    checkmate::expect_data_frame(E$data4)
+  E$data4 <- construct_pseudo_outcomes(E$data3, {{ outcome_variable }}, {{ treatment_variable }})
+  checkmate::expect_data_frame(E$data4)
 })
 
 test_that("Estimate QoIs", {
-    skip_on_cran()
-    E$results <- estimate_QoI(E$data4, !!!moderators)
-    checkmate::expect_data_frame(E$results)
+  skip_on_cran()
+  E$results <- estimate_QoI(E$data4, !!!moderators)
+  checkmate::expect_data_frame(E$results)
 })
 
 test_that("VIMP is valid", {
-    skip_on_cran()
-    vimp <- E$results %>% dplyr::filter(grepl("VIMP", estimand))
-    vimp_z <- vimp$estimate / vimp$std_error
-    # expect small p-value for x1 which has actual HTE
-    expect_lt(2 * pnorm(vimp_z[1], lower.tail = FALSE), 0.01)
-    # expect large p-value for x2 which has no HTE
-    expect_gt(2 * pnorm(vimp_z[2], lower.tail = FALSE), 0.1)
+  skip_on_cran()
+  vimp <- E$results %>% dplyr::filter(grepl("VIMP", estimand))
+  vimp_z <- vimp$estimate / vimp$std_error
+  # expect small p-value for x1 which has actual HTE
+  expect_lt(2 * pnorm(vimp_z[1], lower.tail = FALSE), 0.01)
+  # expect large p-value for x2 which has no HTE
+  expect_gt(2 * pnorm(vimp_z[2], lower.tail = FALSE), 0.1)
 })
 
 n_rows <- (
-    1 + # SATE estimate
+  1 + # SATE estimate
     2 + # MSE for y(0) & y(1)
     2 * 4 + # one row per model in the ensemble for each PO + ps for SL risk
     2 * 4 + # one row per model in the ensemble for each PO + ps for SL coefficient
@@ -126,23 +126,23 @@ n_rows <- (
 )
 
 test_that("Check results data", {
-    skip_on_cran()
-    checkmate::check_character(E$results$estimand, any.missing = FALSE)
-    checkmate::check_double(E$results$estimate, any.missing = FALSE)
-    checkmate::check_double(E$results$std_error, any.missing = FALSE)
+  skip_on_cran()
+  checkmate::check_character(E$results$estimand, any.missing = FALSE)
+  checkmate::check_double(E$results$estimate, any.missing = FALSE)
+  checkmate::check_double(E$results$std_error, any.missing = FALSE)
 
-    checkmate::expect_tibble(
-        E$results,
-        all.missing = FALSE,
-        nrows = n_rows,
-        ncols = 6,
-        types = c(
-            estimand = "character",
-            term = "character",
-            value = "double",
-            level = "character",
-            estimate = "double",
-            std_error = "double"
-        )
+  checkmate::expect_tibble(
+    E$results,
+    all.missing = FALSE,
+    nrows = n_rows,
+    ncols = 6,
+    types = c(
+      estimand = "character",
+      term = "character",
+      value = "double",
+      level = "character",
+      estimate = "double",
+      std_error = "double"
     )
+  )
 })

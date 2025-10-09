@@ -10,7 +10,7 @@
 #' `tidyhte_error_general` and include more specific subclasses:
 #'
 #' * `tidyhte_error_config` - Configuration-related errors
-#' * `tidyhte_error_model` - Model-related errors  
+#' * `tidyhte_error_model` - Model-related errors
 #' * `tidyhte_error_data` - Data validation errors
 #' * `tidyhte_error_not_implemented` - Not implemented functionality
 #' * `tidyhte_error_package` - Package dependency errors
@@ -39,11 +39,11 @@ NULL
 #' @param ... Additional arguments passed to `rlang::abort()`
 #' @keywords internal
 tidyhte_abort <- function(message, class = "general", ...) {
-    rlang::abort(
-        message = message,
-        class = paste0("tidyhte_error_", class),
-        ...
-    )
+  rlang::abort(
+    message = message,
+    class = paste0("tidyhte_error_", class),
+    ...
+  )
 }
 
 #' Configuration-related errors
@@ -52,7 +52,7 @@ tidyhte_abort <- function(message, class = "general", ...) {
 #' @param ... Additional arguments passed to `tidyhte_abort()`
 #' @keywords internal
 abort_config <- function(message, ...) {
-    tidyhte_abort(message, class = "config", ...)
+  tidyhte_abort(message, class = "config", ...)
 }
 
 #' Model-related errors
@@ -61,7 +61,7 @@ abort_config <- function(message, ...) {
 #' @param ... Additional arguments passed to `tidyhte_abort()`
 #' @keywords internal
 abort_model <- function(message, ...) {
-    tidyhte_abort(message, class = "model", ...)
+  tidyhte_abort(message, class = "model", ...)
 }
 
 #' Data validation errors
@@ -70,7 +70,7 @@ abort_model <- function(message, ...) {
 #' @param ... Additional arguments passed to `tidyhte_abort()`
 #' @keywords internal
 abort_data <- function(message, ...) {
-    tidyhte_abort(message, class = "data", ...)
+  tidyhte_abort(message, class = "data", ...)
 }
 
 #' Not implemented errors
@@ -79,7 +79,7 @@ abort_data <- function(message, ...) {
 #' @param ... Additional arguments passed to `tidyhte_abort()`
 #' @keywords internal
 abort_not_implemented <- function(message = "Not implemented", ...) {
-    tidyhte_abort(message, class = "not_implemented", ...)
+  tidyhte_abort(message, class = "not_implemented", ...)
 }
 
 #' Package dependency errors
@@ -88,5 +88,5 @@ abort_not_implemented <- function(message = "Not implemented", ...) {
 #' @param ... Additional arguments passed to `tidyhte_abort()`
 #' @keywords internal
 abort_package <- function(message, ...) {
-    tidyhte_abort(message, class = "package", ...)
+  tidyhte_abort(message, class = "package", ...)
 }

@@ -33,9 +33,9 @@
 #' @importFrom stats predict model.matrix
 #' @import SuperLearner
 SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
-                      alpha = 1, nfolds = 10, nlambda = 100, useMin = TRUE,
-                      loss = "deviance",
-                      ...) {
+                                  alpha = 1, nfolds = 10, nlambda = 100, useMin = TRUE,
+                                  loss = "deviance",
+                                  ...) {
   soft_require("glmnet")
 
   # X must be a matrix, should we use model.matrix or as.matrix
@@ -85,9 +85,9 @@ SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
 #' @importFrom stats model.matrix
 #' @import SuperLearner
 predict.SL.glmnet.interaction <- function(object, newdata,
-                              remove_extra_cols = TRUE,
-                              add_missing_cols = TRUE,
-                              ...) {
+                                          remove_extra_cols = TRUE,
+                                          add_missing_cols = TRUE,
+                                          ...) {
   soft_require("glmnet")
 
   # TODO: support sparse matrices.
@@ -102,7 +102,7 @@ predict.SL.glmnet.interaction <- function(object, newdata,
     extra_cols <- setdiff(colnames(newdata), original_cols)
     if (length(extra_cols) > 0) {
       warning(paste("Removing extra columns in prediction data:",
-                     paste(extra_cols, collapse = ", ")))
+                    paste(extra_cols, collapse = ", ")))
 
       newdata <- newdata[, !colnames(newdata) %in% extra_cols, drop = FALSE]
     }
@@ -113,7 +113,7 @@ predict.SL.glmnet.interaction <- function(object, newdata,
     missing_cols <- setdiff(original_cols, colnames(newdata))
     if (length(missing_cols) > 0) {
       warning(paste("Adding missing columns in prediction data:",
-                     paste(missing_cols, collapse = ", ")))
+                    paste(missing_cols, collapse = ", ")))
 
       new_cols <- matrix(0, nrow = nrow(newdata), ncol = length(missing_cols))
       colnames(new_cols) <- missing_cols
@@ -127,7 +127,7 @@ predict.SL.glmnet.interaction <- function(object, newdata,
   # If we predict with the cv.glmnet object we can specify lambda using a
   # string.
   pred <- predict(object$object, newx = newdata, type = "response",
-             s = ifelse(object$useMin, "lambda.min", "lambda.1se"))
+                  s = ifelse(object$useMin, "lambda.min", "lambda.1se"))
 
   return(pred)
 }

@@ -2,26 +2,26 @@ set.seed(20051920) # 20051920 is derived from 'test'
 
 n <- 250
 data <- dplyr::tibble(
-    uid = 1:n
+  uid = 1:n
 ) %>%
-    dplyr::mutate(
-        a = rbinom(n, 1, 0.5),
-        ps = rep(0.5, n),
-        x1 = rnorm(n),
-        x2 = factor(sample(1:4, n, prob = c(1 / 5, 1 / 5, 1 / 5, 2 / 5), replace = TRUE)),
-        x3 = factor(sample(1:3, n, prob = c(1 / 5, 1 / 5, 3 / 5), replace = TRUE)),
-        x4 = (x1 + rnorm(n)) / 2,
-        x5 = rnorm(n),
-        y = a + x1 - 2.5 * a * (x1 - mean(x1)) + as.double(x2) + rnorm(n),
-        w = rexp(n, plogis(x1 - mean(x1)))
-    )
+  dplyr::mutate(
+    a = rbinom(n, 1, 0.5),
+    ps = rep(0.5, n),
+    x1 = rnorm(n),
+    x2 = factor(sample(1:4, n, prob = c(1 / 5, 1 / 5, 1 / 5, 2 / 5), replace = TRUE)),
+    x3 = factor(sample(1:3, n, prob = c(1 / 5, 1 / 5, 3 / 5), replace = TRUE)),
+    x4 = (x1 + rnorm(n)) / 2,
+    x5 = rnorm(n),
+    y = a + x1 - 2.5 * a * (x1 - mean(x1)) + as.double(x2) + rnorm(n),
+    w = rexp(n, plogis(x1 - mean(x1)))
+  )
 
 n_missing_cells <- 25
 
 for (i in seq_len(n_missing_cells)) {
-    row <- sample(n, 1)
-    col <- sample(names(data)[c(2, 4:9)], 1)
-    data[row, col] <- NA
+  row <- sample(n, 1)
+  col <- sample(names(data)[c(2, 4:9)], 1)
+  data[row, col] <- NA
 }
 
 userid <- rlang::expr(uid)
@@ -43,94 +43,94 @@ outcome_variable <- rlang::expr(y)
 treatment_variable <- rlang::expr(a)
 
 trt.cfg <- SLEnsemble_cfg$new(
-    learner_cfgs = list(
-        SLLearner_cfg$new(
-            "SL.glm"
-        )
-    ),
-    family = stats::quasibinomial()
+  learner_cfgs = list(
+    SLLearner_cfg$new(
+      "SL.glm"
+    )
+  ),
+  family = stats::quasibinomial()
 )
 
 regression.cfg <- SLEnsemble_cfg$new(
-    learner_cfgs = list(
-        SLLearner_cfg$new(
-            "SL.glm"
-        )
+  learner_cfgs = list(
+    SLLearner_cfg$new(
+      "SL.glm"
     )
+  )
 )
 
 qoi.list <- list()
 for (cov in continuous_moderators) {
-    qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100)
+  qoi.list[[rlang::as_string(cov)]] <- KernelSmooth_cfg$new(neval = 100)
 }
 for (cov in discrete_moderators) {
-    qoi.list[[rlang::as_string(cov)]] <- Stratified_cfg$new(cov)
+  qoi.list[[rlang::as_string(cov)]] <- Stratified_cfg$new(cov)
 }
 
 qoi.cfg <- QoI_cfg$new(
-    mcate = MCATE_cfg$new(cfgs = qoi.list),
-    vimp = VIMP_cfg$new(),
-    diag = Diagnostics_cfg$new(
-        outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
-        ps = c("SL_risk", "SL_coefs", "AUC"),
-        params = list(num_bins = 100)
-    ),
+  mcate = MCATE_cfg$new(cfgs = qoi.list),
+  vimp = VIMP_cfg$new(),
+  diag = Diagnostics_cfg$new(
+    outcome = c("SL_risk", "SL_coefs", "MSE", "RROC"),
+    ps = c("SL_risk", "SL_coefs", "AUC"),
+    params = list(num_bins = 100)
+  ),
 )
 
 cfg <- HTE_cfg$new(
-    treatment = trt.cfg,
-    outcome = regression.cfg,
-    effect = regression.cfg,
-    qoi = qoi.cfg
+  treatment = trt.cfg,
+  outcome = regression.cfg,
+  effect = regression.cfg,
+  qoi = qoi.cfg
 )
 
-E = new.env(parent = emptyenv())
+E <- new.env(parent = emptyenv())
 
 test_that("add config", {
-    E$data1 <- attach_config(data, cfg)
-    checkmate::expect_data_frame(E$data1)
-    expect_true("HTE_cfg" %in% names(attributes(E$data1)))
+  E$data1 <- attach_config(data, cfg)
+  checkmate::expect_data_frame(E$data1)
+  expect_true("HTE_cfg" %in% names(attributes(E$data1)))
 })
 
 test_that("Split data", {
-    suppressMessages(E$data2 <- make_splits(E$data1, {{ userid }}, .num_splits = 4))
-    checkmate::expect_data_frame(E$data2)
+  suppressMessages(E$data2 <- make_splits(E$data1, {{ userid }}, .num_splits = 4))
+  checkmate::expect_data_frame(E$data2)
 })
 
 test_that("Estimate Plugin Models", {
-    suppressMessages(E$data3 <- produce_plugin_estimates(
-        E$data2,
-        {{ outcome_variable }},
-        {{ treatment_variable }},
-        !!!model_covariates,
-        .weights = {{ weight_variable }}
-    ))
-    checkmate::expect_data_frame(E$data3)
+  suppressMessages(E$data3 <- produce_plugin_estimates(
+    E$data2,
+    {{ outcome_variable }},
+    {{ treatment_variable }},
+    !!!model_covariates,
+    .weights = {{ weight_variable }}
+  ))
+  checkmate::expect_data_frame(E$data3)
 })
 
 test_that("Construct Pseudo-outcomes", {
-    suppressMessages(
-        E$data4 <- construct_pseudo_outcomes(
-            E$data3, {{ outcome_variable }}, {{ treatment_variable }}
-        )
+  suppressMessages(
+    E$data4 <- construct_pseudo_outcomes(
+      E$data3, {{ outcome_variable }}, {{ treatment_variable }}
     )
-    checkmate::expect_data_frame(E$data4)
+  )
+  checkmate::expect_data_frame(E$data4)
 })
 
 test_that("Estimate QoIs (continuous)", {
-    expect_error(
-        suppressMessages(estimate_QoI(E$data4, !!!continuous_moderators)),
-        "`nprobust` does not support the use of weights."
-    )
+  expect_error(
+    suppressMessages(estimate_QoI(E$data4, !!!continuous_moderators)),
+    "`nprobust` does not support the use of weights."
+  )
 })
 
 test_that("Estimate QoIs (discrete)", {
-    suppressMessages(E$results <- estimate_QoI(E$data4, !!!discrete_moderators))
-    checkmate::expect_data_frame(E$results)
+  suppressMessages(E$results <- estimate_QoI(E$data4, !!!discrete_moderators))
+  checkmate::expect_data_frame(E$results)
 })
 
 n_rows <- (
-    1 + # SATE estimate
+  1 + # SATE estimate
     1 + # PATE estimate
     2 + # MSE for y(0) & y(1)
     1 + # AUC for pscore
@@ -143,34 +143,34 @@ n_rows <- (
 )
 
 test_that("PATE > SATE", {
-    # PATE has larger treatment effects (because weight is correlated with moderator)
-    pate <- E$results %>% dplyr::filter(grepl("PATE", estimand)) %>% select(estimate) %>% unlist()
-    sate <- E$results %>% dplyr::filter(grepl("SATE", estimand)) %>% select(estimate) %>% unlist()
-    expect_gt(pate, sate)
+  # PATE has larger treatment effects (because weight is correlated with moderator)
+  pate <- E$results %>% dplyr::filter(grepl("PATE", estimand)) %>% select(estimate) %>% unlist()
+  sate <- E$results %>% dplyr::filter(grepl("SATE", estimand)) %>% select(estimate) %>% unlist()
+  expect_gt(pate, sate)
 
-    # Weighting makes the standard error larger
-    pate <- E$results %>% dplyr::filter(grepl("PATE", estimand)) %>% select(std_error) %>% unlist()
-    sate <- E$results %>% dplyr::filter(grepl("SATE", estimand)) %>% select(std_error) %>% unlist()
-    expect_gt(pate, sate)
+  # Weighting makes the standard error larger
+  pate <- E$results %>% dplyr::filter(grepl("PATE", estimand)) %>% select(std_error) %>% unlist()
+  sate <- E$results %>% dplyr::filter(grepl("SATE", estimand)) %>% select(std_error) %>% unlist()
+  expect_gt(pate, sate)
 })
 
 test_that("Check results data", {
-    checkmate::check_character(E$results$estimand, any.missing = FALSE)
-    checkmate::check_double(E$results$estimate, any.missing = FALSE)
-    checkmate::check_double(E$results$std_error, any.missing = FALSE)
+  checkmate::check_character(E$results$estimand, any.missing = FALSE)
+  checkmate::check_double(E$results$estimate, any.missing = FALSE)
+  checkmate::check_double(E$results$std_error, any.missing = FALSE)
 
-    checkmate::expect_tibble(
-        E$results,
-        all.missing = FALSE,
-        nrows = n_rows,
-        ncols = 6,
-        types = c(
-            estimand = "character",
-            term = "character",
-            value = "numeric",
-            level = "character",
-            estimate = "double",
-            std_error = "double"
-        )
+  checkmate::expect_tibble(
+    E$results,
+    all.missing = FALSE,
+    nrows = n_rows,
+    ncols = 6,
+    types = c(
+      estimand = "character",
+      term = "character",
+      value = "numeric",
+      level = "character",
+      estimate = "double",
+      std_error = "double"
     )
+  )
 })

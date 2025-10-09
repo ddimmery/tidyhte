@@ -1,6 +1,4 @@
 linters: linters_with_defaults(
-  line_length_linter(100), 
+  line_length_linter(100),
   object_name_linter = NULL,
-  object_usage_linter = NULL,
-  assignment_linter(allow_right_assign = TRUE))
-
+  object_usage_linter = NULL)

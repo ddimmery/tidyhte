@@ -35,25 +35,25 @@
 #' @return `HTE_cfg` object
 #' @export
 basic_config <- function() {
-    trt_cfg <- SLEnsemble_cfg$new()
-    reg_cfg <- SLEnsemble_cfg$new()
-    fx_cfg <- SLEnsemble_cfg$new()
-    qoi_cfg <- QoI_cfg$new(
-        ate = TRUE,
-        vimp = VIMP_cfg$new(sample_splitting = TRUE),
-        diag = Diagnostics_cfg$new(
-            ps = c("AUC", "MSE", "SL_risk", "SL_coefs"),
-            outcome = c("MSE", "SL_risk", "SL_coefs"),
-            effect = c("MSE", "SL_risk", "SL_coefs")
-        )
+  trt_cfg <- SLEnsemble_cfg$new()
+  reg_cfg <- SLEnsemble_cfg$new()
+  fx_cfg <- SLEnsemble_cfg$new()
+  qoi_cfg <- QoI_cfg$new(
+    ate = TRUE,
+    vimp = VIMP_cfg$new(sample_splitting = TRUE),
+    diag = Diagnostics_cfg$new(
+      ps = c("AUC", "MSE", "SL_risk", "SL_coefs"),
+      outcome = c("MSE", "SL_risk", "SL_coefs"),
+      effect = c("MSE", "SL_risk", "SL_coefs")
     )
-    hte_cfg <- HTE_cfg$new(
-        treatment = trt_cfg,
-        outcome = reg_cfg,
-        effect = fx_cfg,
-        qoi = qoi_cfg
-    )
-    invisible(hte_cfg)
+  )
+  hte_cfg <- HTE_cfg$new(
+    treatment = trt_cfg,
+    outcome = reg_cfg,
+    effect = fx_cfg,
+    qoi = qoi_cfg
+  )
+  invisible(hte_cfg)
 }
 
 #' Add an additional model to the propensity score ensemble
@@ -73,13 +73,13 @@ basic_config <- function() {
 #'    add_propensity_score_model("SL.glmnet", alpha = c(0, 0.5, 1)) -> hte_cfg
 #' @export
 add_propensity_score_model <- function(hte_cfg, model_name, ...) {
-    hps <- rlang::dots_list(..., .named = TRUE)
-    if (length(hps) == 0) hps <- NULL
-    if (!checkmate::test_r6(hte_cfg$treatment, classes = "SLEnsemble_cfg")) {
-        hte_cfg$treatment <- SLEnsemble_cfg$new()
-    }
-    hte_cfg$treatment$add_sublearner(model_name, hps)
-    invisible(hte_cfg)
+  hps <- rlang::dots_list(..., .named = TRUE)
+  if (length(hps) == 0) hps <- NULL
+  if (!checkmate::test_r6(hte_cfg$treatment, classes = "SLEnsemble_cfg")) {
+    hte_cfg$treatment <- SLEnsemble_cfg$new()
+  }
+  hte_cfg$treatment$add_sublearner(model_name, hps)
+  invisible(hte_cfg)
 }
 
 #' Uses a known propensity score
@@ -96,12 +96,12 @@ add_propensity_score_model <- function(hte_cfg, model_name, ...) {
 #'    add_known_propensity_score("ps") -> hte_cfg
 #' @export
 add_known_propensity_score <- function(hte_cfg, covariate_name) {
-    hte_cfg$treatment <- Known_cfg$new(covariate_name)
-    hte_cfg$qoi$diag = Diagnostics_cfg$new(
-        outcome = hte_cfg$qoi$diag$outcome,
-        effect = hte_cfg$qoi$diag$effect
-    )
-    invisible(hte_cfg)
+  hte_cfg$treatment <- Known_cfg$new(covariate_name)
+  hte_cfg$qoi$diag <- Diagnostics_cfg$new(
+    outcome = hte_cfg$qoi$diag$outcome,
+    effect = hte_cfg$qoi$diag$effect
+  )
+  invisible(hte_cfg)
 }
 
 #' Add an additional diagnostic to the propensity score
@@ -118,8 +118,8 @@ add_known_propensity_score <- function(hte_cfg, covariate_name) {
 #'    add_propensity_diagnostic(c("AUC", "MSE")) -> hte_cfg
 #' @export
 add_propensity_diagnostic <- function(hte_cfg, diag) {
-    hte_cfg$qoi$diag$add(ps = diag)
-    invisible(hte_cfg)
+  hte_cfg$qoi$diag$add(ps = diag)
+  invisible(hte_cfg)
 }
 
 #' Add an additional model to the outcome ensemble
@@ -139,13 +139,13 @@ add_propensity_diagnostic <- function(hte_cfg, diag) {
 #'    add_outcome_model("SL.glm.interaction") -> hte_cfg
 #' @export
 add_outcome_model <- function(hte_cfg, model_name, ...) {
-    hps <- rlang::dots_list(..., .named = TRUE)
-    if (length(hps) == 0) hps <- NULL
-    if (!checkmate::test_r6(hte_cfg$outcome, classes = "SLEnsemble_cfg")) {
-        hte_cfg$outcome <- SLEnsemble_cfg$new()
-    }
-    hte_cfg$outcome$add_sublearner(model_name, hps)
-    invisible(hte_cfg)
+  hps <- rlang::dots_list(..., .named = TRUE)
+  if (length(hps) == 0) hps <- NULL
+  if (!checkmate::test_r6(hte_cfg$outcome, classes = "SLEnsemble_cfg")) {
+    hte_cfg$outcome <- SLEnsemble_cfg$new()
+  }
+  hte_cfg$outcome$add_sublearner(model_name, hps)
+  invisible(hte_cfg)
 }
 
 #' Add an additional diagnostic to the outcome model
@@ -162,8 +162,8 @@ add_outcome_model <- function(hte_cfg, model_name, ...) {
 #'    add_outcome_diagnostic("RROC") -> hte_cfg
 #' @export
 add_outcome_diagnostic <- function(hte_cfg, diag) {
-    hte_cfg$qoi$diag$add(outcome = diag)
-    invisible(hte_cfg)
+  hte_cfg$qoi$diag$add(outcome = diag)
+  invisible(hte_cfg)
 }
 
 #' Add an additional model to the joint effect ensemble
@@ -183,10 +183,10 @@ add_outcome_diagnostic <- function(hte_cfg, diag) {
 #'    add_effect_model("SL.glm.interaction") -> hte_cfg
 #' @export
 add_effect_model <- function(hte_cfg, model_name, ...) {
-    hps <- rlang::dots_list(..., .named = TRUE)
-    if (length(hps) == 0) hps <- NULL
-    hte_cfg$effect$add_sublearner(model_name, hps)
-    invisible(hte_cfg)
+  hps <- rlang::dots_list(..., .named = TRUE)
+  if (length(hps) == 0) hps <- NULL
+  hte_cfg$effect$add_sublearner(model_name, hps)
+  invisible(hte_cfg)
 }
 
 #' Add an additional diagnostic to the effect model
@@ -203,8 +203,8 @@ add_effect_model <- function(hte_cfg, model_name, ...) {
 #'    add_effect_diagnostic("RROC") -> hte_cfg
 #' @export
 add_effect_diagnostic <- function(hte_cfg, diag) {
-    hte_cfg$qoi$diag$add(effect = diag)
-    invisible(hte_cfg)
+  hte_cfg$qoi$diag$add(effect = diag)
+  invisible(hte_cfg)
 }
 
 #' Adds moderators to the configuration
@@ -229,36 +229,36 @@ add_effect_diagnostic <- function(hte_cfg, diag) {
 #'    add_moderator("KernelSmooth", x1, x4, x5) -> hte_cfg
 #' @export
 add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
-    moderators <- rlang::enexprs(...)
+  moderators <- rlang::enexprs(...)
 
-    discrete <- tolower(model_type) == "stratified"
+  discrete <- tolower(model_type) == "stratified"
+  if (discrete) {
+    model_cls <- Stratified_cfg
+  } else if (tolower(model_type) == "kernelsmooth") {
+    model_cls <- KernelSmooth_cfg
+  } else {
+    abort_config("Unknown `model_type`.")
+  }
+
+  qoi_list <- rlang::list2()
+  for (moderator in moderators) {
+    mod_name <- rlang::as_name(moderator)
     if (discrete) {
-        model_cls <- Stratified_cfg
-    } else if (tolower(model_type) == "kernelsmooth") {
-        model_cls <- KernelSmooth_cfg
+      qoi_list[[mod_name]] <- model_cls$new(covariate = mod_name)
     } else {
-        abort_config("Unknown `model_type`.")
+      if (is.null(.model_arguments)) .model_arguments <- list()
+      qoi_list[[mod_name]] <- do.call(model_cls$new, .model_arguments)
     }
+  }
 
-    qoi_list <- rlang::list2()
-    for (moderator in moderators) {
-        mod_name <- rlang::as_name(moderator)
-        if (discrete) {
-            qoi_list[[mod_name]] <- model_cls$new(covariate = mod_name)
-        } else {
-            if (is.null(.model_arguments)) .model_arguments <- list()
-            qoi_list[[mod_name]] <- do.call(model_cls$new, .model_arguments)
-        }
+  if (is.null(hte_cfg$qoi$mcate)) {
+    hte_cfg$qoi$mcate <- MCATE_cfg$new(qoi_list)
+  } else {
+    for (var in names(qoi_list)) {
+      hte_cfg$qoi$mcate$add_moderator(var, qoi_list[[var]])
     }
-
-    if (is.null(hte_cfg$qoi$mcate)) {
-        hte_cfg$qoi$mcate <- MCATE_cfg$new(qoi_list)
-    } else {
-        for (var in names(qoi_list)) {
-            hte_cfg$qoi$mcate$add_moderator(var, qoi_list[[var]])
-        }
-    }
-    invisible(hte_cfg)
+  }
+  invisible(hte_cfg)
 }
 
 #' Adds variable importance information
@@ -285,14 +285,14 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #'    add_vimp(sample_splitting = FALSE) -> hte_cfg
 #' @export
 add_vimp <- function(hte_cfg, sample_splitting = TRUE, linear_only = FALSE) {
-    hte_cfg$qoi$vimp <- VIMP_cfg$new(
-        sample_splitting = sample_splitting
-    )
-    invisible(hte_cfg)
+  hte_cfg$qoi$vimp <- VIMP_cfg$new(
+    sample_splitting = sample_splitting
+  )
+  invisible(hte_cfg)
 }
 
 #' Removes variable importance information
-#' 
+#'
 #' This removes the variable importance quantity of interest
 #' from an `HTE_cfg`.
 #' @param hte_cfg `HTE_cfg` object to update.
@@ -303,6 +303,6 @@ add_vimp <- function(hte_cfg, sample_splitting = TRUE, linear_only = FALSE) {
 #'    remove_vimp() -> hte_cfg
 #' @export
 remove_vimp <- function(hte_cfg) {
-    hte_cfg$qoi$vimp = NULL
-    invisible(hte_cfg)
+  hte_cfg$qoi$vimp <- NULL
+  invisible(hte_cfg)
 }
