@@ -8,6 +8,113 @@ SL_model_slot <- function(prediction) {
     else abort_model("Unknown model slot.")
 }
 
+#' Calculate AUC diagnostic
+#' @noRd
+#' @keywords internal
+calculate_auc_diagnostic <- function(data, label, prediction) {
+    w_col <- attr(data, "weights")
+    soft_require("WeightedROC")
+    labels <- data[[label]]
+    if (checkmate::test_integerish(labels, lower = 0, upper = 1)) {
+        predictions <- data[[prediction]]
+        n1 <- sum(data[[label]] * data[[w_col]])
+        n <- sum(data[[w_col]])
+        wroc <- WeightedROC::WeightedROC(predictions, labels, data[[w_col]])
+        auc <- WeightedROC::WeightedAUC(wroc)
+        result <- dplyr::tibble(
+            estimand = "AUC",
+            term = label,
+            estimate = auc,
+            # Hanley and McNeil (1982) bound on the variance of AUC
+            std_error = 1 / 2 / sqrt(pmin(n1, n - n1))
+        )
+    } else {
+        result <- NULL
+        message("Cannot calculate AUC because labels are not binary.")
+    }
+    result
+}
+
+#' Calculate MSE diagnostic
+#' @noRd
+#' @keywords internal
+calculate_mse_diagnostic <- function(data, label, prediction) {
+    w_col <- attr(data, "weights")
+    id_col <- attr(data, "identifier")
+    sqerr <- (data[[label]] - data[[prediction]]) ^ 2
+    result <- stats::weighted.mean(sqerr, data[[w_col]])
+    stderr <- clustered_se_of_mean(sqerr, data[[id_col]], data[[w_col]])
+    dplyr::tibble(
+        estimand = "MSE",
+        term = label,
+        estimate = result,
+        std_error = stderr
+    )
+}
+
+#' Extract SuperLearner model information
+#' @noRd
+#' @keywords internal
+extract_sl_data <- function(data, prediction, field_name) {
+    if (
+        ("SL_coefs" %in% names(attributes(data))) &&
+        (SL_model_slot(prediction) %in% names(attr(data, "SL_coefs"))) &&
+        length(attr(data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
+    ) {
+        result_list <- attr(data, "SL_coefs")[[SL_model_slot(prediction)]]
+        result <- dplyr::bind_rows(!!!result_list) %>%
+            dplyr::group_by(.data$model_name) %>%
+            dplyr::summarize(
+                estimate = mean(.data[[field_name]]),
+                std_error = stats::sd(.data[[field_name]]) / sqrt(dplyr::n())
+            ) %>%
+            dplyr::rename(term = "model_name")
+        result
+    } else {
+        NULL
+    }
+}
+
+#' Calculate SuperLearner coefficients diagnostic
+#' @noRd
+#' @keywords internal
+calculate_sl_coefs_diagnostic <- function(data, label, prediction) {
+    result <- extract_sl_data(data, prediction, "coef")
+    if (!is.null(result)) {
+        result$estimand <- "SL coefficient"
+    } else {
+        message("Cannot calculate SL_coefs because the model is not SuperLearner.")
+    }
+    result
+}
+
+#' Calculate SuperLearner risk diagnostic
+#' @noRd
+#' @keywords internal
+calculate_sl_risk_diagnostic <- function(data, label, prediction) {
+    result <- extract_sl_data(data, prediction, "cvRisk")
+    if (!is.null(result)) {
+        result$estimand <- "SL risk"
+    } else {
+        message("Cannot calculate SL_risk because the model is not SuperLearner.")
+    }
+    result
+}
+
+#' Calculate RROC diagnostic
+#' @noRd
+#' @keywords internal
+calculate_rroc_diagnostic <- function(data, label, prediction, params) {
+    if ("num_bins" %in% names(params)) {
+        nbins <- params$num_bins
+    } else {
+        nbins <- nrow(data)
+    }
+    result <- calculate_rroc(data[[label]], data[[prediction]], nbins = nbins)
+    result$term <- label
+    result
+}
+
 #' Function to calculate diagnostics based on model outputs
 #'
 #' This function defines the calculations of common model diagnostics
@@ -27,87 +134,16 @@ SL_model_slot <- function(prediction) {
 #' @export
 #' @importFrom stats sd weighted.mean
 estimate_diagnostic <- function(data, label, prediction, diag_name, params) {
-    w_col <- attr(data, "weights")
-    id_col <- attr(data, "identifier")
+    diag_name_lower <- tolower(diag_name)
 
-    if (tolower(diag_name) == "auc") {
-        soft_require("WeightedROC")
-        labels <- data[[label]]
-        if (checkmate::test_integerish(labels, lower = 0, upper = 1)) {
-            predictions <- data[[prediction]]
-            n1 <- sum(data[[label]] * data[[w_col]])
-            n <- sum(data[[w_col]])
-            wroc <- WeightedROC::WeightedROC(predictions, labels, data[[w_col]])
-            auc <- WeightedROC::WeightedAUC(wroc)
-            result <- dplyr::tibble(
-                estimand = "AUC",
-                term = label,
-                estimate = auc,
-                # Hanley and McNeil (1982) bound on the variance of AUC
-                std_error = 1 / 2 / sqrt(pmin(n1, n - n1))
-            )
-        } else {
-            result <- NULL
-            message("Cannot calculate AUC because labels are not binary.")
-        }
-    } else if (tolower(diag_name) == "mse") {
-        sqerr <- (data[[label]] - data[[prediction]]) ^ 2
-        result <- stats::weighted.mean(sqerr, data[[w_col]])
-        stderr <- clustered_se_of_mean(sqerr, data[[id_col]], data[[w_col]])
-        result <- dplyr::tibble(
-            estimand = "MSE",
-            term = label,
-            estimate = result,
-            std_error = stderr
-        )
-    } else if (tolower(diag_name) == "sl_coefs") {
-        if (
-            ("SL_coefs" %in% names(attributes(data))) &&
-            (SL_model_slot(prediction) %in% names(attr(data, "SL_coefs"))) &&
-            length(attr(data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
-        ) {
-        result_list <- attr(data, "SL_coefs")[[SL_model_slot(prediction)]]
-        result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(.data$model_name) %>%
-            dplyr::summarize(
-                estimate = mean(.data$coef),
-                std_error = stats::sd(.data$coef) / sqrt(dplyr::n()),
-                estimand = "SL coefficient"
-            ) %>%
-            dplyr::rename(term = "model_name")
-        } else {
-            result <- NULL
-            message("Cannot calculate SL_coefs because the model is not SuperLearner.")
-        }
-    } else if (tolower(diag_name) == "sl_risk") {
-        if (
-            ("SL_coefs" %in% names(attributes(data))) &&
-            (SL_model_slot(prediction) %in% names(attr(data, "SL_coefs"))) &&
-            length(attr(data, "SL_coefs")[[SL_model_slot(prediction)]]) > 0
-        ) {
-        result_list <- attr(data, "SL_coefs")[[SL_model_slot(prediction)]]
-        result <- dplyr::bind_rows(!!!result_list) %>%
-            dplyr::group_by(.data$model_name) %>%
-            dplyr::summarize(
-                estimate = mean(.data$cvRisk),
-                std_error = stats::sd(.data$cvRisk) / sqrt(dplyr::n()),
-                estimand = "SL risk"
-            ) %>%
-            dplyr::rename(term = "model_name")
-        } else {
-            result <- NULL
-            message("Cannot calculate SL_risk because the model is not SuperLearner.")
-        }
-    } else if (tolower(diag_name) == "rroc") {
-        if ("num_bins" %in% names(params)) {
-            nbins <- params$num_bins
-        } else {
-            nbins <- nrow(data)
-        }
-        result <- calculate_rroc(data[[label]], data[[prediction]], nbins = nbins)
-        result$term <- label
-    }
-    result
+    switch(diag_name_lower,
+        "auc" = calculate_auc_diagnostic(data, label, prediction),
+        "mse" = calculate_mse_diagnostic(data, label, prediction),
+        "sl_coefs" = calculate_sl_coefs_diagnostic(data, label, prediction),
+        "sl_risk" = calculate_sl_risk_diagnostic(data, label, prediction),
+        "rroc" = calculate_rroc_diagnostic(data, label, prediction, params),
+        stop("Unknown diagnostic: ", diag_name)
+    )
 }
 
 #' Calculate diagnostics

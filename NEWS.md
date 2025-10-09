@@ -1,3 +1,7 @@
+# tidyhte (current)
+
+* Refactored diagnostics calculation.
+
 # tidyhte (1.0.4)
 
 * Reduce packaged vignette file sizes.
