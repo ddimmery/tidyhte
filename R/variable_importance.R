@@ -18,9 +18,19 @@
 #' Journal of the American Statistical Association, 1-14.
 #' @seealso [calculate_linear_vimp()]
 #' @importFrom progress progress_bar
-#' @import SuperLearner
 #' @keywords internal
 calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg) {
+  if (!identical(.Model_cfg$model_class, "SL")) {
+    abort_config(paste0(
+      "Non-linear variable importance requires a SuperLearner ensemble (`SLEnsemble_cfg`) ",
+      "for the effect model, but the effect model has class '", .Model_cfg$model_class, "'. ",
+      "Either add learners with `add_effect_model()` or request linear variable ",
+      "importance with `add_vimp(linear_only = TRUE)`."
+    ))
+  }
+  soft_require("SuperLearner", reason = "to estimate non-linear variable importance.")
+  soft_require("vimp", reason = "to estimate non-linear variable importance.")
+  soft_require("quadprog", reason = "to estimate non-linear variable importance.")
   dots <- rlang::enexprs(...)
   weight_col <- rlang::enexpr(weight_col)
   pseudo_outcome <- rlang::enexpr(pseudo_outcome)
@@ -42,7 +52,6 @@ calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg
   } else {
     inner_cv_ctl <- list()
   }
-  soft_require("quadprog")
   pb <- progress::progress_bar$new(
     total = 1 + ncol(data$model_frame),
     show_after = 0,
@@ -146,7 +155,6 @@ calculate_vimp <- function(full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg
 #' @importFrom stats lm residuals weighted.mean
 #' @importFrom dplyr select %>% tibble
 #' @importFrom rlang enexprs enexpr
-#' @import SuperLearner
 #' @keywords internal
 calculate_linear_vimp <- function(
   full_data, weight_col, pseudo_outcome, ..., .VIMP_cfg, .Model_cfg

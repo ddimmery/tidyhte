@@ -23,8 +23,16 @@ Updated \code{HTE_cfg} object
 This adds a learner to the ensemble used for estimating propensity
 scores.
 }
+\details{
+If the current model is not a \code{SuperLearner} ensemble (e.g. a
+\code{GLM_cfg} fallback), it is replaced with a new \code{SLEnsemble_cfg}. This
+requires the optional \code{SuperLearner} package and will prompt to install it
+if it is missing.
+}
 \examples{
+\dontshow{if (rlang::is_installed("SuperLearner")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("dplyr")
 basic_config() \%>\%
    add_propensity_score_model("SL.glmnet", alpha = c(0, 0.5, 1)) -> hte_cfg
+\dontshow{\}) # examplesIf}
 }

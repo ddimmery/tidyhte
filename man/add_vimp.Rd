@@ -15,7 +15,9 @@ moderators with non-null importance.}
 
 \item{linear_only}{Logical indicating whether the variable importance should use only a single
 linear-only model. Variable importance measure will only be consistent for the population
-quantity if the true model of pseudo-outcomes is linear.}
+quantity if the true model of pseudo-outcomes is linear. Non-linear variable
+importance requires the optional \code{vimp} and \code{SuperLearner} packages;
+\code{linear_only = TRUE} requires neither.}
 }
 \value{
 Updated \code{HTE_cfg} object
@@ -24,9 +26,11 @@ Updated \code{HTE_cfg} object
 This adds a variable importance quantity of interest to the outputs.
 }
 \examples{
+\dontshow{if (rlang::is_installed("vimp")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("dplyr")
 basic_config() \%>\%
    add_vimp(sample_splitting = FALSE) -> hte_cfg
+\dontshow{\}) # examplesIf}
 }
 \references{
 \itemize{

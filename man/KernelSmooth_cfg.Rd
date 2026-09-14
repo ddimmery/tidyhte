@@ -9,15 +9,13 @@ regression to construct a smooth representation of the relationship between
 two variables. This is typically used for displaying a surface of the conditional
 average treatment effect over a continuous covariate.
 
-Kernel smoothing is handled by the \code{nprobust} package.
+Kernel smoothing is handled by the optional \code{nprobust} package, which
+\code{tidyhte} will offer to install when a \code{KernelSmooth_cfg} is constructed.
 }
 \examples{
-
-## ------------------------------------------------
-## Method `KernelSmooth_cfg$new`
-## ------------------------------------------------
-
+\dontshow{if (rlang::is_installed("nprobust")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 KernelSmooth_cfg$new(neval = 100)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \link[nprobust:lprobust]{nprobust::lprobust}
@@ -72,14 +70,6 @@ evaluate over [alpha, 1 - alpha].}
 \subsection{Returns}{
 A new \code{KernelSmooth_cfg} object.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{KernelSmooth_cfg$new(neval = 100)
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KernelSmooth_cfg-clone"></a>}}

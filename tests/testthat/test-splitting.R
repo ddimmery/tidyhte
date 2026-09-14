@@ -63,8 +63,9 @@ d <- dplyr::tibble(
   cov2 = sample(rep(1:2, c(n / 20, 19 * n / 20)), n, replace = TRUE)
 )
 
-s_df <- make_splits(d, uid, cov2, .num_splits = 2)
 test_that("check that stratification on one variable works", {
+  skip_if_not_installed("quickblock")
+  s_df <- make_splits(d, uid, cov2, .num_splits = 2)
   result <- s_df %>%
     dplyr::group_by(cov2) %>%
     dplyr::summarize(all_splits = all(1:2 %in% .split_id)) %>%
@@ -73,8 +74,9 @@ test_that("check that stratification on one variable works", {
   expect_true(result)
 })
 
-s_df <- make_splits(d, uid, cov1, cov2, .num_splits = 2)
 test_that("check that stratification on multiple variables works", {
+  skip_if_not_installed("quickblock")
+  s_df <- make_splits(d, uid, cov1, cov2, .num_splits = 2)
   result <- s_df %>%
     dplyr::group_by(cov2) %>%
     dplyr::summarize(all_splits = all(1:2 %in% .split_id)) %>%
@@ -150,6 +152,7 @@ test_that("clustered data", {
 })
 
 test_that("splitting works when quickblock isn't installed", {
+  skip_if_not_installed("mockr")
   expect_message(
     mockr::with_mock(
       package_present = function(x) FALSE,

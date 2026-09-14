@@ -1,6 +1,15 @@
 
-test_that("predictor factory", {
+test_that("predictor factory (SuperLearner)", {
+  skip_if_no_superlearner()
   model_cfg <- SLEnsemble_cfg$new()
+  checkmate::expect_r6(predictor_factory(model_cfg), classes = c("SLPredictor", "Predictor"))
+})
+
+test_that("predictor factory", {
+  model_cfg <- GLM_cfg$new()
+  checkmate::expect_r6(predictor_factory(model_cfg), classes = c("GLMPredictor", "Predictor"))
+
+  model_cfg <- Constant_cfg$new()
   checkmate::expect_r6(predictor_factory(model_cfg), classes = "Predictor")
 
   model_cfg <- Known_cfg$new("test")
@@ -30,6 +39,7 @@ test_that("check check_nuisance_models", {
 })
 
 test_that("SL_predictor gives expected output", {
+  skip_if_no_superlearner()
   slpred <- predictor_factory(
     SLEnsemble_cfg$new(learner_cfgs = list(
       SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam")

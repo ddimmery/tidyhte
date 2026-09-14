@@ -15,7 +15,7 @@ PCATE surfaces.
 }
 \examples{
 PCATE_cfg$new(
-   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")),
    model_covariates = c("x1", "x2", "x3"),
    num_mc_samples = list(x1 = 100)
 )
@@ -25,7 +25,7 @@ PCATE_cfg$new(
 ## ------------------------------------------------
 
 PCATE_cfg$new(
-   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")),
    model_covariates = c("x1", "x2", "x3"),
    num_mc_samples = list(x1 = 100)
 )
@@ -35,11 +35,11 @@ PCATE_cfg$new(
 ## ------------------------------------------------
 
 cfg <- PCATE_cfg$new(
-   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")),
    model_covariates = c("x1", "x2", "x3"),
    num_mc_samples = list(x1 = 100)
 )
-cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
+cfg <- cfg$add_moderator("x2", Stratified_cfg$new(covariate = "x2"))
 }
 \keyword{internal}
 \section{Public fields}{
@@ -99,7 +99,7 @@ A new \code{PCATE_cfg} object.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{PCATE_cfg$new(
-   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")),
    model_covariates = c("x1", "x2", "x3"),
    num_mc_samples = list(x1 = 100)
 )
@@ -137,11 +137,11 @@ An updated \code{PCATE_cfg} object.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{cfg <- PCATE_cfg$new(
-   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")),
    model_covariates = c("x1", "x2", "x3"),
    num_mc_samples = list(x1 = 100)
 )
-cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
+cfg <- cfg$add_moderator("x2", Stratified_cfg$new(covariate = "x2"))
 }
 \if{html}{\out{</div>}}
 

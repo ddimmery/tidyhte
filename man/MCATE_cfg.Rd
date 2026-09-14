@@ -11,20 +11,20 @@ Thus, if two covariates are highly correlated, it is likely that their
 MCATE surfaces will be extremely similar.
 }
 \examples{
-MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
+MCATE_cfg$new(cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")))
 
 ## ------------------------------------------------
 ## Method `MCATE_cfg$new`
 ## ------------------------------------------------
 
-MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
+MCATE_cfg$new(cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")))
 
 ## ------------------------------------------------
 ## Method `MCATE_cfg$add_moderator`
 ## ------------------------------------------------
 
-cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
-cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
+cfg <- MCATE_cfg$new(cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")))
+cfg <- cfg$add_moderator("x2", Stratified_cfg$new(covariate = "x2"))
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -74,7 +74,7 @@ A new \code{MCATE_cfg} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
+\preformatted{MCATE_cfg$new(cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")))
 }
 \if{html}{\out{</div>}}
 
@@ -107,8 +107,8 @@ An updated \code{MCATE_cfg} object.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
-cfg <- cfg$add_moderator("x2", KernelSmooth_cfg$new(neval = 100))
+\preformatted{cfg <- MCATE_cfg$new(cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")))
+cfg <- cfg$add_moderator("x2", Stratified_cfg$new(covariate = "x2"))
 }
 \if{html}{\out{</div>}}
 

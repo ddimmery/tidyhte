@@ -1,5 +1,22 @@
 # tidyhte (current)
 
+* `SuperLearner` is now an optional dependency (moved from `Imports` to `Suggests`). It is only
+  required when a `SuperLearner` ensemble is actually configured or fit, at which point `tidyhte`
+  prompts to install it if it is missing (via `rlang::check_installed()`). `vimp` is likewise only
+  required when non-linear variable importance is requested.
+* Added `GLM_cfg`, a nuisance-model configuration backed by a single base-R `stats::glm`, which
+  requires no optional packages. `basic_config()` and the defaults of `HTE_cfg` fall back to it
+  when `SuperLearner` is not installed. Because a GLM is far less flexible than an ensemble, a
+  warning is emitted both when the fallback happens and whenever nuisance models are fit with a
+  `GLM_cfg`. Adding an `SL.*` learner with `add_*_model()` upgrades a `GLM_cfg` to an ensemble.
+* `add_vimp()` now honours its `linear_only` argument (previously it was silently ignored).
+* `add_effect_model()` now upgrades a non-ensemble effect model to an `SLEnsemble_cfg`, matching
+  `add_propensity_score_model()` and `add_outcome_model()`.
+* Diagnostics that cannot be computed (`SL_risk`/`SL_coefs` on non-`SuperLearner` models, `AUC` on
+  non-binary labels or without `WeightedROC`) are now skipped with a message instead of producing
+  spurious rows of `NA`s in the results.
+* Examples, tests and vignettes now use optional packages conditionally, and CI checks the package
+  with only its hard dependencies installed.
 * Refactored diagnostics calculation.
 * Fixed lint warnings (including switching project to 2-space tabs)
 

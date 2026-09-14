@@ -6,19 +6,21 @@
 \description{
 \code{SLEnsemble_cfg} is a configuration class for estimation of a model
 using an ensemble of models using \code{SuperLearner}.
+
+\code{SuperLearner} is an optional dependency of \code{tidyhte}: constructing an
+\code{SLEnsemble_cfg} checks that it is installed and, in an interactive session,
+offers to install it.
 }
 \examples{
+\dontshow{if (rlang::is_installed("SuperLearner")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 SLEnsemble_cfg$new(
 learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
 )
-
-## ------------------------------------------------
-## Method `SLEnsemble_cfg$new`
-## ------------------------------------------------
-
-SLEnsemble_cfg$new(
-learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
+cfg <- SLEnsemble_cfg$new(
+ learner_cfgs = list(SLLearner_cfg$new("SL.glm"))
 )
+cfg <- cfg$add_sublearner("SL.gam", list(deg.gam = c(2, 3)))
+\dontshow{\}) # examplesIf}
 }
 \section{Super class}{
 \code{\link[tidyhte:Model_cfg]{tidyhte::Model_cfg}} -> \code{SLEnsemble_cfg}
@@ -81,16 +83,6 @@ For more details, see \code{SuperLearner::SuperLearner.CV.control}.}
 \subsection{Returns}{
 A new \code{SLEnsemble_cfg} object.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{SLEnsemble_cfg$new(
-learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
-)
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SLEnsemble_cfg-add_sublearner"></a>}}
@@ -113,11 +105,7 @@ with \code{SuperLearner::listWrappers("SL")}}
 
 \item{\code{hps}}{A named list of hyper-parameters. Every element of the
 cross-product of these hyper-parameters will be included in the
-ensemble.
-cfg <- SLEnsemble_cfg$new(
-learner_cfgs = list(SLLearner_cfg$new("SL.glm"))
-)
-cfg <- cfg$add_sublearner("SL.gam", list(deg.gam = c(2, 3)))}
+ensemble.}
 }
 \if{html}{\out{</div>}}
 }

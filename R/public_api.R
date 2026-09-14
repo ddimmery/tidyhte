@@ -13,10 +13,9 @@
 #' @param .HTE_cfg `HTE_cfg` object representing the full configuration of the HTE analysis.
 #' @seealso [basic_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()], [estimate_QoI()]
-#' @examples
+#' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' if(require("palmerpenguins")) {
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
@@ -29,7 +28,6 @@
 #' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
 #' construct_pseudo_outcomes(body_mass_g, treatment) %>%
 #' estimate_QoI(species, sex)
-#' }
 #' @export
 attach_config <- function(data, .HTE_cfg) {
   check_hte_cfg(.HTE_cfg)
@@ -56,10 +54,9 @@ attach_config <- function(data, .HTE_cfg) {
 #' @return original dataframe with additional `.split_id` column
 #' @seealso [attach_config()], [produce_plugin_estimates()], [construct_pseudo_outcomes()],
 #' [estimate_QoI()]
-#' @examples
+#' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' if(require("palmerpenguins")) {
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
@@ -72,7 +69,6 @@ attach_config <- function(data, .HTE_cfg) {
 #' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
 #' construct_pseudo_outcomes(body_mass_g, treatment) %>%
 #' estimate_QoI(species, sex)
-#' }
 #' @importFrom magrittr %>%
 #' @importFrom stats model.matrix
 #' @importFrom tibble as_tibble
@@ -161,10 +157,9 @@ make_splits <- function(data, identifier, ..., .num_splits) {
 #' @param .weights Unquoted name of weights column. If NULL, all analysis will assume weights
 #' are all equal to one and sample-based quantities will be returned.
 #' @seealso [attach_config()], [make_splits()], [construct_pseudo_outcomes()], [estimate_QoI()]
-#' @examples
+#' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' if(require("palmerpenguins")) {
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
@@ -177,7 +172,6 @@ make_splits <- function(data, identifier, ..., .num_splits) {
 #' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
 #' construct_pseudo_outcomes(body_mass_g, treatment) %>%
 #' estimate_QoI(species, sex)
-#' }
 #' @importFrom progress progress_bar
 #' @importFrom dplyr matches left_join select
 #' @export
@@ -194,6 +188,7 @@ produce_plugin_estimates <- function(data, outcome, treatment, ..., .weights = N
   .HTE_cfg <- attr(data, "HTE_cfg")
   check_splits(data)
   check_weights(data, rlang::as_name(.weights))
+  warn_glm_models(treatment = .HTE_cfg$treatment, outcome = .HTE_cfg$outcome)
   data$.row_id <- seq_len(nrow(data))
   ok_data <- listwise_deletion(data, {{ outcome }}, {{ treatment }}, !!!dots)
   num_splits <- attr(data, "num_splits")
@@ -290,10 +285,9 @@ produce_plugin_estimates <- function(data, outcome, treatment, ..., .weights = N
 #' @param ... Unquoted names of moderators to calculate QoIs for.
 #' @seealso [attach_config()], [make_splits()], [produce_plugin_estimates()],
 #' [construct_pseudo_outcomes()],
-#' @examples
+#' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' if(require("palmerpenguins")) {
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
@@ -306,7 +300,6 @@ produce_plugin_estimates <- function(data, outcome, treatment, ..., .weights = N
 #' produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) %>%
 #' construct_pseudo_outcomes(body_mass_g, treatment) %>%
 #' estimate_QoI(species, sex)
-#' }
 #' @export
 #' @importFrom rlang .env
 estimate_QoI <- function(

@@ -114,6 +114,7 @@ fit_fx_predictor <- function(full_data, weights, psi_col, ...,
     force = TRUE
   )
   pb$tick(0)
+  warn_glm_models(effect = .Model_cfg)
   for (split_id in seq(num_splits)) {
     folds <- split_data(full_data, split_id)
     fx_model <- fit_effect(

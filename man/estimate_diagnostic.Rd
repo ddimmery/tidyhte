@@ -23,9 +23,11 @@ This function defines the calculations of common model diagnostics
 which are available.
 }
 \examples{
+\dontshow{if (rlang::is_installed("WeightedROC")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100), w = rexp(100), u = 1:100)
 attr(df, "weights") <- "w"
 attr(df, "identifier") <- "u"
 estimate_diagnostic(df, "y", "p", "AUC")
+\dontshow{\}) # examplesIf}
 }
 \keyword{internal}

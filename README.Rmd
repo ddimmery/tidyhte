@@ -82,7 +82,7 @@ When choosing machine learning algorithms for the ensemble, consider a progressi
 - **Regularization**: `"SL.glmnet"` for higher-dimensional data (e.g. many interactions, note `SL.glmnet.interaction`) or when overfitting is a concern
 - **Flexible models**: `"SL.ranger"` (random forests) or `"SL.xgboost"` (gradient boosting) when relationships are complex
 
-The SuperLearner ensemble will automatically weight these models. Start with 2-3 algorithms and add complexity as needed. See `SuperLearner::listWrappers()` for all available options.
+The SuperLearner ensemble will automatically weight these models. Start with 2-3 algorithms and add complexity as needed. See `SuperLearner::listWrappers()` for all available options. Adding any `SL.*` learner requires the optional `SuperLearner` package; `tidyhte` will offer to install it if it is missing.
 
 # Installation
 
@@ -97,6 +97,23 @@ Or install the development version from [GitHub](https://github.com/):
 ``` r
 # install.packages("devtools")
 devtools::install_github("ddimmery/tidyhte")
+```
+
+## Optional dependencies
+
+The core estimation pipeline only depends on a small set of tidyverse packages. Several features rely on optional packages which are only loaded when used; `tidyhte` will prompt you to install them the first time they are needed:
+
+- `SuperLearner`: machine learning ensembles for the nuisance models (`SLEnsemble_cfg`, `add_*_model()`). Without it, `basic_config()` falls back (with a warning) to a single base-R `glm` per nuisance model (`GLM_cfg`), which is far less flexible.
+- `vimp` and `quadprog`: non-linear variable importance (`add_vimp()` with the default `linear_only = FALSE`).
+- `nprobust`: kernel-smoothed effect surfaces for continuous moderators (`add_moderator("KernelSmooth", ...)`).
+- `quickblock`: stratified cross-validation splits (`make_splits()` with stratification covariates).
+- `WeightedROC`: the `AUC` propensity-score diagnostic.
+- `glmnet`: the `SL.glmnet` and `SL.glmnet.interaction` learners.
+
+To install everything at once:
+
+``` r
+install.packages(c("SuperLearner", "vimp", "quadprog", "nprobust", "quickblock", "WeightedROC", "glmnet"))
 ```
 
 # Setting up a configuration
@@ -115,7 +132,7 @@ hte_cfg <- basic_config() %>%
   add_vimp(sample_splitting = FALSE)
 ```
 
-The `basic_config` includes a number of defaults: it starts off the SuperLearner ensembles for both treatment and outcome with linear models (`"SL.glm"`)
+The `basic_config` includes a number of defaults: it starts off the SuperLearner ensembles for treatment, outcome and effect models with linear models (`"SL.glm"`). If `SuperLearner` is not installed, it instead warns and uses a single base-R `glm` for each of these models; adding any `SL.*` learner upgrades that model back to an ensemble.
 
 # Running an Analysis
 

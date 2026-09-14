@@ -28,6 +28,8 @@ This analysis will focus on using machine learning ensembles (through SuperLearn
 
 # Load packages and setup environment
 
+This vignette uses the optional `SuperLearner` package (for the machine learning ensembles), `vimp` (for variable importance), `glmnet` and `nprobust` (for the specific learners and kernel smoothers used below) and `ggplot2` (for plotting). Install them with `install.packages(c("SuperLearner", "vimp", "glmnet", "nprobust", "ggplot2"))` if you have not already.
+
 ```{r rmd_setup, include = FALSE}
 # Detect if we're on CRAN
 on_cran <- !identical(Sys.getenv("NOT_CRAN"), "true")
@@ -41,6 +43,25 @@ if (on_cran) {
     out.width = "70%"
   )
 }
+```
+
+```{r check_suggests, include = FALSE}
+# This vignette relies on optional (Suggests) packages. If any are missing the
+# code chunks are not evaluated, so that the package can still be built and
+# checked without them.
+required_pkgs <- c("SuperLearner", "vimp", "quadprog", "glmnet", "nprobust", "ggplot2")
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE)]
+has_deps <- length(missing_pkgs) == 0
+knitr::opts_chunk$set(eval = has_deps)
+```
+
+```{r missing_note, eval = !has_deps, echo = FALSE, results = "asis"}
+cat(
+  "> **Note:** the code in this vignette was not evaluated because the following ",
+  "optional packages are not installed: ", paste0("`", missing_pkgs, "`", collapse = ", "),
+  ". Install them with `install.packages(c(", paste0('"', missing_pkgs, '"', collapse = ", "),
+  "))` to run the examples.\n", sep = ""
+)
 ```
 
 ```{r setup, print=FALSE, message=FALSE}

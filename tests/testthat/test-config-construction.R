@@ -1,3 +1,5 @@
+skip_if_missing_suggests("SuperLearner", "glmnet", "nprobust", "vimp")
+
 propensity_score_variable_name <- "ps"
 continuous_covariates <- c("x1")
 discrete_covariates <- c("x2")
