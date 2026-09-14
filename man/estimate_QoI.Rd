@@ -25,7 +25,7 @@ of an experiment, \code{vignette("experimental_analysis")} for an observational 
 \examples{
 \dontshow{if (rlang::is_installed(c("palmerpenguins", "SuperLearner"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("dplyr")
-data(package = 'palmerpenguins')
+data("penguins", package = "palmerpenguins")
 penguins$unitid = seq_len(nrow(penguins))
 penguins$propensity = rep(0.5, nrow(penguins))
 penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)

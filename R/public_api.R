@@ -15,7 +15,7 @@
 #' [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
@@ -56,7 +56,7 @@ attach_config <- function(data, .HTE_cfg) {
 #' [estimate_QoI()]
 #' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
@@ -159,7 +159,7 @@ make_splits <- function(data, identifier, ..., .num_splits) {
 #' @seealso [attach_config()], [make_splits()], [construct_pseudo_outcomes()], [estimate_QoI()]
 #' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
@@ -287,7 +287,7 @@ produce_plugin_estimates <- function(data, outcome, treatment, ..., .weights = N
 #' [construct_pseudo_outcomes()],
 #' @examplesIf rlang::is_installed(c("palmerpenguins", "SuperLearner"))
 #' library("dplyr")
-#' data(package = 'palmerpenguins')
+#' data("penguins", package = "palmerpenguins")
 #' penguins$unitid = seq_len(nrow(penguins))
 #' penguins$propensity = rep(0.5, nrow(penguins))
 #' penguins$treatment = rbinom(nrow(penguins), 1, penguins$propensity)
