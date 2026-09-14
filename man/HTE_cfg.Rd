@@ -7,20 +7,20 @@
 \code{HTE_cfg} is a configuration class that pulls everything together, indicating
 the full configuration for a given HTE analysis. This includes how to estimate
 models and what Quantities of Interest to calculate based off those underlying models.
+
+When \code{SuperLearner} is not installed, the default model configurations fall
+back to \code{GLM_cfg} (a single base-R GLM) with a warning. Explicitly pass
+\code{Model_cfg} objects to control this.
 }
 \examples{
-
-## ------------------------------------------------
-## Method `HTE_cfg$new`
-## ------------------------------------------------
-
-mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
+\dontshow{if (rlang::is_installed("SuperLearner")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")))
 pcate_cfg <- PCATE_cfg$new(
-   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
+   cfgs = list(x1 = Stratified_cfg$new(covariate = "x1")),
    model_covariates = c("x1", "x2", "x3"),
    num_mc_samples = list(x1 = 100)
 )
-vimp_cfg <- VIMP_cfg$new()
+vimp_cfg <- VIMP_cfg$new(linear_only = TRUE)
 diag_cfg <- Diagnostics_cfg$new(
    outcome = c("SL_risk", "SL_coefs", "MSE"),
    ps = c("SL_risk", "SL_coefs", "AUC")
@@ -41,6 +41,7 @@ fx_cfg <- SLEnsemble_cfg$new(
    learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
 )
 HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, effect = fx_cfg, qoi = qoi_cfg)
+\dontshow{\}) # examplesIf}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -104,40 +105,6 @@ necessary detail on how they should be estimated.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{mcate_cfg <- MCATE_cfg$new(cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)))
-pcate_cfg <- PCATE_cfg$new(
-   cfgs = list(x1 = KernelSmooth_cfg$new(neval = 100)),
-   model_covariates = c("x1", "x2", "x3"),
-   num_mc_samples = list(x1 = 100)
-)
-vimp_cfg <- VIMP_cfg$new()
-diag_cfg <- Diagnostics_cfg$new(
-   outcome = c("SL_risk", "SL_coefs", "MSE"),
-   ps = c("SL_risk", "SL_coefs", "AUC")
-)
-qoi_cfg <- QoI_cfg$new(
-    mcate = mcate_cfg,
-    pcate = pcate_cfg,
-    vimp = vimp_cfg,
-    diag = diag_cfg
-)
-ps_cfg <- SLEnsemble_cfg$new(
-   learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
-)
-y_cfg <- SLEnsemble_cfg$new(
-   learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
-)
-fx_cfg <- SLEnsemble_cfg$new(
-   learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
-)
-HTE_cfg$new(outcome = y_cfg, treatment = ps_cfg, effect = fx_cfg, qoi = qoi_cfg)
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-HTE_cfg-clone"></a>}}

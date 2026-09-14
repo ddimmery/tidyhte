@@ -9,7 +9,9 @@ d <- dplyr::tibble(
 ) %>% dplyr::mutate(y = 2 * cov1 + cov3 + rnorm(n))
 
 test_that("splitting ensures even number of splits with VIMP", {
-  attr(d, "HTE_cfg") <- HTE_cfg$new(qoi = QoI_cfg$new(vimp = VIMP_cfg$new()))
+  attr(d, "HTE_cfg") <- suppressWarnings(
+    HTE_cfg$new(qoi = QoI_cfg$new(vimp = VIMP_cfg$new(linear_only = TRUE)))
+  )
   expect_message(
     make_splits(d, uid, .num_splits = 5),
     "`num_splits` must be even if VIMP is requested as a QoI. Rounding up."
@@ -17,7 +19,26 @@ test_that("splitting ensures even number of splits with VIMP", {
   expect_message(make_splits(d, cov1, .num_splits = 4), NA)
 })
 
+test_that("non-linear VIMP requires a SuperLearner effect model", {
+  d <- make_splits(d, uid, .num_splits = 4)
+  expect_error(
+    calculate_vimp(
+      d, w, y, cov1, cov2, .VIMP_cfg = VIMP_cfg$new(linear_only = TRUE),
+      .Model_cfg = GLM_cfg$new()
+    ),
+    class = "tidyhte_error_config"
+  )
+  expect_error(
+    calculate_vimp(
+      d, w, y, cov1, cov2, .VIMP_cfg = VIMP_cfg$new(linear_only = TRUE),
+      .Model_cfg = GLM_cfg$new()
+    ),
+    "add_vimp\\(linear_only = TRUE\\)"
+  )
+})
+
 test_that("VIMP ensures even number of splits", {
+  skip_if_no_vimp()
   d <- make_splits(d, uid, .num_splits = 5)
   attr(d, "HTE_cfg") <- HTE_cfg$new(qoi = QoI_cfg$new(vimp = VIMP_cfg$new()))
   expect_error(
@@ -40,10 +61,10 @@ test_that("VIMP ensures even number of splits", {
 test_that("linear VIMP works with weights", {
   d <- make_splits(d, uid, .num_splits = 4)
   d$w <- rexp(n, 1 / 0.9) + 0.1
-  attr(d, "HTE_cfg") <- HTE_cfg$new(qoi = QoI_cfg$new(vimp = VIMP_cfg$new()))
+  vimp_cfg <- VIMP_cfg$new(linear_only = TRUE)
   expect_error(result <- calculate_linear_vimp(
     d, w, y, cov1, cov2, cov3,
-    .VIMP_cfg = attr(d, "HTE_cfg")$qoi$vimp, .Model_cfg = SLEnsemble_cfg$new()
+    .VIMP_cfg = vimp_cfg, .Model_cfg = GLM_cfg$new()
   ), NA)
 
   expect_gt(result$estimate[1], result$estimate[2])
@@ -55,6 +76,7 @@ test_that("linear VIMP works with weights", {
 })
 
 test_that("VIMP works with weights", {
+  skip_if_no_vimp()
   d <- make_splits(d, uid, .num_splits = 4)
   d$w <- rexp(n, 1 / 0.9) + 0.1
   attr(d, "HTE_cfg") <- HTE_cfg$new(qoi = QoI_cfg$new(vimp = VIMP_cfg$new()))
@@ -72,6 +94,7 @@ test_that("VIMP works with weights", {
 })
 
 test_that("VIMP works with weights without sample splitting", {
+  skip_if_no_vimp()
   d <- make_splits(d, uid, .num_splits = 4)
   d$w <- rexp(n, 1 / 0.9) + 0.1
   attr(d, "HTE_cfg") <- HTE_cfg$new(

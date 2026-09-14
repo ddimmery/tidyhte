@@ -26,3 +26,26 @@ test_that("estimate_diagnostic", {
     "Cannot calculate SL_coefs because the model is not SuperLearner."
   )
 })
+
+test_that("calculate_diagnostics drops diagnostics that cannot be computed", {
+  df <- dplyr::tibble(
+    y = rnorm(100), a = rbinom(100, 1, 0.5), w = rep(1, 100), u = 1:100,
+    .pi_hat = rep(0.5, 100), .mu1_hat = rnorm(100), .mu0_hat = rnorm(100)
+  )
+  attr(df, "weights") <- "w"
+  attr(df, "identifier") <- "u"
+  attr(df, "treatment") <- "a"
+  attr(df, "outcome") <- "y"
+  attr(df, "SL_coefs") <- list(pi = list(), mu0 = list(), mu1 = list())
+  diag_cfg <- Diagnostics_cfg$new(
+    ps = c("MSE", "SL_risk", "SL_coefs"),
+    outcome = c("MSE", "SL_coefs")
+  )
+  expect_message(
+    result <- calculate_diagnostics(df, a, y, .diag.cfg = diag_cfg),
+    "Cannot calculate SL_risk"
+  )
+  checkmate::expect_data_frame(result, nrows = 3)
+  expect_true(all(result$estimand == "MSE"))
+  expect_false(any(is.na(result$estimate)))
+})

@@ -31,7 +31,6 @@
 #' @param ... Any additional arguments are passed through to cv.glmnet.
 #' @export
 #' @importFrom stats predict model.matrix
-#' @import SuperLearner
 SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
                                   alpha = 1, nfolds = 10, nlambda = 100, useMin = TRUE,
                                   loss = "deviance",
@@ -83,7 +82,6 @@ SL.glmnet.interaction <- function(Y, X, newX, family, obsWeights, id,
 #'
 #' @export
 #' @importFrom stats model.matrix
-#' @import SuperLearner
 predict.SL.glmnet.interaction <- function(object, newdata,
                                           remove_extra_cols = TRUE,
                                           add_missing_cols = TRUE,

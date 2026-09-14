@@ -116,6 +116,63 @@ Constant_cfg <- R6::R6Class("Constant_cfg",
   )
 )
 
+#' Configuration of a Generalized Linear Model
+#'
+#' @description
+#' `GLM_cfg` is a configuration class for estimating a nuisance model with a
+#' single generalized linear model fit with `stats::glm.fit`. It requires no
+#' optional packages and is what `basic_config()` and `HTE_cfg` fall back to
+#' when `SuperLearner` is not installed.
+#'
+#' This is a deliberately simple model: there is no model selection, no
+#' regularization and no ensembling. Estimates of heterogeneous treatment effects
+#' built on it are only reliable when the linear specification is (close to)
+#' correct. It is intended for prototyping and for minimal installations. A
+#' warning is emitted whenever nuisance models are fit with a `GLM_cfg`; use a
+#' `SLEnsemble_cfg` (e.g. via `add_outcome_model("SL.glmnet")`) for a flexible
+#' ensemble.
+#' @seealso [SLEnsemble_cfg], [basic_config()]
+#' @importFrom R6 R6Class
+#' @examples
+#' GLM_cfg$new()
+#' GLM_cfg$new(family = stats::binomial())
+#' @export
+GLM_cfg <- R6::R6Class("GLM_cfg",
+  inherit = Model_cfg,
+  public = list(
+    #' @field family `stats::family` object determining how the GLM is fitted.
+    family = list(),
+    #' @field model_class The class of the model, required for all classes
+    #' which inherit from `Model_cfg`.
+    model_class = "GLM",
+
+    #' @description
+    #' Create a new `GLM_cfg` object.
+    #' @param family `stats::family` object determining how the GLM should be fitted.
+    #' Defaults to `stats::gaussian()`, matching the default used for `SLEnsemble_cfg`.
+    #' @return A new `GLM_cfg` object.
+    initialize = function(family = stats::gaussian()) {
+      self$family <- family
+      invisible(self)
+    }
+  )
+)
+
+#' Default nuisance-model configuration
+#'
+#' Returns a `SLEnsemble_cfg` when `SuperLearner` is installed and a `GLM_cfg`
+#' otherwise. This function is silent; callers are responsible for warning the
+#' user (see `warn_sl_fallback()`).
+#' @noRd
+#' @keywords internal
+default_model_cfg <- function(family = stats::gaussian()) {
+  if (package_present("SuperLearner")) {
+    SLEnsemble_cfg$new(family = family)
+  } else {
+    GLM_cfg$new(family = family)
+  }
+}
+
 
 #' Configuration for a Kernel Smoother
 #'
@@ -125,9 +182,12 @@ Constant_cfg <- R6::R6Class("Constant_cfg",
 #' two variables. This is typically used for displaying a surface of the conditional
 #' average treatment effect over a continuous covariate.
 #'
-#' Kernel smoothing is handled by the `nprobust` package.
+#' Kernel smoothing is handled by the optional `nprobust` package, which
+#' `tidyhte` will offer to install when a `KernelSmooth_cfg` is constructed.
 #' @seealso [nprobust::lprobust]
 #' @importFrom R6 R6Class
+#' @examplesIf rlang::is_installed("nprobust")
+#' KernelSmooth_cfg$new(neval = 100)
 #' @export
 KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
   inherit = Model_cfg,
@@ -152,10 +212,8 @@ KernelSmooth_cfg <- R6::R6Class("KernelSmooth_cfg",
     #' top and the bottom of the empirical distribution. A value of alpha would
     #' evaluate over \[alpha, 1 - alpha\].
     #' @return A new `KernelSmooth_cfg` object.
-    #' @examples
-    #' KernelSmooth_cfg$new(neval = 100)
     initialize = function(neval = 100, eval_min_quantile = 0.05) {
-      soft_require("nprobust")
+      soft_require("nprobust", reason = "to estimate kernel-smoothed effect surfaces.")
       self$neval <- neval
       eval_min_quantile <- pmin(eval_min_quantile, 1 - eval_min_quantile)
       checkmate::check_double(eval_min_quantile, lower = 0.0, upper = 0.5)
@@ -202,12 +260,19 @@ Stratified_cfg <- R6::R6Class("Stratified_cfg",
 #' @description
 #' `SLEnsemble_cfg` is a configuration class for estimation of a model
 #' using an ensemble of models using `SuperLearner`.
-#' @import SuperLearner
+#'
+#' `SuperLearner` is an optional dependency of `tidyhte`: constructing an
+#' `SLEnsemble_cfg` checks that it is installed and, in an interactive session,
+#' offers to install it.
 #' @importFrom R6 R6Class
-#' @examples
+#' @examplesIf rlang::is_installed("SuperLearner")
 #' SLEnsemble_cfg$new(
 #' learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
 #' )
+#' cfg <- SLEnsemble_cfg$new(
+#'  learner_cfgs = list(SLLearner_cfg$new("SL.glm"))
+#' )
+#' cfg <- cfg$add_sublearner("SL.gam", list(deg.gam = c(2, 3)))
 #' @export
 SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
   inherit = Model_cfg,
@@ -237,12 +302,8 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
     #' @param learner_cfgs A list of `SLLearner_cfg` objects.
     #' @param family `stats::family` object to determine how SuperLearner should be fitted.
     #' @return A new `SLEnsemble_cfg` object.
-    #' @examples
-    #' SLEnsemble_cfg$new(
-    #' learner_cfgs = list(SLLearner_cfg$new("SL.glm"), SLLearner_cfg$new("SL.gam"))
-    #' )
     initialize = function(cvControl = NULL, learner_cfgs = NULL, family = stats::gaussian()) {
-      soft_require("SuperLearner", load = TRUE)
+      soft_require("SuperLearner", load = TRUE, reason = "to build a SuperLearner ensemble.")
 
       self$family <- family
       if (!is.null(cvControl)) {
@@ -273,16 +334,12 @@ SLEnsemble_cfg <- R6::R6Class("SLEnsemble_cfg",
     #' @param hps A named list of hyper-parameters. Every element of the
     #' cross-product of these hyper-parameters will be included in the
     #' ensemble.
-    #' cfg <- SLEnsemble_cfg$new(
-    #'  learner_cfgs = list(SLLearner_cfg$new("SL.glm"))
-    #' )
-    #' cfg <- cfg$add_sublearner("SL.gam", list(deg.gam = c(2, 3)))
     add_sublearner = function(learner_name, hps = NULL) {
       sl_lib <- character()
       if (is.null(hps)) {
         lrnrs <- learner_name
       } else {
-        learners <- create.Learner(
+        learners <- SuperLearner::create.Learner(
           learner_name,
           tune = hps,
           detailed_names = TRUE,

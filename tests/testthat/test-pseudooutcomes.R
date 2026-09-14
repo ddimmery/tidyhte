@@ -1,3 +1,5 @@
+skip_if_missing_suggests("SuperLearner", "nprobust", "WeightedROC")
+
 set.seed(20051920) # 20051920 is derived from 'test'
 
 n <- 250

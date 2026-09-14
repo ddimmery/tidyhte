@@ -13,9 +13,12 @@ SL_model_slot <- function(prediction) {
 #' @keywords internal
 calculate_auc_diagnostic <- function(data, label, prediction) {
   w_col <- attr(data, "weights")
-  soft_require("WeightedROC")
   labels <- data[[label]]
   if (checkmate::test_integerish(labels, lower = 0, upper = 1)) {
+    if (!package_present("WeightedROC")) {
+      message("Cannot calculate AUC because `WeightedROC` is not installed.")
+      return(NULL)
+    }
     predictions <- data[[prediction]]
     n1 <- sum(data[[label]] * data[[w_col]])
     n <- sum(data[[w_col]])
@@ -125,7 +128,7 @@ calculate_rroc_diagnostic <- function(data, label, prediction, params) {
 #' @param diag_name The (string) name of the diagnostic to calculate. Currently
 #' available are "AUC", "MSE", "SL_coefs", "SL_risk", "RROC"
 #' @param params Any other necessary options to pass to the given diagnostic.
-#' @examples
+#' @examplesIf rlang::is_installed("WeightedROC")
 #' df <- dplyr::tibble(y = rbinom(100, 1, 0.5), p = rep(0.5, 100), w = rexp(100), u = 1:100)
 #' attr(df, "weights") <- "w"
 #' attr(df, "identifier") <- "u"
@@ -174,6 +177,7 @@ calculate_diagnostics <- function(data, treatment, outcome, .diag.cfg) {
   result_list <- list()
   for (diag in ps_cfg) {
     result <- estimate_diagnostic(data, treatment_name, ".pi_hat", diag, params)
+    if (is.null(result)) next
     result$level <- "Propensity Score"
     result_list <- c(result_list, list(result))
   }
@@ -186,7 +190,7 @@ calculate_diagnostics <- function(data, treatment, outcome, .diag.cfg) {
       diag,
       params
     )
-    result1$level <- "Treatment Response"
+    if (!is.null(result1)) result1$level <- "Treatment Response"
     result0 <- estimate_diagnostic(
       dplyr::filter(data, data[[treatment_name]] == 0),
       outcome_name,
@@ -194,8 +198,9 @@ calculate_diagnostics <- function(data, treatment, outcome, .diag.cfg) {
       diag,
       params
     )
-    result0$level <- "Control Response"
-    result_list <- c(result_list, list(result0), list(result1))
+    if (!is.null(result0)) result0$level <- "Control Response"
+    if (!is.null(result0)) result_list <- c(result_list, list(result0))
+    if (!is.null(result1)) result_list <- c(result_list, list(result1))
   }
 
   for (diag in fx_cfg) {
@@ -204,6 +209,7 @@ calculate_diagnostics <- function(data, treatment, outcome, .diag.cfg) {
       break
     }
     result <- estimate_diagnostic(data, ".pseudo_outcome", ".pseudo_outcome_hat", diag, params)
+    if (is.null(result)) next
     result$level <- "Effect Surface"
     result_list <- c(result_list, list(result))
   }

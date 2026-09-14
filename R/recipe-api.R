@@ -11,6 +11,21 @@
 #' be added using their respective helper functions provided as part
 #' of the Recipe API.
 #'
+#' @section Optional dependencies:
+#' When the `SuperLearner` package is installed, the nuisance models start as
+#' `SLEnsemble_cfg` ensembles containing a single linear learner (`"SL.glm"`),
+#' `SL_risk`/`SL_coefs` diagnostics are requested, and (if `vimp` is installed)
+#' non-linear variable importance is requested.
+#'
+#' When `SuperLearner` is **not** installed, this function warns and falls
+#' back to `GLM_cfg`: a single base-R `stats::glm` per nuisance model, with
+#' `MSE`/`AUC` diagnostics and linear-only variable importance. This is a far
+#' less flexible model than an ensemble; install `SuperLearner` (and `vimp`) to
+#' get the defaults described above. Adding a learner with
+#' `add_propensity_score_model()`, `add_outcome_model()` or `add_effect_model()`
+#' always upgrades that model to a `SuperLearner` ensemble and will prompt to
+#' install `SuperLearner` if needed.
+#'
 #' To see an example analysis, read `vignette("experimental_analysis")` in the context
 #' of an experiment, `vignette("experimental_analysis")` for an observational study, or
 #' `vignette("methodological_details")` for a deeper dive under the hood.
@@ -18,6 +33,8 @@
 #' [add_propensity_diagnostic()], [add_outcome_model()], [add_outcome_diagnostic()],
 #' [add_effect_model()], [add_effect_diagnostic()], [add_moderator()], [add_vimp()]
 #' @examples
+#' basic_config()
+#' @examplesIf rlang::is_installed(c("SuperLearner", "nprobust"))
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_known_propensity_score("ps") %>%
@@ -35,16 +52,19 @@
 #' @return `HTE_cfg` object
 #' @export
 basic_config <- function() {
-  trt_cfg <- SLEnsemble_cfg$new()
-  reg_cfg <- SLEnsemble_cfg$new()
-  fx_cfg <- SLEnsemble_cfg$new()
+  sl_present <- package_present("SuperLearner")
+  if (!sl_present) warn_sl_fallback()
+  trt_cfg <- default_model_cfg()
+  reg_cfg <- default_model_cfg()
+  fx_cfg <- default_model_cfg()
+  sl_diags <- if (sl_present) c("SL_risk", "SL_coefs") else character()
   qoi_cfg <- QoI_cfg$new(
     ate = TRUE,
-    vimp = VIMP_cfg$new(sample_splitting = TRUE),
+    vimp = VIMP_cfg$new(sample_splitting = TRUE, linear_only = !package_present("vimp")),
     diag = Diagnostics_cfg$new(
-      ps = c("AUC", "MSE", "SL_risk", "SL_coefs"),
-      outcome = c("MSE", "SL_risk", "SL_coefs"),
-      effect = c("MSE", "SL_risk", "SL_coefs")
+      ps = c("AUC", "MSE", sl_diags),
+      outcome = c("MSE", sl_diags),
+      effect = c("MSE", sl_diags)
     )
   )
   hte_cfg <- HTE_cfg$new(
@@ -54,6 +74,21 @@ basic_config <- function() {
     qoi = qoi_cfg
   )
   invisible(hte_cfg)
+}
+
+#' Coerce a model configuration to a SuperLearner ensemble
+#'
+#' Returns `cfg` unchanged if it is already an `SLEnsemble_cfg`; otherwise
+#' constructs a fresh `SLEnsemble_cfg` (prompting to install `SuperLearner` if
+#' it is missing), carrying over the `family` of a `GLM_cfg` if present.
+#' @noRd
+#' @keywords internal
+ensure_sl_ensemble <- function(cfg) {
+  if (checkmate::test_r6(cfg, classes = "SLEnsemble_cfg")) return(cfg)
+  if (checkmate::test_r6(cfg, classes = "GLM_cfg")) {
+    return(SLEnsemble_cfg$new(family = cfg$family))
+  }
+  SLEnsemble_cfg$new()
 }
 
 #' Add an additional model to the propensity score ensemble
@@ -66,8 +101,12 @@ basic_config <- function() {
 #' use `SuperLearner` naming conventions. A full list is available
 #' with `SuperLearner::listWrappers("SL")`
 #' @param ... Parameters over which to grid-search for this model class.
+#' @details If the current model is not a `SuperLearner` ensemble (e.g. a
+#' `GLM_cfg` fallback), it is replaced with a new `SLEnsemble_cfg`. This
+#' requires the optional `SuperLearner` package and will prompt to install it
+#' if it is missing.
 #' @return Updated `HTE_cfg` object
-#' @examples
+#' @examplesIf rlang::is_installed("SuperLearner")
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_propensity_score_model("SL.glmnet", alpha = c(0, 0.5, 1)) -> hte_cfg
@@ -75,9 +114,7 @@ basic_config <- function() {
 add_propensity_score_model <- function(hte_cfg, model_name, ...) {
   hps <- rlang::dots_list(..., .named = TRUE)
   if (length(hps) == 0) hps <- NULL
-  if (!checkmate::test_r6(hte_cfg$treatment, classes = "SLEnsemble_cfg")) {
-    hte_cfg$treatment <- SLEnsemble_cfg$new()
-  }
+  hte_cfg$treatment <- ensure_sl_ensemble(hte_cfg$treatment)
   hte_cfg$treatment$add_sublearner(model_name, hps)
   invisible(hte_cfg)
 }
@@ -132,8 +169,12 @@ add_propensity_diagnostic <- function(hte_cfg, diag) {
 #' use `SuperLearner` naming conventions. A full list is available
 #' with `SuperLearner::listWrappers("SL")`
 #' @param ... Parameters over which to grid-search for this model class.
+#' @details If the current model is not a `SuperLearner` ensemble (e.g. a
+#' `GLM_cfg` fallback), it is replaced with a new `SLEnsemble_cfg`. This
+#' requires the optional `SuperLearner` package and will prompt to install it
+#' if it is missing.
 #' @return Updated `HTE_cfg` object
-#' @examples
+#' @examplesIf rlang::is_installed("SuperLearner")
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_outcome_model("SL.glm.interaction") -> hte_cfg
@@ -141,9 +182,7 @@ add_propensity_diagnostic <- function(hte_cfg, diag) {
 add_outcome_model <- function(hte_cfg, model_name, ...) {
   hps <- rlang::dots_list(..., .named = TRUE)
   if (length(hps) == 0) hps <- NULL
-  if (!checkmate::test_r6(hte_cfg$outcome, classes = "SLEnsemble_cfg")) {
-    hte_cfg$outcome <- SLEnsemble_cfg$new()
-  }
+  hte_cfg$outcome <- ensure_sl_ensemble(hte_cfg$outcome)
   hte_cfg$outcome$add_sublearner(model_name, hps)
   invisible(hte_cfg)
 }
@@ -176,8 +215,12 @@ add_outcome_diagnostic <- function(hte_cfg, diag) {
 #' use `SuperLearner` naming conventions. A full list is available
 #' with `SuperLearner::listWrappers("SL")`
 #' @param ... Parameters over which to grid-search for this model class.
+#' @details If the current model is not a `SuperLearner` ensemble (e.g. a
+#' `GLM_cfg` fallback), it is replaced with a new `SLEnsemble_cfg`. This
+#' requires the optional `SuperLearner` package and will prompt to install it
+#' if it is missing.
 #' @return Updated `HTE_cfg` object
-#' @examples
+#' @examplesIf rlang::is_installed("SuperLearner")
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_effect_model("SL.glm.interaction") -> hte_cfg
@@ -185,6 +228,7 @@ add_outcome_diagnostic <- function(hte_cfg, diag) {
 add_effect_model <- function(hte_cfg, model_name, ...) {
   hps <- rlang::dots_list(..., .named = TRUE)
   if (length(hps) == 0) hps <- NULL
+  hte_cfg$effect <- ensure_sl_ensemble(hte_cfg$effect)
   hte_cfg$effect$add_sublearner(model_name, hps)
   invisible(hte_cfg)
 }
@@ -222,7 +266,7 @@ add_effect_diagnostic <- function(hte_cfg, diag) {
 #' @note For moderators with many levels and limited sample per level, estimates may be noisy.
 #' Consider whether other encodings would be more appropriate.
 #' @return Updated `HTE_cfg` object
-#' @examples
+#' @examplesIf rlang::is_installed("nprobust")
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_moderator("Stratified", x2, x3) %>%
@@ -270,7 +314,9 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' moderators with non-null importance.
 #' @param linear_only Logical indicating whether the variable importance should use only a single
 #' linear-only model. Variable importance measure will only be consistent for the population
-#' quantity if the true model of pseudo-outcomes is linear.
+#' quantity if the true model of pseudo-outcomes is linear. Non-linear variable
+#' importance requires the optional `vimp` and `SuperLearner` packages;
+#' `linear_only = TRUE` requires neither.
 #' @return Updated `HTE_cfg` object
 #' @references
 #' * Williamson, B. D., Gilbert, P. B., Carone, M., & Simon, N. (2021).
@@ -279,14 +325,15 @@ add_moderator <- function(hte_cfg, model_type, ..., .model_arguments = NULL) {
 #' * Williamson, B. D., Gilbert, P. B., Simon, N. R., & Carone, M. (2021).
 #' A general framework for inference on algorithm-agnostic variable importance.
 #' Journal of the American Statistical Association, 1-14.
-#' @examples
+#' @examplesIf rlang::is_installed("vimp")
 #' library("dplyr")
 #' basic_config() %>%
 #'    add_vimp(sample_splitting = FALSE) -> hte_cfg
 #' @export
 add_vimp <- function(hte_cfg, sample_splitting = TRUE, linear_only = FALSE) {
   hte_cfg$qoi$vimp <- VIMP_cfg$new(
-    sample_splitting = sample_splitting
+    sample_splitting = sample_splitting,
+    linear_only = linear_only
   )
   invisible(hte_cfg)
 }

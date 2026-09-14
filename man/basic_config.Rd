@@ -21,12 +21,31 @@ basic diagnostics.
 Additional models, diagnostics and quantities of interest should
 be added using their respective helper functions provided as part
 of the Recipe API.
+}
+\section{Optional dependencies}{
+
+When the \code{SuperLearner} package is installed, the nuisance models start as
+\code{SLEnsemble_cfg} ensembles containing a single linear learner (\code{"SL.glm"}),
+\code{SL_risk}/\code{SL_coefs} diagnostics are requested, and (if \code{vimp} is installed)
+non-linear variable importance is requested.
+
+When \code{SuperLearner} is \strong{not} installed, this function warns and falls
+back to \code{GLM_cfg}: a single base-R \code{stats::glm} per nuisance model, with
+\code{MSE}/\code{AUC} diagnostics and linear-only variable importance. This is a far
+less flexible model than an ensemble; install \code{SuperLearner} (and \code{vimp}) to
+get the defaults described above. Adding a learner with
+\code{add_propensity_score_model()}, \code{add_outcome_model()} or \code{add_effect_model()}
+always upgrades that model to a \code{SuperLearner} ensemble and will prompt to
+install \code{SuperLearner} if needed.
 
 To see an example analysis, read \code{vignette("experimental_analysis")} in the context
 of an experiment, \code{vignette("experimental_analysis")} for an observational study, or
 \code{vignette("methodological_details")} for a deeper dive under the hood.
 }
+
 \examples{
+basic_config()
+\dontshow{if (rlang::is_installed(c("SuperLearner", "nprobust"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("dplyr")
 basic_config() \%>\%
    add_known_propensity_score("ps") \%>\%
@@ -41,6 +60,7 @@ basic_config() \%>\%
    add_moderator("Stratified", x2, x3) \%>\%
    add_moderator("KernelSmooth", x1, x4, x5) \%>\%
    add_vimp(sample_splitting = FALSE) -> hte_cfg
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=add_propensity_score_model]{add_propensity_score_model()}}, \code{\link[=add_known_propensity_score]{add_known_propensity_score()}},

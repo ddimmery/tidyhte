@@ -113,6 +113,7 @@ Model_data <- R6::R6Class("Model_data", list(
   #' A helper function to create the cross-validation options to be used by SuperLearner.
   #' @seealso [SuperLearner::SuperLearner.CV.control]
   SL_cv_control = function() {
+    soft_require("SuperLearner", reason = "to construct SuperLearner cross-validation controls.")
     validRows <- purrr::map(sort(unique(self$split_id)), ~which(.x == self$split_id))
     SuperLearner::SuperLearner.CV.control(V = length(validRows), validRows = validRows)
   }

@@ -68,9 +68,11 @@ reference:
     estimation. In particular, `Known_cfg` may be used when the propensity score is
     known ex ante, while `SLEnsemble_cfg` may be used when a SuperLearner ensemble
     of machine learning models should be used to estimate an unknown nuisance function.
+    `GLM_cfg` fits a single base-R GLM and requires no optional packages.
 - contents:
   - Known_cfg
   - Constant_cfg
+  - GLM_cfg
   - SLEnsemble_cfg
   - SLLearner_cfg
 - title: Analysis Configuration

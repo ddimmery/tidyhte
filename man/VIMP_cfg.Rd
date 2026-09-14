@@ -9,13 +9,10 @@ across all moderators. This provides a meaningful measure of which moderators
 explain the most of the CATE surface.
 }
 \examples{
+VIMP_cfg$new(linear_only = TRUE)
+\dontshow{if (rlang::is_installed("vimp")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 VIMP_cfg$new()
-
-## ------------------------------------------------
-## Method `VIMP_cfg$new`
-## ------------------------------------------------
-
-VIMP_cfg$new()
+\dontshow{\}) # examplesIf}
 }
 \references{
 \itemize{
@@ -26,6 +23,9 @@ Biometrics, 77(1), 9-22.
 A general framework for inference on algorithm-agnostic variable importance.
 Journal of the American Statistical Association, 1-14.
 }
+
+Non-linear variable importance (the default) requires the optional \code{vimp} and
+\code{SuperLearner} packages; \code{linear_only = TRUE} requires neither.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -74,14 +74,6 @@ of pseudo-outcomes is linear.}
 \subsection{Returns}{
 A new \code{VIMP_cfg} object.
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{VIMP_cfg$new()
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-VIMP_cfg-clone"></a>}}

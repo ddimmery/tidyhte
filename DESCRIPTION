@@ -34,7 +34,8 @@ Suggests:
     quadprog,
     quickblock,
     rmarkdown,
-    testthat (>= 3.0.0),
+    SuperLearner,
+    testthat (>= 3.2.0),
     vimp,
     WeightedROC
 Config/testthat/edition: 3
@@ -47,6 +48,5 @@ Imports:
     purrr,
     R6,
     rlang,
-    SuperLearner,
     tibble
 VignetteBuilder: knitr

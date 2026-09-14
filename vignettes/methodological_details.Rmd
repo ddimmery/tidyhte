@@ -41,7 +41,28 @@ if (on_cran) {
 }
 ```
 
+```{r check_suggests, include = FALSE}
+# This vignette relies on optional (Suggests) packages. If any are missing the
+# code chunks are not evaluated, so that the package can still be built and
+# checked without them.
+required_pkgs <- c("SuperLearner", "vimp", "quadprog", "glmnet", "nprobust", "ggplot2", "palmerpenguins")
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE)]
+has_deps <- length(missing_pkgs) == 0
+knitr::opts_chunk$set(eval = has_deps)
+```
+
+```{r missing_note, eval = !has_deps, echo = FALSE, results = "asis"}
+cat(
+  "> **Note:** the code in this vignette was not evaluated because the following ",
+  "optional packages are not installed: ", paste0("`", missing_pkgs, "`", collapse = ", "),
+  ". Install them with `install.packages(c(", paste0('"', missing_pkgs, '"', collapse = ", "),
+  "))` to run the examples.\n", sep = ""
+)
+```
+
 ```{r setup, echo=FALSE}
+# This vignette uses the optional SuperLearner, vimp, glmnet, nprobust, ggplot2 and
+# palmerpenguins packages; see the `check_suggests` chunk above.
 suppressMessages({
   library(palmerpenguins)
   library(dplyr)

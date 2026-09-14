@@ -39,7 +39,17 @@ test_that("soft_require works", {
     class = "rlib_error_package_not_found"
   )
 
-  expect_error(soft_require("SuperLearner"), NA)
+  expect_error(soft_require("rlang"), NA)
+  expect_error(soft_require("rlang", reason = "to run the tests."), NA)
+})
+
+test_that("warn_glm_models only warns for GLM configs", {
+  expect_no_warning(warn_glm_models(treatment = Constant_cfg$new(), outcome = Known_cfg$new("ps")))
+  expect_warning(
+    warn_glm_models(treatment = Constant_cfg$new(), outcome = GLM_cfg$new()),
+    class = "tidyhte_warning_glm_model"
+  )
+  expect_warning(warn_glm_models(outcome = GLM_cfg$new()), "`outcome`")
 })
 
 test_that("cluster robust SEs are correct", {

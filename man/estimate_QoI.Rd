@@ -23,8 +23,8 @@ of an experiment, \code{vignette("experimental_analysis")} for an observational 
 \code{vignette("methodological_details")} for a deeper dive under the hood.
 }
 \examples{
+\dontshow{if (rlang::is_installed(c("palmerpenguins", "SuperLearner"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("dplyr")
-if(require("palmerpenguins")) {
 data(package = 'palmerpenguins')
 penguins$unitid = seq_len(nrow(penguins))
 penguins$propensity = rep(0.5, nrow(penguins))
@@ -38,7 +38,7 @@ make_splits(unitid, .num_splits = 4) \%>\%
 produce_plugin_estimates(outcome = body_mass_g, treatment = treatment, species, sex) \%>\%
 construct_pseudo_outcomes(body_mass_g, treatment) \%>\%
 estimate_QoI(species, sex)
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=attach_config]{attach_config()}}, \code{\link[=make_splits]{make_splits()}}, \code{\link[=produce_plugin_estimates]{produce_plugin_estimates()}},

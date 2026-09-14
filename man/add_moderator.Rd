@@ -31,8 +31,10 @@ For moderators with many levels and limited sample per level, estimates may be n
 Consider whether other encodings would be more appropriate.
 }
 \examples{
+\dontshow{if (rlang::is_installed("nprobust")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library("dplyr")
 basic_config() \%>\%
    add_moderator("Stratified", x2, x3) \%>\%
    add_moderator("KernelSmooth", x1, x4, x5) -> hte_cfg
+\dontshow{\}) # examplesIf}
 }

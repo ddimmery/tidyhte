@@ -13,6 +13,8 @@ predictor_factory <- function(cfg, ...) {
     StratifiedPredictor$new(cfg$covariate)
   } else if (cfg$model_class == "Constant") {
     ConstantPredictor$new()
+  } else if (cfg$model_class == "GLM") {
+    GLMPredictor$new(family = cfg$family)
   } else {
     abort_model(paste0("Unknown model class: '", cfg$model_class, "'."))
   }
@@ -85,7 +87,6 @@ ConstantPredictor <- R6::R6Class("ConstantPredictor",
 )
 
 #' @noRd
-#' @import SuperLearner
 #' @keywords internal
 SLPredictor <- R6::R6Class("SLPredictor",
   inherit = Predictor,
@@ -101,6 +102,7 @@ SLPredictor <- R6::R6Class("SLPredictor",
       self$family <- family
     },
     fit = function(data) {
+      soft_require("SuperLearner", reason = "to fit a SuperLearner ensemble.")
       X_df <- tibble::as_tibble(data$features)
       self$model_features <- names(X_df)
       self$model <- muffle_warnings(SuperLearner::SuperLearner(
@@ -125,6 +127,56 @@ SLPredictor <- R6::R6Class("SLPredictor",
       dplyr::tibble(
         x = covs,
         estimate = pred,
+        sample_size = rep(1, length(pred))
+      )
+    }
+  )
+)
+
+#' @noRd
+#' @keywords internal
+GLMPredictor <- R6::R6Class("GLMPredictor",
+  inherit = Predictor,
+  public = list(
+    model = NULL,
+    model_features = character(),
+    family = list(),
+    initialize = function(family = stats::gaussian()) {
+      self$family <- family
+    },
+    fit = function(data) {
+      X <- as.matrix(data$features)
+      self$model_features <- colnames(X)
+      X <- cbind("(Intercept)" = 1, X)
+      # Weights are normalized to mean one by `Model_data`, so they are typically
+      # non-integer; for a binomial family `stats::glm.fit` warns about this
+      # even though the weighted estimates are the intended ones.
+      self$model <- muffle_warnings(
+        stats::glm.fit(X, data$label, weights = data$weights, family = self$family),
+        "non-integer #successes"
+      )
+      invisible(self)
+    },
+    predict = function(data) {
+      X_df <- tibble::as_tibble(data$features)
+      # Features unseen at fit time are dropped; features missing at prediction
+      # time (e.g. an unobserved factor level in this fold) are set to zero.
+      X <- matrix(
+        0, nrow = nrow(X_df), ncol = length(self$model_features),
+        dimnames = list(NULL, self$model_features)
+      )
+      present <- intersect(self$model_features, names(X_df))
+      X[, present] <- as.matrix(X_df[, present, drop = FALSE])
+      X <- cbind("(Intercept)" = 1, X)
+      # Aliased (rank-deficient) coefficients are `NA`; they contribute nothing.
+      coefs <- self$model$coefficients
+      coefs[is.na(coefs)] <- 0
+      pred <- self$family$linkinv(drop(X %*% coefs))
+      covs <- rep(NA_real_, length(pred))
+      if (ncol(data$model_frame) == 1) covs <- drop(unlist(data$model_frame))
+      dplyr::tibble(
+        x = covs,
+        estimate = unname(pred),
         sample_size = rep(1, length(pred))
       )
     }
